@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LogiTrack – Theo dõi container & tàu biển Việt Nam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-dark:    #050d1a;
+      --bg-card:    #0b1628;
+      --bg-card2:   #0e1e35;
+      --accent:     #2563eb;
+      --accent-2:   #38bdf8;
+      --accent-glow:#1d4ed8;
+      --text:       #f0f6ff;
+      --text-muted: #8ba3c7;
+      --border:     rgba(255,255,255,0.08);
+      --green:      #22c55e;
+      --yellow:     #f59e0b;
+      --red:        #ef4444;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 3px; }
+
+    /* ─────────────────────────────── NAVBAR ─────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 68px;
+      background: rgba(5,13,26,0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--text);
+    }
+    .nav-logo .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .nav-logo span { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.3px; }
+    .nav-logo span em { color: var(--accent-2); font-style: normal; }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none; color: var(--text-muted); font-size: 0.9rem;
+      font-weight: 500; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+
+    .btn { display: inline-flex; align-items: center; gap: 6px; border: none; cursor: pointer; border-radius: 8px; font-family: inherit; font-weight: 600; transition: all 0.2s; text-decoration: none; white-space: nowrap; }
+    .btn-ghost { background: transparent; color: var(--text-muted); padding: 9px 18px; font-size: 0.875rem; border: 1px solid var(--border); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.06); color: var(--text); border-color: rgba(255,255,255,0.15); }
+    .btn-primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; padding: 10px 22px; font-size: 0.875rem; box-shadow: 0 0 20px rgba(37,99,235,0.4); }
+    .btn-primary:hover { background: linear-gradient(135deg, #3b82f6, #2563eb); box-shadow: 0 0 30px rgba(37,99,235,0.6); transform: translateY(-1px); }
+    .btn-lg { padding: 14px 30px; font-size: 1rem; border-radius: 10px; }
+    .btn-outline { background: transparent; color: var(--accent-2); padding: 13px 28px; font-size: 1rem; border: 1.5px solid var(--accent-2); border-radius: 10px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-outline:hover { background: rgba(56,189,248,0.1); transform: translateY(-1px); }
+
+    /* ─────────────────────────────── HERO ─────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 100px 5% 60px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, #040c18 0%, #061425 50%, #071b32 100%);
+    }
+
+    /* Radial glow layers */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 900px 600px at 65% 35%, rgba(37,99,235,0.13) 0%, transparent 65%),
+        radial-gradient(ellipse 500px 400px at 15% 75%, rgba(56,189,248,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 400px 300px at 85% 80%, rgba(14,42,100,0.4) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── Wave canvas ── */
+    /* ── Diagonal wave background ── */
+    .wave-bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .wave-bg svg { display: block; width: 100%; height: 100%; }
+
+    /* Particle dots */
+    .wave-particles {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    }
+    .wp {
+      position: absolute; border-radius: 50%;
+      animation: wFloat linear infinite;
+    }
+    @keyframes wFloat {
+      0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+      20%  { opacity: 1; }
+      80%  { opacity: 0.5; }
+      100% { transform: translateY(-100px) translateX(20px) scale(0.3); opacity: 0; }
+    }
+
+    /* Hero content must be above waves */
+    .hero-grid { position: relative; z-index: 2; }
+
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: center;
+      width: 100%; max-width: 1280px; margin: 0 auto;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(37,99,235,0.15); border: 1px solid rgba(37,99,235,0.3);
+      border-radius: 100px; padding: 6px 14px; font-size: 0.8rem;
+      color: var(--accent-2); font-weight: 500; margin-bottom: 22px;
+    }
+    .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      font-weight: 900; line-height: 1.15;
+      letter-spacing: -1px; margin-bottom: 20px;
+    }
+    .hero-title .highlight { color: var(--accent-2); }
+
+    .hero-desc {
+      color: var(--text-muted); font-size: 1.05rem;
+      line-height: 1.7; margin-bottom: 36px; max-width: 520px;
+    }
+
+    /* Search bar */
+    .search-bar {
+      display: flex; background: var(--bg-card2);
+      border: 1px solid var(--border); border-radius: 12px;
+      overflow: hidden; margin-bottom: 32px;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+      transition: border-color 0.2s;
+    }
+    .search-bar:focus-within { border-color: var(--accent); }
+    .search-bar input {
+      flex: 1; background: transparent; border: none; outline: none;
+      color: var(--text); font-family: inherit; font-size: 0.95rem;
+      padding: 14px 18px;
+    }
+    .search-bar input::placeholder { color: var(--text-muted); }
+    .search-bar button {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      border: none; color: #fff; padding: 0 24px;
+      font-family: inherit; font-weight: 600; font-size: 0.9rem;
+      cursor: pointer; transition: background 0.2s; white-space: nowrap;
+    }
+    .search-bar button:hover { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+
+    .hero-cta { display: flex; gap: 14px; align-items: center; margin-bottom: 48px; flex-wrap: wrap; }
+
+    .hero-stats {
+      display: flex; gap: 32px; padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+    .hero-stat strong { display: block; font-size: 1.6rem; font-weight: 800; color: var(--text); }
+    .hero-stat span { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; display: block; }
+
+    /* Dashboard mockup */
+    .hero-visual {
+      position: relative; display: flex;
+      justify-content: center; align-items: center;
+    }
+
+    .dashboard-mockup {
+      width: 100%; max-width: 560px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(37,99,235,0.1);
+    }
+    .dash-header {
+      background: #0a1525; padding: 12px 18px;
+      display: flex; align-items: center; gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .dash-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dash-title { font-size: 0.8rem; color: var(--text-muted); margin-left: 6px; font-weight: 500; }
+    .dash-body { padding: 20px; }
+
+    .dash-row-label {
+      display: flex; justify-content: space-between;
+      font-size: 0.72rem; color: var(--text-muted);
+      padding: 0 6px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    .container-item {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--bg-card2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 14px; margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+    .container-item:hover { border-color: rgba(37,99,235,0.4); }
+    .ci-left { display: flex; align-items: center; gap: 12px; }
+    .ci-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .ci-icon.green { background: rgba(34,197,94,0.12); }
+    .ci-icon.blue  { background: rgba(37,99,235,0.12); }
+    .ci-icon.yellow{ background: rgba(245,158,11,0.12);}
+    .ci-icon.red   { background: rgba(239,68,68,0.12); }
+    .ci-num  { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+    .ci-line { font-size: 0.73rem; color: var(--text-muted); margin-top: 1px; }
+    .ci-right { text-align: right; }
+    .ci-status {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.75rem; font-weight: 600; padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .ci-status.arrived   { background: rgba(34,197,94,0.15); color: var(--green); }
+    .ci-status.transit   { background: rgba(37,99,235,0.15); color: #60a5fa; }
+    .ci-status.customs   { background: rgba(245,158,11,0.15); color: var(--yellow); }
+    .ci-status.departed  { background: rgba(239,68,68,0.12); color: #f87171; }
+    .ci-eta  { font-size: 0.72rem; color: var(--text-muted); margin-top: 3px; }
+
+    .dash-mini-chart {
+      margin-top: 16px; padding: 14px;
+      background: rgba(37,99,235,0.05); border: 1px solid rgba(37,99,235,0.15);
+      border-radius: 10px;
+      display: flex; align-items: flex-end; gap: 8px;
+    }
+    .chart-info { flex: 1; }
+    .chart-label { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 4px; }
+    .chart-val { font-size: 1.4rem; font-weight: 800; color: var(--text); }
+    .chart-sub { font-size: 0.7rem; color: var(--green); margin-top: 2px; }
+    .mini-bars {
+      display: flex; align-items: flex-end; gap: 4px; height: 50px;
+    }
+    .mini-bar {
+      width: 8px; border-radius: 3px 3px 0 0;
+      background: linear-gradient(to top, #2563eb, #38bdf8);
+      opacity: 0.7;
+      animation: barGrow 1s ease-out forwards;
+      transform-origin: bottom;
+    }
+    @keyframes barGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+    /* Floating cards */
+    .float-card {
+      position: absolute; background: var(--bg-card2);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px 16px; font-size: 0.8rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      animation: floatAnim 3s ease-in-out infinite;
+    }
+    @keyframes floatAnim { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    .float-card:nth-child(2) { animation-delay: 1s; }
+    .float-card.top-right { top: -20px; right: -20px; width: 170px; }
+    .float-card.bottom-left { bottom: -20px; left: -20px; width: 180px; }
+    .fc-title { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 6px; }
+    .fc-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .fc-key { color: var(--text-muted); font-size: 0.75rem; }
+    .fc-val { font-weight: 600; font-size: 0.8rem; }
+    .fc-green { color: var(--green); }
+    .fc-blue  { color: var(--accent-2); }
+
+    /* ─────────────────────────────── TRUST BAR ─────────────────────────────── */
+    .trust-bar {
+      background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 28px 5%;
+    }
+    .trust-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
+    }
+    .trust-label { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; }
+    .trust-logos { display: flex; align-items: center; gap: 36px; flex-wrap: wrap; flex: 1; }
+    .trust-logo {
+      font-size: 0.85rem; font-weight: 700; color: var(--text-muted);
+      opacity: 0.55; letter-spacing: 0.5px; white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+    .trust-logo:hover { opacity: 0.9; }
+
+    /* ─────────────────────────────── PROBLEM / SOLUTION ─────────────────────────────── */
+    .section { padding: 90px 5%; }
+    .section-inner { max-width: 1280px; margin: 0 auto; }
+
+    .section-tag {
+      display: inline-block; font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.2px; color: var(--accent-2);
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 800; line-height: 1.25; letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+    .section-sub { color: var(--text-muted); font-size: 1rem; line-height: 1.7; max-width: 580px; }
+
+    .compare-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 50px;
+    }
+    .compare-card {
+      border-radius: 16px; padding: 32px;
+      border: 1px solid var(--border);
+    }
+    .compare-card.old { background: #0b1118; }
+    .compare-card.new { background: linear-gradient(145deg, #0b1a35, #0e2048); border-color: rgba(37,99,235,0.3); }
+
+    .compare-head {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 24px;
+    }
+    .compare-icon { font-size: 24px; }
+    .compare-head h3 { font-size: 1.1rem; font-weight: 700; }
+    .compare-head .badge-bad  { background: rgba(239,68,68,0.15); color: #f87171; font-size: 0.75rem; padding: 3px 10px; border-radius: 100px; font-weight: 600; }
+    .compare-head .badge-good { background: rgba(34,197,94,0.15); color: var(--green); font-size: 0.75rem; padding: 3px 10px; border-radius: 100px; font-weight: 600; }
+
+    .compare-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      margin-bottom: 14px; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;
+    }
+    .compare-item .ci-bullet { flex-shrink: 0; font-size: 16px; margin-top: 1px; }
+
+    /* ─────────────────────────────── FEATURES ─────────────────────────────── */
+    .features-bg { background: var(--bg-card); }
+
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 50px;
+    }
+    .feature-card {
+      background: var(--bg-dark); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature-card:hover { border-color: rgba(37,99,235,0.4); transform: translateY(-4px); }
+    .feature-card.featured {
+      background: linear-gradient(145deg, #0b1a35, #0e2248);
+      border-color: rgba(37,99,235,0.4);
+    }
+
+    .feat-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 18px;
+    }
+    .feat-icon.blue   { background: rgba(37,99,235,0.15); }
+    .feat-icon.cyan   { background: rgba(56,189,248,0.12); }
+    .feat-icon.green  { background: rgba(34,197,94,0.12); }
+    .feat-icon.purple { background: rgba(168,85,247,0.12); }
+    .feat-icon.orange { background: rgba(249,115,22,0.12); }
+    .feat-icon.teal   { background: rgba(20,184,166,0.12); }
+
+    .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+    .feature-card p  { font-size: 0.875rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* ─────────────────────────────── HOW IT WORKS ─────────────────────────────── */
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 50px;
+      position: relative;
+    }
+    .steps-grid::before {
+      content: '';
+      position: absolute; top: 32px; left: calc(12.5% + 20px); right: calc(12.5% + 20px);
+      height: 1px; background: linear-gradient(to right, transparent, #1e3a5f 20%, #1e3a5f 80%, transparent);
+    }
+
+    .step-card { text-align: center; padding: 0 16px; }
+    .step-num {
+      width: 64px; height: 64px; border-radius: 16px; margin: 0 auto 20px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; font-weight: 900; color: #fff;
+      box-shadow: 0 0 24px rgba(37,99,235,0.4);
+      position: relative; z-index: 1;
+    }
+    .step-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; }
+    .step-card p  { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ─────────────────────────────── PORTS & CARRIERS ─────────────────────────────── */
+    .ports-bg { background: var(--bg-card); }
+
+    .ports-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+      margin-top: 50px; align-items: start;
+    }
+
+    .port-list { display: flex; flex-direction: column; gap: 12px; }
+    .port-item {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--bg-dark); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 20px;
+      transition: border-color 0.2s;
+    }
+    .port-item:hover { border-color: rgba(37,99,235,0.4); }
+    .port-item.active { border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.05); }
+    .port-badge {
+      width: 42px; height: 42px; border-radius: 10px;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .port-info h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 2px; }
+    .port-info p  { font-size: 0.78rem; color: var(--text-muted); }
+    .port-status {
+      margin-left: auto; font-size: 0.72rem; font-weight: 600;
+      padding: 4px 10px; border-radius: 100px;
+    }
+    .port-status.live   { background: rgba(34,197,94,0.15); color: var(--green); }
+    .port-status.soon   { background: rgba(245,158,11,0.15); color: var(--yellow); }
+
+    .carrier-list {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    }
+    .carrier-item {
+      background: var(--bg-dark); border: 1px solid var(--border);
+      border-radius: 12px; padding: 18px; text-align: center;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .carrier-item:hover { border-color: rgba(37,99,235,0.4); transform: translateY(-2px); }
+    .carrier-logo { font-size: 28px; margin-bottom: 8px; }
+    .carrier-name { font-size: 0.8rem; font-weight: 700; color: var(--text); }
+    .carrier-code { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ─────────────────────────────── TESTIMONIALS ─────────────────────────────── */
+    .testimonials-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 50px;
+    }
+    .testi-card {
+      background: var(--bg-card2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px;
+    }
+    .testi-stars { color: #f59e0b; font-size: 0.9rem; margin-bottom: 16px; letter-spacing: 2px; }
+    .testi-text  { font-size: 0.875rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .testi-name  { font-size: 0.875rem; font-weight: 700; }
+    .testi-role  { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* ─────────────────────────────── PRICING ─────────────────────────────── */
+    .pricing-bg { background: var(--bg-card); }
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 50px;
+    }
+    .price-card {
+      background: var(--bg-dark); border: 1px solid var(--border);
+      border-radius: 20px; padding: 36px 28px;
+      position: relative; transition: transform 0.2s;
+    }
+    .price-card:hover { transform: translateY(-6px); }
+    .price-card.popular {
+      background: linear-gradient(145deg, #0b1a35, #0e2248);
+      border-color: var(--accent); box-shadow: 0 0 40px rgba(37,99,235,0.2);
+    }
+    .popular-badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      color: #fff; font-size: 0.75rem; font-weight: 700;
+      padding: 5px 16px; border-radius: 100px;
+      white-space: nowrap;
+    }
+    .price-plan  { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .price-amount { font-size: 2.4rem; font-weight: 900; margin-bottom: 4px; }
+    .price-amount span { font-size: 1rem; font-weight: 500; color: var(--text-muted); }
+    .price-period { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 24px; }
+    .price-features { list-style: none; margin-bottom: 28px; }
+    .price-features li {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 0.875rem; color: var(--text-muted); margin-bottom: 10px; line-height: 1.4;
+    }
+    .price-features li .check { color: var(--green); flex-shrink: 0; }
+    .price-divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+    /* ─────────────────────────────── CTA BANNER ─────────────────────────────── */
+    .cta-banner {
+      margin: 0 5% 90px;
+      background: linear-gradient(135deg, #0c1f4a, #0e2460);
+      border: 1px solid rgba(37,99,235,0.3);
+      border-radius: 24px; padding: 60px;
+      text-align: center; position: relative; overflow: hidden;
+      max-width: 1200px; margin-left: auto; margin-right: auto;
+    }
+    .cta-banner::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 600px 400px at 50% 50%, rgba(37,99,235,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-banner h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; margin-bottom: 16px; }
+    .cta-banner p  { color: var(--text-muted); font-size: 1rem; margin-bottom: 36px; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .cta-banner .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* ─────────────────────────────── FOOTER ─────────────────────────────── */
+    footer {
+      background: var(--bg-card); border-top: 1px solid var(--border);
+      padding: 60px 5% 30px;
+    }
+    .footer-grid {
+      max-width: 1280px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+      padding-bottom: 48px; border-bottom: 1px solid var(--border);
+    }
+    .footer-brand .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); margin-bottom: 16px; }
+    .footer-brand .logo .logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, #2563eb, #38bdf8); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .footer-brand .logo span { font-weight: 800; font-size: 1.1rem; }
+    .footer-brand .logo span em { color: var(--accent-2); font-style: normal; }
+    .footer-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px; }
+    .footer-contact { font-size: 0.82rem; color: var(--text-muted); line-height: 1.8; }
+    .footer-contact a { color: var(--accent-2); text-decoration: none; }
+    .footer-col h4 { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 16px; color: var(--text); }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 10px; }
+    .footer-col a { font-size: 0.85rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--text); }
+    .footer-bottom {
+      max-width: 1280px; margin: 28px auto 0;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.8rem; color: var(--text-muted); flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-bottom a:hover { color: var(--text); }
+    .footer-links { display: flex; gap: 20px; }
+
+    /* ─────────────────────────────── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 1024px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+      .hero-visual { display: none; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .steps-grid { grid-template-columns: 1fr 1fr; }
+      .steps-grid::before { display: none; }
+      .testimonials-grid { grid-template-columns: 1fr 1fr; }
+      .pricing-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      nav .nav-links { display: none; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .ports-grid { grid-template-columns: 1fr; }
+      .carrier-list { grid-template-columns: 1fr 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .cta-banner { padding: 40px 24px; }
+    }
+
+    /* ─────────────────────────────── UTILITIES ─────────────────────────────── */
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin-left: auto; margin-right: auto; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ NAVBAR ══════════════════════ -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="logo-icon">🚢</div>
+    <span>Logi<em>Track</em></span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#features">Tính năng</a></li>
+    <li><a href="#ports">Cảng & Hãng tàu</a></li>
+    <li><a href="#how-it-works">Cách hoạt động</a></li>
+    <li><a href="#pricing">Bảng giá</a></li>
+    <li><a href="#contact">Liên hệ</a></li>
+  </ul>
+
+  <div class="nav-actions">
+    <a href="login.html" class="btn btn-ghost">Đăng nhập</a>
+    <a href="register.html" class="btn btn-primary">Đăng ký</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════ HERO ══════════════════════ -->
+<section class="hero">
+
+  <!-- Diagonal wave layers (bottom-left → upper-right, ~35°) -->
+  <div class="wave-bg">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="wgTop" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#040c18" stop-opacity="1"/>
+          <stop offset="40%" stop-color="#040c18" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="wgLeft" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#040c18" stop-opacity="0.6"/>
+          <stop offset="35%" stop-color="#040c18" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Layer 6 – darkest fill (bottom) -->
+      <path fill="#061630" fill-opacity="1">
+        <animate attributeName="d" dur="6s" repeatCount="indefinite"
+          values="M-100,900 C200,820 420,740 660,700 C900,660 1100,650 1540,560 L1540,1000 L-100,1000 Z;
+                  M-100,840 C180,780 460,660 700,640 C940,620 1160,700 1540,620 L1540,1000 L-100,1000 Z;
+                  M-100,900 C200,820 420,740 660,700 C900,660 1100,650 1540,560 L1540,1000 L-100,1000 Z"
+          calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+      </path>
+
+      <!-- Layer 5 -->
+      <path fill="#071d40" fill-opacity="0.88">
+        <animate attributeName="d" dur="8s" repeatCount="indefinite"
+          values="M-100,780 C160,700 380,590 640,560 C880,530 1120,560 1540,440 L1540,1000 L-100,1000 Z;
+                  M-100,700 C200,640 440,510 680,490 C920,470 1180,510 1540,500 L1540,1000 L-100,1000 Z;
+                  M-100,780 C160,700 380,590 640,560 C880,530 1120,560 1540,440 L1540,1000 L-100,1000 Z"
+          calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+      </path>
+
+      <!-- Layer 4 -->
+      <path fill="#0a2450" fill-opacity="0.72">
+        <animate attributeName="d" dur="10s" repeatCount="indefinite"
+          values="M-100,650 C140,560 360,440 620,410 C860,380 1120,430 1540,310 L1540,1000 L-100,1000 Z;
+                  M-100,560 C180,490 420,360 660,340 C900,320 1160,380 1540,370 L1540,1000 L-100,1000 Z;
+                  M-100,650 C140,560 360,440 620,410 C860,380 1120,430 1540,310 L1540,1000 L-100,1000 Z"
+          calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+      </path>
+
+      <!-- Layer 3 -->
+      <path fill="#0d3068" fill-opacity="0.55">
+        <animate attributeName="d" dur="12s" repeatCount="indefinite"
+          values="M-100,520 C120,420 340,290 600,260 C840,230 1100,290 1540,180 L1540,1000 L-100,1000 Z;
+                  M-100,420 C160,340 400,210 640,190 C880,170 1140,240 1540,240 L1540,1000 L-100,1000 Z;
+                  M-100,520 C120,420 340,290 600,260 C840,230 1100,290 1540,180 L1540,1000 L-100,1000 Z"
+          calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+      </path>
+
+      <!-- Layer 2 -->
+      <path fill="#113c82" fill-opacity="0.40">
+        <animate attributeName="d" dur="15s" repeatCount="indefinite"
+          values="M-100,380 C100,280 320,150 580,110 C820,70 1080,130 1540,50 L1540,1000 L-100,1000 Z;
+                  M-100,280 C140,200 380,70 620,40 C860,10 1120,80 1540,110 L1540,1000 L-100,1000 Z;
+                  M-100,380 C100,280 320,150 580,110 C820,70 1080,130 1540,50 L1540,1000 L-100,1000 Z"
+          calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+      </path>
+
+      <!-- Layer 1 – lightest crest -->
+      <path fill="#1a4ea0" fill-opacity="0.22">
+        <animate attributeName="d" dur="18s" repeatCount="indefinite"
+          values="M-100,240 C80,140 300,10 560,-30 C800,-70 1060,-10 1540,-90 L1540,1000 L-100,1000 Z;
+                  M-100,140 C120,60 360,-70 600,-100 C840,-130 1100,-60 1540,-40 L1540,1000 L-100,1000 Z;
+                  M-100,240 C80,140 300,10 560,-30 C800,-70 1060,-10 1540,-90 L1540,1000 L-100,1000 Z"
+          calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+      </path>
+
+      <!-- Top fade overlay (keeps hero text readable) -->
+      <rect x="0" y="0" width="1440" height="900" fill="url(#wgTop)"/>
+      <!-- Left fade overlay -->
+      <rect x="0" y="0" width="1440" height="900" fill="url(#wgLeft)"/>
+    </svg>
+  </div>
+
+  <!-- Floating particles -->
+  <div class="wave-particles" id="waveParticles"></div>
+
+  <div class="hero-grid">
+    <!-- LEFT -->
+    <div>
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Hệ thống tracking realtime · Cảng Đà Nẵng
+      </div>
+
+      <h1 class="hero-title">
+        Theo dõi container<br/>& tàu biển<br/>
+        <span class="highlight">tập trung một nơi</span>
+      </h1>
+
+      <p class="hero-desc">
+        Không còn phải vào từng website cảng, nhập captcha thủ công hay chờ đợi.
+        LogiTrack tự động cập nhật trạng thái container & lịch tàu, giúp đội logistics
+        nắm bắt thông tin chính xác theo thời gian thực.
+      </p>
+
+      <!-- Quick search -->
+      <div class="search-bar">
+        <input type="text" placeholder="Nhập số container (VD: MSCU1234567) hoặc booking..." />
+        <button>🔍 Tra cứu ngay</button>
+      </div>
+
+      <div class="hero-cta">
+        <a href="#" class="btn btn-primary btn-lg">Bắt đầu miễn phí →</a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <strong>500+</strong>
+          <span>Công ty đang dùng</span>
+        </div>
+        <div class="hero-stat">
+          <strong>12,000+</strong>
+          <span>Container được theo dõi</span>
+        </div>
+        <div class="hero-stat">
+          <strong>99.9%</strong>
+          <span>Uptime hệ thống</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT – Dashboard mockup -->
+    <div class="hero-visual">
+      <div class="dashboard-mockup">
+        <div class="dash-header">
+          <div class="dash-dot" style="background:#ef4444"></div>
+          <div class="dash-dot" style="background:#f59e0b"></div>
+          <div class="dash-dot" style="background:#22c55e"></div>
+          <span class="dash-title">LogiTrack Dashboard – Container Manager</span>
+        </div>
+        <div class="dash-body">
+          <div class="dash-row-label">
+            <span>Số container</span>
+            <span>Hãng tàu</span>
+            <span>Trạng thái</span>
+          </div>
+
+          <div class="container-item">
+            <div class="ci-left">
+              <div class="ci-icon green">📦</div>
+              <div>
+                <div class="ci-num">MSCU 1234567</div>
+                <div class="ci-line">MSC · Booking: MSC-VN-8821</div>
+              </div>
+            </div>
+            <div class="ci-right">
+              <div class="ci-status arrived">● Đã cập bến</div>
+              <div class="ci-eta">Cảng Đà Nẵng · Cầu số 5</div>
+            </div>
+          </div>
+
+          <div class="container-item">
+            <div class="ci-left">
+              <div class="ci-icon blue">🚢</div>
+              <div>
+                <div class="ci-num">CMAU 9876543</div>
+                <div class="ci-line">CMA CGM · BKG-CM-3301</div>
+              </div>
+            </div>
+            <div class="ci-right">
+              <div class="ci-status transit">▶ Đang vận chuyển</div>
+              <div class="ci-eta">ETA: 20/04 · Còn 2 ngày</div>
+            </div>
+          </div>
+
+          <div class="container-item">
+            <div class="ci-left">
+              <div class="ci-icon yellow">🏛️</div>
+              <div>
+                <div class="ci-num">HLXU 5557891</div>
+                <div class="ci-line">Hapag-Lloyd · HL-DN-9902</div>
+              </div>
+            </div>
+            <div class="ci-right">
+              <div class="ci-status customs">⏳ Đang làm thủ tục</div>
+              <div class="ci-eta">Hải quan · Cảng Tiên Sa</div>
+            </div>
+          </div>
+
+          <div class="container-item">
+            <div class="ci-left">
+              <div class="ci-icon red">⚓</div>
+              <div>
+                <div class="ci-num">EVGU 3318820</div>
+                <div class="ci-line">Evergreen · EVG-2204-VN</div>
+              </div>
+            </div>
+            <div class="ci-right">
+              <div class="ci-status departed">✈ Đã rời cảng</div>
+              <div class="ci-eta">Khởi hành 18/04 · Singapore</div>
+            </div>
+          </div>
+
+          <div class="dash-mini-chart">
+            <div class="chart-info">
+              <div class="chart-label">Container cập bến tuần này</div>
+              <div class="chart-val">247</div>
+              <div class="chart-sub">↑ 18% so với tuần trước</div>
+            </div>
+            <div class="mini-bars">
+              <div class="mini-bar" style="height:28px;animation-delay:0.0s"></div>
+              <div class="mini-bar" style="height:36px;animation-delay:0.1s"></div>
+              <div class="mini-bar" style="height:22px;animation-delay:0.2s"></div>
+              <div class="mini-bar" style="height:44px;animation-delay:0.3s"></div>
+              <div class="mini-bar" style="height:38px;animation-delay:0.4s"></div>
+              <div class="mini-bar" style="height:50px;animation-delay:0.5s"></div>
+              <div class="mini-bar" style="height:42px;animation-delay:0.6s"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ TRUST BAR ══════════════════════ -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <span class="trust-label">Tin dùng bởi:</span>
+    <div class="trust-logos">
+      <span class="trust-logo">VINAFCO</span>
+      <span class="trust-logo">GEMADEPT</span>
+      <span class="trust-logo">TAN CANG</span>
+      <span class="trust-logo">TRANSIMEX</span>
+      <span class="trust-logo">SOTRANS</span>
+      <span class="trust-logo">VINALINES</span>
+      <span class="trust-logo">SNT LOGISTICS</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ PROBLEM / SOLUTION ══════════════════════ -->
+<section class="section">
+  <div class="section-inner">
+    <div class="text-center" style="margin-bottom:0">
+      <div class="section-tag">Vấn đề & Giải pháp</div>
+      <h2 class="section-title">Tại sao cần LogiTrack?</h2>
+      <p class="section-sub">
+        Đội logistics Việt Nam đang lãng phí hàng giờ mỗi ngày vào các tác vụ thủ công.
+        Chúng tôi giải quyết tận gốc vấn đề đó.
+      </p>
+    </div>
+
+    <div class="compare-grid">
+      <!-- OLD WAY -->
+      <div class="compare-card old">
+        <div class="compare-head">
+          <span class="compare-icon">😩</span>
+          <h3>Cách làm hiện tại</h3>
+          <span class="badge-bad">Kém hiệu quả</span>
+        </div>
+        <div class="compare-item"><span class="ci-bullet">❌</span> Phải mở 5–10 tab trình duyệt cho từng website cảng khác nhau</div>
+        <div class="compare-item"><span class="ci-bullet">❌</span> Nhập số container thủ công và giải captcha mỗi lần tra cứu</div>
+        <div class="compare-item"><span class="ci-bullet">❌</span> Không có thông báo tự động khi container thay đổi trạng thái</div>
+        <div class="compare-item"><span class="ci-bullet">❌</span> Dữ liệu phân tán, không có tổng quan toàn bộ lô hàng</div>
+        <div class="compare-item"><span class="ci-bullet">❌</span> Dễ bỏ lỡ hạn nộp phí lưu bãi dẫn đến phát sinh chi phí</div>
+        <div class="compare-item"><span class="ci-bullet">❌</span> Báo cáo phải làm tay trên Excel, mất nhiều thời gian</div>
+      </div>
+
+      <!-- NEW WAY -->
+      <div class="compare-card new">
+        <div class="compare-head">
+          <span class="compare-icon">🚀</span>
+          <h3>Với LogiTrack</h3>
+          <span class="badge-good">Tự động hoàn toàn</span>
+        </div>
+        <div class="compare-item"><span class="ci-bullet">✅</span> Một dashboard duy nhất – tất cả cảng, tất cả hãng tàu</div>
+        <div class="compare-item"><span class="ci-bullet">✅</span> Tự động cào dữ liệu, không cần nhập tay hay giải captcha</div>
+        <div class="compare-item"><span class="ci-bullet">✅</span> Nhận thông báo ngay qua Email / Zalo / Telegram khi có thay đổi</div>
+        <div class="compare-item"><span class="ci-bullet">✅</span> Tổng quan toàn bộ lô hàng theo thời gian thực</div>
+        <div class="compare-item"><span class="ci-bullet">✅</span> Cảnh báo phí lưu bãi, freetime tự động trước 24–48 giờ</div>
+        <div class="compare-item"><span class="ci-bullet">✅</span> Báo cáo tự động, xuất Excel / PDF chỉ 1 click</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ FEATURES ══════════════════════ -->
+<section class="section features-bg" id="features">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-tag">Tính năng</div>
+      <h2 class="section-title">Đầy đủ công cụ cho đội logistics</h2>
+      <p class="section-sub">
+        Từ tra cứu đơn lẻ đến quản lý hàng trăm container, LogiTrack đáp ứng mọi nhu cầu.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card featured">
+        <div class="feat-icon blue">🔄</div>
+        <h3>Tự động cập nhật realtime</h3>
+        <p>Hệ thống tự động kéo dữ liệu từ website cảng mỗi 15–30 phút. Trạng thái container luôn chính xác, không cần thao tác thủ công.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feat-icon cyan">🗺️</div>
+        <h3>Theo dõi vị trí tàu</h3>
+        <p>Xem vị trí tàu trực tiếp trên bản đồ AIS. Biết chính xác tàu đang ở đâu, tốc độ bao nhiêu và ETA về cảng.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feat-icon green">🔔</div>
+        <h3>Thông báo thông minh</h3>
+        <p>Nhận cảnh báo tức thì qua Email, Zalo OA hoặc Telegram khi container cập bến, thông quan, hoặc sắp hết freetime.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feat-icon purple">📊</div>
+        <h3>Dashboard tổng quan</h3>
+        <p>Nhìn toàn cảnh tất cả lô hàng: đang vận chuyển, chờ thông quan, tại bãi, đã lấy hàng – ngay trên một màn hình.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feat-icon orange">⚠️</div>
+        <h3>Cảnh báo phí lưu bãi</h3>
+        <p>Hệ thống tự tính freetime và cảnh báo trước 24–48 giờ khi sắp phát sinh phí lưu container tại cảng.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feat-icon teal">📁</div>
+        <h3>Quản lý booking & BL</h3>
+        <p>Lưu trữ và tra cứu toàn bộ lịch sử booking, B/L, hóa đơn theo từng lô hàng. Tìm kiếm siêu nhanh trong vài giây.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ HOW IT WORKS ══════════════════════ -->
+<section class="section" id="how-it-works">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-tag">Cách hoạt động</div>
+      <h2 class="section-title">Bắt đầu trong 3 phút</h2>
+      <p class="section-sub">
+        Không cần cài đặt phức tạp. Nhập container số và hệ thống tự làm mọi thứ còn lại.
+      </p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Tạo tài khoản</h3>
+        <p>Đăng ký miễn phí trong 30 giây. Không cần thẻ tín dụng. Dùng thử 14 ngày đầy đủ tính năng.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Thêm container</h3>
+        <p>Nhập số container, booking hoặc B/L. Có thể import hàng loạt bằng file Excel chỉ trong 1 click.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Hệ thống tự cập nhật</h3>
+        <p>LogiTrack tự động kéo dữ liệu từ website cảng và các hãng tàu, cập nhật trạng thái mỗi 15 phút.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h3>Nhận thông báo</h3>
+        <p>Cài đặt kênh thông báo (Email / Zalo / Telegram) và nhận cảnh báo ngay khi có thay đổi quan trọng.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ PORTS & CARRIERS ══════════════════════ -->
+<section class="section ports-bg" id="ports">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-tag">Phủ sóng</div>
+      <h2 class="section-title">Cảng biển & Hãng tàu được hỗ trợ</h2>
+      <p class="section-sub">
+        Bắt đầu với cảng Đà Nẵng, đang mở rộng ra toàn bộ cảng biển Việt Nam và các tuyến quốc tế.
+      </p>
+    </div>
+
+    <div class="ports-grid">
+      <!-- Ports -->
+      <div>
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:20px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;">Cảng biển</h3>
+        <div class="port-list">
+          <div class="port-item active">
+            <div class="port-badge">🏗️</div>
+            <div class="port-info">
+              <h4>Cảng Đà Nẵng (Tiên Sa)</h4>
+              <p>Cảng container lớn nhất miền Trung</p>
+            </div>
+            <span class="port-status live">● Đang live</span>
+          </div>
+          <div class="port-item active">
+            <div class="port-badge">⚓</div>
+            <div class="port-info">
+              <h4>Cảng Quy Nhơn</h4>
+              <p>Cảng trọng điểm khu vực Nam Trung Bộ</p>
+            </div>
+            <span class="port-status live">● Đang live</span>
+          </div>
+          <div class="port-item">
+            <div class="port-badge">🌊</div>
+            <div class="port-info">
+              <h4>Cảng Cát Lái (TP.HCM)</h4>
+              <p>Cảng container lớn nhất Việt Nam</p>
+            </div>
+            <span class="port-status soon">Sắp ra mắt</span>
+          </div>
+          <div class="port-item">
+            <div class="port-badge">🚢</div>
+            <div class="port-info">
+              <h4>Cảng Hải Phòng</h4>
+              <p>Cảng container lớn nhất miền Bắc</p>
+            </div>
+            <span class="port-status soon">Sắp ra mắt</span>
+          </div>
+          <div class="port-item">
+            <div class="port-badge">🏝️</div>
+            <div class="port-info">
+              <h4>Cảng Vũng Tàu (TCIT)</h4>
+              <p>Cảng nước sâu quốc tế</p>
+            </div>
+            <span class="port-status soon">Sắp ra mắt</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carriers -->
+      <div>
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:20px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;">Hãng tàu hỗ trợ</h3>
+        <div class="carrier-list">
+          <div class="carrier-item">
+            <div class="carrier-logo">🔵</div>
+            <div class="carrier-name">MSC</div>
+            <div class="carrier-code">Mediterranean</div>
+          </div>
+          <div class="carrier-item">
+            <div class="carrier-logo">🟦</div>
+            <div class="carrier-name">CMA CGM</div>
+            <div class="carrier-code">Pháp</div>
+          </div>
+          <div class="carrier-item">
+            <div class="carrier-logo">🟧</div>
+            <div class="carrier-name">Hapag-Lloyd</div>
+            <div class="carrier-code">Đức</div>
+          </div>
+          <div class="carrier-item">
+            <div class="carrier-logo">🟩</div>
+            <div class="carrier-name">Evergreen</div>
+            <div class="carrier-code">Đài Loan</div>
+          </div>
+          <div class="carrier-item">
+            <div class="carrier-logo">🔷</div>
+            <div class="carrier-name">COSCO</div>
+            <div class="carrier-code">Trung Quốc</div>
+          </div>
+          <div class="carrier-item">
+            <div class="carrier-logo">⬛</div>
+            <div class="carrier-name">ONE</div>
+            <div class="carrier-code">Nhật Bản</div>
+          </div>
+          <div class="carrier-item">
+            <div class="carrier-logo">🟫</div>
+            <div class="carrier-name">Yang Ming</div>
+            <div class="carrier-code">Đài Loan</div>
+          </div>
+          <div class="carrier-item">
+            <div class="carrier-logo">🔴</div>
+            <div class="carrier-name">OOCL</div>
+            <div class="carrier-code">Hong Kong</div>
+          </div>
+          <div class="carrier-item">
+            <div class="carrier-logo">🟡</div>
+            <div class="carrier-name">PIL</div>
+            <div class="carrier-code">Singapore</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ TESTIMONIALS ══════════════════════ -->
+<section class="section">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-tag">Khách hàng nói gì</div>
+      <h2 class="section-title">500+ doanh nghiệp logistics<br/>tin dùng LogiTrack</h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Trước đây mỗi ngày nhân viên phải mất 2–3 tiếng chỉ để tra cứu container. Giờ với LogiTrack, hệ thống tự làm, chúng tôi tiết kiệm gần 50% thời gian vận hành."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">NT</div>
+          <div>
+            <div class="testi-name">Nguyễn Thành</div>
+            <div class="testi-role">Giám đốc vận hành · Công ty TNHH Vận tải Miền Trung</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Tính năng cảnh báo freetime cực kỳ hữu ích. Chúng tôi đã tránh được mấy lần bị phạt phí lưu container chỉ vì không theo dõi kịp. ROI rõ ràng ngay tuần đầu."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">PH</div>
+          <div>
+            <div class="testi-name">Phạm Hương</div>
+            <div class="testi-role">Trưởng phòng xuất nhập khẩu · Seafood Export Co.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Giao diện rất trực quan, nhân viên mới học được trong 30 phút. Đặc biệt tính năng import container từ Excel giúp chúng tôi thêm cả trăm container chỉ trong vài giây."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">LM</div>
+          <div>
+            <div class="testi-name">Lê Minh</div>
+            <div class="testi-role">CEO · Đà Nẵng Freight Forwarder</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ PRICING ══════════════════════ -->
+<section class="section pricing-bg" id="pricing">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-tag">Bảng giá</div>
+      <h2 class="section-title">Giá rõ ràng, không phát sinh</h2>
+      <p class="section-sub">
+        Dùng thử miễn phí 14 ngày. Không cần thẻ tín dụng. Hủy bất cứ lúc nào.
+      </p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- FREE -->
+      <div class="price-card">
+        <div class="price-plan">Starter</div>
+        <div class="price-amount">Miễn phí</div>
+        <div class="price-period">Mãi mãi · Không cần thẻ</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Theo dõi tối đa 10 container</li>
+          <li><span class="check">✓</span> Cập nhật mỗi 60 phút</li>
+          <li><span class="check">✓</span> Thông báo qua Email</li>
+          <li><span class="check">✓</span> 1 cảng (Đà Nẵng)</li>
+          <li><span class="check">✓</span> Lịch sử 7 ngày</li>
+        </ul>
+        <a href="#" class="btn btn-ghost" style="width:100%;justify-content:center;">Bắt đầu miễn phí</a>
+      </div>
+
+      <!-- PRO -->
+      <div class="price-card popular">
+        <div class="popular-badge">⭐ Phổ biến nhất</div>
+        <div class="price-plan">Pro</div>
+        <div class="price-amount">990<span>K / tháng</span></div>
+        <div class="price-period">Thanh toán hàng tháng · Hóa đơn VAT</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Theo dõi tối đa 200 container</li>
+          <li><span class="check">✓</span> Cập nhật mỗi 15 phút</li>
+          <li><span class="check">✓</span> Thông báo Email + Zalo + Telegram</li>
+          <li><span class="check">✓</span> Tất cả cảng biển Việt Nam</li>
+          <li><span class="check">✓</span> Cảnh báo freetime & phí lưu bãi</li>
+          <li><span class="check">✓</span> Báo cáo tự động + xuất Excel</li>
+          <li><span class="check">✓</span> Lịch sử 90 ngày</li>
+          <li><span class="check">✓</span> Hỗ trợ ưu tiên 24/7</li>
+        </ul>
+        <a href="#" class="btn btn-primary" style="width:100%;justify-content:center;">Dùng thử 14 ngày →</a>
+      </div>
+
+      <!-- ENTERPRISE -->
+      <div class="price-card">
+        <div class="price-plan">Enterprise</div>
+        <div class="price-amount">Liên hệ</div>
+        <div class="price-period">Tùy chỉnh theo quy mô doanh nghiệp</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Container không giới hạn</li>
+          <li><span class="check">✓</span> Cập nhật realtime (5 phút)</li>
+          <li><span class="check">✓</span> API tích hợp ERP / TMS</li>
+          <li><span class="check">✓</span> Theo dõi tàu quốc tế</li>
+          <li><span class="check">✓</span> Báo cáo tùy chỉnh</li>
+          <li><span class="check">✓</span> Onboarding riêng + training</li>
+          <li><span class="check">✓</span> SLA 99.9% + dedicated support</li>
+        </ul>
+        <a href="#" class="btn btn-ghost" style="width:100%;justify-content:center;">Tư vấn ngay</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ CTA BANNER ══════════════════════ -->
+<section style="padding: 0 0 90px;">
+  <div class="cta-banner">
+    <h2>Sẵn sàng theo dõi<br/>container tự động chưa?</h2>
+    <p>Tham gia cùng 500+ doanh nghiệp logistics đang tiết kiệm hàng giờ mỗi ngày với LogiTrack.</p>
+    <div class="cta-actions">
+      <a href="#" class="btn btn-primary btn-lg">Bắt đầu miễn phí – 14 ngày →</a>
+      <a href="#" class="btn-outline">Đặt lịch demo với chuyên gia</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer id="contact">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a class="logo" href="#">
+        <div class="logo-icon">🚢</div>
+        <span>Logi<em>Track</em></span>
+      </a>
+      <p class="footer-desc">
+        Nền tảng theo dõi container & tàu biển tập trung cho logistics Việt Nam.
+        Tự động hóa quy trình, tiết kiệm thời gian, không bỏ lỡ hàng hóa.
+      </p>
+      <div class="footer-contact">
+        📍 Tầng 5, Tòa VietinBank, 36 Trần Quốc Toản, Hải Châu, Đà Nẵng<br/>
+        📞 <a href="tel:+84905123456">(+84) 905 123 456</a><br/>
+        ✉️ <a href="mailto:hello@logitrack.vn">hello@logitrack.vn</a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Sản phẩm</h4>
+      <ul>
+        <li><a href="#">Theo dõi container</a></li>
+        <li><a href="#">Tracking tàu biển</a></li>
+        <li><a href="#">Cảnh báo freetime</a></li>
+        <li><a href="#">Báo cáo & Analytics</a></li>
+        <li><a href="#">API & Tích hợp</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Công ty</h4>
+      <ul>
+        <li><a href="#">Về chúng tôi</a></li>
+        <li><a href="#">Khách hàng</a></li>
+        <li><a href="#">Blog & Tin tức</a></li>
+        <li><a href="#">Tuyển dụng</a></li>
+        <li><a href="#">Đối tác</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Hỗ trợ</h4>
+      <ul>
+        <li><a href="#">Trung tâm trợ giúp</a></li>
+        <li><a href="#">Video hướng dẫn</a></li>
+        <li><a href="#">Changelog</a></li>
+        <li><a href="#">Trạng thái hệ thống</a></li>
+        <li><a href="#">Liên hệ support</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2026 LogiTrack. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="terms.html">Điều khoản dịch vụ</a>
+      <a href="privacy.html">Chính sách bảo mật</a>
+      <a href="#">Cookie</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav background on scroll
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 20) {
+      nav.style.background = 'rgba(5,13,26,0.97)';
+    } else {
+      nav.style.background = 'rgba(5,13,26,0.85)';
+    }
+  });
+
+  // ── Wave particles ──
+  (function() {
+    const container = document.getElementById('waveParticles');
+    if (!container) return;
+    const count = 28;
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('div');
+      el.className = 'wp';
+      const size = Math.random() * 4 + 1.5;
+      const left = Math.random() * 100;
+      const bottom = Math.random() * 55;
+      const duration = Math.random() * 10 + 8;
+      const delay = Math.random() * 12;
+      const opacity = Math.random() * 0.5 + 0.2;
+      el.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${left}%; bottom:${bottom}%;
+        animation-duration:${duration}s;
+        animation-delay:-${delay}s;
+        opacity:${opacity};
+        background: ${Math.random() > 0.5 ? 'rgba(56,189,248,0.6)' : 'rgba(99,179,255,0.5)'};
+      `;
+      container.appendChild(el);
+    }
+  })();
+
+  // Animate elements on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.style.opacity = '1';
+        el.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feature-card, .step-card, .testi-card, .price-card, .port-item, .carrier-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

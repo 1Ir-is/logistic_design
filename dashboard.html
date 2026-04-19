@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – LogiTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-dark:    #050d1a;
+      --bg-card:    #0b1628;
+      --bg-card2:   #0e1e35;
+      --accent:     #2563eb;
+      --accent-2:   #38bdf8;
+      --text:       #f0f6ff;
+      --text-muted: #8ba3c7;
+      --border:     rgba(255,255,255,0.08);
+      --green:      #22c55e;
+      --yellow:     #f59e0b;
+      --red:        #ef4444;
+      --sidebar-w:  258px;
+      --nav-h:      62px;
+    }
+
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      display: flex; flex-direction: column;
+    }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+    /* ══════════════════ TOP NAVBAR ══════════════════ */
+    .topnav {
+      height: var(--nav-h); flex-shrink: 0;
+      display: flex; align-items: center; padding: 0 16px; gap: 12px;
+      background: rgba(11,22,40,0.96);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      z-index: 100; position: relative;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      flex-shrink: 0; width: calc(var(--sidebar-w) - 16px);
+    }
+    .btn-toggle {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      color: var(--text-muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 15px;
+      transition: all 0.18s; flex-shrink: 0;
+    }
+    .btn-toggle:hover { background: rgba(37,99,235,0.15); color: var(--text); }
+    .nav-logo {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--text);
+      font-weight: 800; font-size: 1.08rem;
+    }
+    .logo-box {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      display: flex; align-items: center; justify-content: center; font-size: 14px;
+    }
+    .nav-logo em { color: var(--accent-2); font-style: normal; }
+
+    .nav-search { flex: 1; position: relative; }
+    .nav-search input {
+      width: 100%; padding: 8px 12px 8px 36px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text); font-family: inherit; font-size: 0.875rem;
+      outline: none; transition: border-color 0.2s, background 0.2s;
+    }
+    .nav-search input:focus { border-color: rgba(37,99,235,0.4); background: rgba(37,99,235,0.05); }
+    .nav-search input::placeholder { color: var(--text-muted); }
+    .nav-search .ico { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--text-muted); pointer-events: none; }
+
+    .nav-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: 9px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none;
+      color: #fff; font-family: inherit; font-size: 0.84rem; font-weight: 700;
+      cursor: pointer; white-space: nowrap; transition: all 0.2s;
+      box-shadow: 0 0 18px rgba(37,99,235,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 0 28px rgba(37,99,235,0.5); }
+    .nav-icon-btn {
+      width: 34px; height: 34px; border-radius: 8px; position: relative;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      color: var(--text-muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 15px;
+      transition: all 0.18s;
+    }
+    .nav-icon-btn:hover { color: var(--text); background: rgba(255,255,255,0.08); }
+    .badge {
+      position: absolute; top: -4px; right: -4px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--red); color: #fff; font-size: 9px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--bg-card);
+    }
+    .user-chip {
+      display: flex; align-items: center; gap: 8px;
+      padding: 4px 10px 4px 4px; border-radius: 10px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      cursor: pointer; transition: background 0.18s;
+    }
+    .user-chip:hover { background: rgba(255,255,255,0.07); }
+    .avatar {
+      width: 26px; height: 26px; border-radius: 6px;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; color: #fff;
+    }
+    .user-chip .uname { font-size: 0.82rem; font-weight: 600; }
+    .user-chip .ucaret { font-size: 9px; color: var(--text-muted); margin-left: 2px; }
+
+    /* ══════════════════ LAYOUT ══════════════════ */
+    .layout { flex: 1; display: flex; overflow: hidden; }
+
+    /* ══════════════════ SIDEBAR ══════════════════ */
+    .sidebar {
+      width: var(--sidebar-w); flex-shrink: 0;
+      background: var(--bg-card); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      overflow-y: auto; overflow-x: hidden;
+      transition: width 0.22s ease;
+    }
+    .sidebar.collapsed { width: 64px; }
+    .sidebar.collapsed .sl, .sidebar.collapsed .slt,
+    .sidebar.collapsed .group-meta, .sidebar.collapsed .pcount,
+    .sidebar.collapsed .btn-addgroup { display: none; }
+    .sidebar.collapsed .group-hdr, .sidebar.collapsed .sidebar-item,
+    .sidebar.collapsed .sidebar-child { justify-content: center; padding-left: 0; padding-right: 0; }
+    .sidebar.collapsed .gi { margin: 0; }
+
+    .sb-section { padding: 10px 8px; }
+    .sb-section + .sb-section { border-top: 1px solid var(--border); }
+    .slt {
+      font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--text-muted); font-weight: 800; padding: 0 6px 6px; display: block;
+    }
+
+    .sidebar-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 8px 10px; border-radius: 10px;
+      color: var(--text-muted); font-size: 0.885rem; font-weight: 500;
+      cursor: pointer; text-decoration: none; transition: all 0.15s;
+      white-space: nowrap; overflow: hidden;
+    }
+    .sidebar-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .sidebar-item.active { background: rgba(37,99,235,0.14); color: var(--text); }
+    .sidebar-item .ii { font-size: 15px; flex-shrink: 0; width: 18px; text-align: center; }
+
+    /* Groups */
+    .sb-group { margin-bottom: 2px; }
+    .group-hdr {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px; border-radius: 10px;
+      cursor: pointer; transition: all 0.15s;
+      white-space: nowrap; overflow: hidden;
+    }
+    .group-hdr:hover { background: rgba(255,255,255,0.04); }
+    .gi {
+      width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800;
+    }
+    .gi.blue { background: rgba(37,99,235,0.2); color: #60a5fa; }
+    .gi.teal { background: rgba(20,184,166,0.2); color: #2dd4bf; }
+    .gi.violet { background: rgba(139,92,246,0.2); color: #a78bfa; }
+    .group-meta { flex: 1; min-width: 0; }
+    .gname { font-size: 0.87rem; font-weight: 700; color: var(--text); }
+    .gsub { font-size: 0.72rem; color: var(--text-muted); }
+    .gchevron { font-size: 9px; color: var(--text-muted); flex-shrink: 0; transition: transform 0.2s; }
+    .sb-group.open .gchevron { transform: rotate(90deg); }
+    .group-children { display: none; padding-left: 12px; }
+    .sb-group.open .group-children { display: block; }
+
+    .sidebar-child {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px; border-radius: 8px;
+      cursor: pointer; font-size: 0.84rem; color: var(--text-muted); font-weight: 500;
+      transition: all 0.15s; white-space: nowrap; overflow: hidden;
+    }
+    .sidebar-child:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .sidebar-child.active { background: rgba(37,99,235,0.12); color: var(--accent-2); }
+    .cdot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.15); flex-shrink: 0; }
+    .sidebar-child.active .cdot { background: var(--accent-2); }
+    .pcount {
+      margin-left: auto; font-size: 0.7rem; color: var(--text-muted);
+      background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 5px; flex-shrink: 0;
+    }
+
+    .btn-addgroup {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px; border-radius: 8px; cursor: pointer;
+      font-size: 0.8rem; color: var(--text-muted); font-weight: 500;
+      border: 1px dashed rgba(255,255,255,0.09); margin: 4px 0; transition: all 0.15s;
+    }
+    .btn-addgroup:hover { border-color: rgba(37,99,235,0.4); color: var(--accent-2); }
+
+    .sb-bottom { margin-top: auto; padding: 10px 8px; border-top: 1px solid var(--border); }
+
+    /* ══════════════════ MAIN ══════════════════ */
+    .main { flex: 1; overflow-y: auto; background: var(--bg-dark); }
+    .main-inner { padding: 22px 26px 48px; }
+
+    .page-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 18px; gap: 12px;
+    }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 0.77rem; color: var(--text-muted); margin-bottom: 4px;
+    }
+    .breadcrumb .bc-cur { color: var(--text); }
+    .breadcrumb .sep { opacity: 0.35; }
+    .page-title { font-size: 1.3rem; font-weight: 800; }
+
+    /* Stats */
+    .stats-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+    .stat-chip {
+      flex: 1; min-width: 140px;
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 14px; border-radius: 13px;
+      background: var(--bg-card); border: 1px solid var(--border);
+    }
+    .sc-icon {
+      width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 15px;
+    }
+    .sc-val { font-size: 1.25rem; font-weight: 800; line-height: 1; }
+    .sc-lbl { font-size: 0.73rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* Filter bar */
+    .filter-bar { display: flex; align-items: center; gap: 9px; margin-bottom: 16px; flex-wrap: wrap; }
+    .f-search { position: relative; flex: 1; min-width: 200px; }
+    .f-search input {
+      width: 100%; padding: 8px 12px 8px 32px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 9px; color: var(--text); font-family: inherit; font-size: 0.875rem; outline: none;
+      transition: border-color 0.2s;
+    }
+    .f-search input:focus { border-color: rgba(37,99,235,0.4); }
+    .f-search input::placeholder { color: var(--text-muted); }
+    .f-search .ico { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--text-muted); }
+    .f-select {
+      padding: 8px 12px; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 9px; color: var(--text); font-family: inherit; font-size: 0.875rem; outline: none; cursor: pointer;
+    }
+    .f-select option { background: var(--bg-card2); }
+
+    /* ══════════════════ BOOKING CARD ══════════════════ */
+    .booking-list { display: flex; flex-direction: column; gap: 10px; }
+    .booking-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden; transition: border-color 0.2s;
+    }
+    .booking-card:hover { border-color: rgba(37,99,235,0.22); }
+
+    /* Header row */
+    .bkghdr {
+      display: flex; align-items: stretch; cursor: pointer;
+      transition: background 0.15s; min-height: 64px;
+    }
+    .bkghdr:hover { background: rgba(255,255,255,0.015); }
+
+    .bh-chevron {
+      width: 40px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 10px; transition: color 0.2s;
+    }
+    .booking-card.open .bh-chevron { color: var(--accent-2); }
+
+    .bh-cell {
+      padding: 12px 14px; border-left: 1px solid var(--border);
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .bh-cell:first-of-type { border-left: none; }
+
+    .bh-bkg   { min-width: 145px; flex-shrink: 0; }
+    .bh-ship  { min-width: 175px; flex-shrink: 0; }
+    .bh-route { flex-direction: row; align-items: center; gap: 8px; min-width: 150px; flex-shrink: 0; }
+    .bh-tl    { flex: 1; min-width: 200px; }
+    .bh-cutoff{ min-width: 165px; flex-shrink: 0; }
+    .bh-count { min-width: 110px; flex-shrink: 0; align-items: center; }
+
+    .bkg-num { font-size: 0.9rem; font-weight: 800; margin-bottom: 3px; }
+    .bkg-sub { font-size: 0.73rem; color: var(--text-muted); }
+
+    .ship-name { font-size: 0.86rem; font-weight: 700; margin-bottom: 2px; }
+    .voyage    { font-size: 0.73rem; color: var(--text-muted); }
+
+    .port-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.8rem; font-weight: 700;
+      padding: 4px 9px; border-radius: 7px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    }
+    .rarrow { color: var(--text-muted); font-size: 12px; }
+
+    /* Ship timeline inside booking header */
+    .tl-wrap { }
+    .tl-label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); font-weight: 800; margin-bottom: 6px; }
+    .tl-row { display: flex; align-items: center; gap: 0; }
+    .tl-node { display: flex; flex-direction: column; align-items: center; min-width: 58px; }
+    .tl-node .nl { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700; }
+    .tl-node .nv { font-size: 0.78rem; font-weight: 700; }
+    .nv.actual { color: var(--green); }
+    .nv.eta    { color: var(--accent-2); }
+    .nv.pending{ color: var(--text-muted); }
+    .nv.atb    { color: #4ade80; }
+    .tl-conn { flex: 1; height: 1px; background: var(--border); min-width: 10px; margin-bottom: 10px; }
+    .tl-conn.done { background: rgba(34,197,94,0.3); }
+
+    /* Cutoff */
+    .co-row { display: flex; flex-direction: column; gap: 5px; }
+    .co-item { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; }
+    .co-lbl { color: var(--text-muted); font-weight: 600; min-width: 58px; }
+    .co-val { font-weight: 700; }
+    .co-val.expired { color: var(--red); text-decoration: line-through; opacity: 0.75; }
+    .co-val.soon    { color: var(--yellow); }
+
+    /* Count badge */
+    .cnt-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;
+    }
+    .cnt-badge.done    { background: rgba(34,197,94,0.1);  color: var(--green);   border: 1px solid rgba(34,197,94,0.2); }
+    .cnt-badge.partial { background: rgba(37,99,235,0.1);  color: #60a5fa;        border: 1px solid rgba(37,99,235,0.2); }
+    .cnt-badge.transit { background: rgba(245,158,11,0.1); color: var(--yellow);  border: 1px solid rgba(245,158,11,0.2); }
+
+    /* Booking body */
+    .booking-body { display: none; border-top: 1px solid var(--border); }
+    .booking-card.open .booking-body { display: block; }
+
+    /* Sub header row */
+    .body-head {
+      display: grid;
+      grid-template-columns: 195px 80px 1fr 155px 115px;
+      gap: 0; padding: 6px 14px 6px 54px;
+      background: rgba(255,255,255,0.015);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.07em;
+      color: var(--text-muted); font-weight: 800;
+    }
+    .body-head > div { padding: 0 8px; }
+
+    /* Container row */
+    .ct-row {
+      display: grid;
+      grid-template-columns: 195px 80px 1fr 155px 115px;
+      align-items: center; gap: 0;
+      padding: 10px 14px 10px 54px;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      transition: background 0.15s; cursor: pointer;
+    }
+    .ct-row:last-child { border-bottom: none; }
+    .ct-row:hover { background: rgba(37,99,235,0.05); }
+    .ct-row > div { padding: 0 8px; }
+
+    .ct-num  { font-size: 0.86rem; font-weight: 700; }
+    .ct-type { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
+
+    /* ══════════════════ 4-STAGE PROGRESS ══════════════════ */
+    .progress-track { display: flex; align-items: flex-start; }
+
+    .pt-stage {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 3px; flex-shrink: 0; width: 62px;
+    }
+    .pt-icon {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; transition: all 0.25s; position: relative;
+    }
+    .pt-icon.upcoming {
+      background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.07);
+      filter: grayscale(1); opacity: 0.45;
+    }
+    .pt-icon.active {
+      background: rgba(37,99,235,0.18); border: 1.5px solid rgba(37,99,235,0.5);
+      box-shadow: 0 0 10px rgba(37,99,235,0.3);
+    }
+    .pt-icon.active::after {
+      content: ''; position: absolute; inset: -5px; border-radius: 50%;
+      border: 1.5px solid rgba(37,99,235,0.25);
+      animation: pulsering 1.8s ease-out infinite;
+    }
+    .pt-icon.done {
+      background: rgba(34,197,94,0.12); border: 1.5px solid rgba(34,197,94,0.3);
+    }
+    @keyframes pulsering {
+      0%   { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(1.9); opacity: 0; }
+    }
+    .pt-lbl  { font-size: 0.6rem; color: var(--text-muted); text-align: center; line-height: 1.25; }
+    .pt-date { font-size: 0.6rem; font-weight: 700; text-align: center; color: var(--text-muted); white-space: nowrap; }
+    .pt-date.done   { color: rgba(74,222,128,0.85); }
+    .pt-date.active { color: #60a5fa; }
+
+    .pt-line {
+      flex: 1; height: 2px; background: rgba(255,255,255,0.07);
+      margin-top: 14px; min-width: 8px;
+    }
+    .pt-line.done { background: rgba(34,197,94,0.25); }
+
+    /* Status & customs badges */
+    .st-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 8px;
+      font-size: 0.74rem; font-weight: 700; white-space: nowrap;
+    }
+    .st-badge.arrived  { background: rgba(34,197,94,0.1);  color: var(--green);  border: 1px solid rgba(34,197,94,0.2);  }
+    .st-badge.transit  { background: rgba(37,99,235,0.1);  color: #60a5fa;       border: 1px solid rgba(37,99,235,0.2);  }
+    .st-badge.port     { background: rgba(245,158,11,0.1); color: var(--yellow); border: 1px solid rgba(245,158,11,0.2); }
+    .st-badge.cleared  { background: rgba(56,189,248,0.1); color: var(--accent-2); border: 1px solid rgba(56,189,248,0.2); }
+    .st-badge.delivered{ background: rgba(34,197,94,0.06); color: #86efac;       border: 1px solid rgba(34,197,94,0.12); }
+
+    .cq-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 9px; border-radius: 7px; font-size: 0.71rem; font-weight: 700;
+    }
+    .cq-badge.yes { background: rgba(34,197,94,0.08); color: #4ade80; }
+    .cq-badge.no  { background: rgba(245,158,11,0.08); color: #fbbf24; }
+    .cq-badge.na  { background: rgba(255,255,255,0.04); color: var(--text-muted); }
+
+    .ct-status { display: flex; flex-direction: column; gap: 4px; }
+
+    /* ══════════════════ RESPONSIVE ══════════════════ */
+    @media (max-width: 1100px) {
+      .bh-cutoff { display: none; }
+    }
+    @media (max-width: 920px) {
+      .sidebar { width: 64px; }
+      .sl, .slt, .group-meta, .pcount, .btn-addgroup { display: none !important; }
+      .group-hdr, .sidebar-item, .sidebar-child { justify-content: center; padding-left: 0; padding-right: 0; }
+      .gi { margin: 0; }
+      .nav-brand { width: 80px; }
+    }
+    @media (max-width: 680px) {
+      .main-inner { padding: 14px; }
+      .body-head { display: none; }
+      .ct-row { grid-template-columns: 1fr; gap: 10px; padding: 14px; }
+      .ct-row:hover { background: rgba(37,99,235,0.05); }
+      .bh-tl, .bh-cutoff { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ TOP NAVBAR ══════════════════════ -->
+<nav class="topnav">
+  <div class="nav-brand">
+    <button class="btn-toggle" onclick="toggleSidebar()" title="Thu/mở sidebar">☰</button>
+    <a href="index.html" class="nav-logo">
+      <div class="logo-box">🚢</div>
+      <span>Logi<em>Track</em></span>
+    </a>
+  </div>
+
+  <div class="nav-search">
+    <span class="ico">🔍</span>
+    <input type="text" placeholder="Tìm BKG, số container, tên tàu..." oninput="filterBookings(this.value)" />
+  </div>
+
+  <div class="nav-right">
+    <button class="btn-primary" onclick="alert('Chức năng thêm booking đang phát triển...')">＋ Thêm booking</button>
+    <div class="nav-icon-btn" title="Thông báo" onclick="alert('Trung tâm thông báo')">
+      🔔<div class="badge">3</div>
+    </div>
+    <div class="user-chip" title="Tài khoản">
+      <div class="avatar">N</div>
+      <span class="uname">Nguyễn Văn A</span>
+      <span class="ucaret">▾</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════ LAYOUT ══════════════════════ -->
+<div class="layout">
+
+  <!-- ════════ SIDEBAR ════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sb-section">
+      <span class="slt">Tổng quan</span>
+      <a class="sidebar-item" href="#">
+        <span class="ii">🏠</span><span class="sl">Dashboard</span>
+      </a>
+      <a class="sidebar-item active" href="#">
+        <span class="ii">📦</span><span class="sl">Tất cả booking</span>
+      </a>
+      <a class="sidebar-item" href="#">
+        <span class="ii">📅</span><span class="sl">Lịch tàu</span>
+      </a>
+    </div>
+
+    <div class="sb-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 6px 6px;">
+        <span class="slt" style="padding:0;">Dự án</span>
+        <span class="sl" style="cursor:pointer;font-size:14px;color:var(--accent-2);" title="Thêm nhóm">＋</span>
+      </div>
+
+      <!-- KH1 -->
+      <div class="sb-group open">
+        <div class="group-hdr" onclick="toggleGroup(this)">
+          <div class="gi blue">K1</div>
+          <div class="group-meta">
+            <div class="gname">KH1 – Công ty ABC</div>
+            <div class="gsub">2 dự án · 6 container</div>
+          </div>
+          <span class="gchevron">▶</span>
+        </div>
+        <div class="group-children">
+          <div class="sidebar-child active" onclick="setActive(this)">
+            <div class="cdot"></div>
+            <span class="sl">Dự án A – Hàng Mỹ</span>
+            <span class="pcount sl">4</span>
+          </div>
+          <div class="sidebar-child" onclick="setActive(this)">
+            <div class="cdot"></div>
+            <span class="sl">Dự án B – Hàng EU</span>
+            <span class="pcount sl">2</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- KH2 -->
+      <div class="sb-group">
+        <div class="group-hdr" onclick="toggleGroup(this)">
+          <div class="gi teal">K2</div>
+          <div class="group-meta">
+            <div class="gname">KH2 – Công ty XYZ</div>
+            <div class="gsub">1 dự án · 3 container</div>
+          </div>
+          <span class="gchevron">▶</span>
+        </div>
+        <div class="group-children">
+          <div class="sidebar-child" onclick="setActive(this)">
+            <div class="cdot"></div>
+            <span class="sl">Dự án C – Hàng Singapore</span>
+            <span class="pcount sl">3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- KH3 -->
+      <div class="sb-group">
+        <div class="group-hdr" onclick="toggleGroup(this)">
+          <div class="gi violet">K3</div>
+          <div class="group-meta">
+            <div class="gname">KH3 – Công ty DEF</div>
+            <div class="gsub">1 dự án · 2 container</div>
+          </div>
+          <span class="gchevron">▶</span>
+        </div>
+        <div class="group-children">
+          <div class="sidebar-child" onclick="setActive(this)">
+            <div class="cdot"></div>
+            <span class="sl">Dự án D – Nội địa</span>
+            <span class="pcount sl">2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-addgroup sl" onclick="alert('Thêm nhóm khách hàng mới...')">
+        <span>＋</span><span>Thêm nhóm khách hàng</span>
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <span class="slt">Công cụ</span>
+      <a class="sidebar-item" href="#"><span class="ii">📊</span><span class="sl">Báo cáo</span></a>
+      <a class="sidebar-item" href="#"><span class="ii">🔔</span><span class="sl">Cài đặt cảnh báo</span></a>
+      <a class="sidebar-item" href="#"><span class="ii">⚙️</span><span class="sl">Cài đặt</span></a>
+    </div>
+
+    <div class="sb-bottom">
+      <a class="sidebar-item" href="index.html"><span class="ii">🏠</span><span class="sl">Về trang chủ</span></a>
+      <a class="sidebar-item" href="login.html"><span class="ii">🚪</span><span class="sl">Đăng xuất</span></a>
+    </div>
+  </aside>
+
+  <!-- ════════ MAIN ════════ -->
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- Header -->
+      <div class="page-header">
+        <div>
+          <div class="breadcrumb">
+            <span>Dashboard</span><span class="sep">›</span>
+            <span>KH1 – Công ty ABC</span><span class="sep">›</span>
+            <span class="bc-cur">Dự án A – Hàng Mỹ</span>
+          </div>
+          <h1 class="page-title">Dự án A – Hàng Mỹ</h1>
+        </div>
+        <button class="btn-primary" onclick="alert('Thêm booking vào dự án này...')">＋ Thêm booking</button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-chip">
+          <div class="sc-icon" style="background:rgba(37,99,235,0.15);color:#60a5fa;">📦</div>
+          <div><div class="sc-val">6</div><div class="sc-lbl">Container đang theo dõi</div></div>
+        </div>
+        <div class="stat-chip">
+          <div class="sc-icon" style="background:rgba(34,197,94,0.12);color:var(--green);">✅</div>
+          <div><div class="sc-val" style="color:var(--green);">3</div><div class="sc-lbl">Đã giao thành công</div></div>
+        </div>
+        <div class="stat-chip">
+          <div class="sc-icon" style="background:rgba(245,158,11,0.12);color:var(--yellow);">⏳</div>
+          <div><div class="sc-val" style="color:var(--yellow);">2</div><div class="sc-lbl">Chờ thông quan</div></div>
+        </div>
+        <div class="stat-chip">
+          <div class="sc-icon" style="background:rgba(56,189,248,0.12);color:var(--accent-2);">🚢</div>
+          <div><div class="sc-val" style="color:var(--accent-2);">1</div><div class="sc-lbl">Đang vận chuyển</div></div>
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div class="filter-bar">
+        <div class="f-search">
+          <span class="ico">🔍</span>
+          <input type="text" placeholder="Tìm BKG, container..." oninput="filterBookings(this.value)" />
+        </div>
+        <select class="f-select">
+          <option value="">Tất cả trạng thái</option>
+          <option>Đang vận chuyển</option>
+          <option>Trên bãi cảng</option>
+          <option>Đã thông quan</option>
+          <option>Đã giao</option>
+        </select>
+        <select class="f-select">
+          <option value="">Tất cả cảng đến</option>
+          <option>Đà Nẵng (DAD)</option>
+          <option>Hải Phòng (HPH)</option>
+          <option>Cát Lái (SGN)</option>
+        </select>
+      </div>
+
+      <!-- ════ BOOKING LIST ════ -->
+      <div class="booking-list" id="bookingList">
+
+        <!-- ══ BOOKING 1: MSC-VN-8821 ══ -->
+        <div class="booking-card open" id="bkg-1">
+          <div class="bkghdr" onclick="toggleBooking('bkg-1')">
+            <div class="bh-chevron">▾</div>
+
+            <div class="bh-cell bh-bkg">
+              <div class="bkg-num">MSC-VN-8821</div>
+              <div class="bkg-sub">KH1 · Dự án A</div>
+            </div>
+
+            <div class="bh-cell bh-ship">
+              <div class="ship-name">MSC Antonia</div>
+              <div class="voyage">Voyage 2204N · Cảng Đà Nẵng</div>
+            </div>
+
+            <div class="bh-cell bh-route">
+              <div class="port-tag">🇺🇸 LAX</div>
+              <span class="rarrow">→</span>
+              <div class="port-tag">🇻🇳 DAD</div>
+            </div>
+
+            <div class="bh-cell bh-tl">
+              <div class="tl-wrap">
+                <div class="tl-label">Lịch tàu</div>
+                <div class="tl-row">
+                  <div class="tl-node">
+                    <div class="nl">ATB</div>
+                    <div class="nv atb">20/04 08:00</div>
+                  </div>
+                  <div class="tl-conn done"></div>
+                  <div class="tl-node">
+                    <div class="nl">ATD</div>
+                    <div class="nv atb">22/04 18:30</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bh-cell bh-cutoff">
+              <div class="co-row">
+                <div class="co-item">
+                  <span class="co-lbl">SI Cutoff</span>
+                  <span class="co-val expired">18/04 10:00</span>
+                </div>
+                <div class="co-item">
+                  <span class="co-lbl">CY Cutoff</span>
+                  <span class="co-val expired">17/04 16:00</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bh-cell bh-count">
+              <div class="cnt-badge partial">📦 2/4 xong</div>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="booking-body">
+            <div class="body-head">
+              <div>Số container</div>
+              <div>Loại</div>
+              <div>Tiến trình</div>
+              <div>Trạng thái</div>
+              <div>Thông quan</div>
+            </div>
+
+            <!-- Container 1 – Stage 4: Đã giao, Đã TQ -->
+            <div class="ct-row">
+              <div class="ct-num">MSCU 1234567</div>
+              <div class="ct-type">20'GP</div>
+              <div>
+                <div class="progress-track">
+                  <div class="pt-stage">
+                    <div class="pt-icon done">🚛</div>
+                    <div class="pt-lbl">Vào cảng</div>
+                    <div class="pt-date done">18/04</div>
+                  </div>
+                  <div class="pt-line done"></div>
+                  <div class="pt-stage">
+                    <div class="pt-icon done">🏗️</div>
+                    <div class="pt-lbl">Trong bãi</div>
+                    <div class="pt-date done">19/04</div>
+                  </div>
+                  <div class="pt-line done"></div>
+                  <div class="pt-stage">
+                    <div class="pt-icon done">✅</div>
+                    <div class="pt-lbl">Thông quan</div>
+                    <div class="pt-date done">20/04</div>
+                  </div>
+                  <div class="pt-line done"></div>
+                  <div class="pt-stage">
+                    <div class="pt-icon done">🚢</div>
+                    <div class="pt-lbl">Đã giao</div>
+                    <div class="pt-date done">21/04</div>
+                  </div>
+                </div>
+              </div>
+              <div class="ct-status">
+                <div class="st-badge delivered">● Đã giao hàng</div>
+              </div>
+              <div>
+                <div class="cq-badge yes">✓ Đã thông quan</div>
+              </div>
+            </div>
+
+            <!-- Container 2 – Stage 2: Trong bãi, Chưa TQ -->
+            <div class="ct-row">
+              <div class="ct-num">CMAU 9876543</div>
+              <div class="ct-type">40'HC</div>
+              <div>
+                <div class="progress-track">
+                  <div class="pt-stage">
+                    <div class="pt-icon done">🚛</div>
+                    <div class="pt-lbl">Vào cảng</div>
+                    <div class="pt-date done">19/04</div>
+                  </div>
+                  <div class="pt-line done"></div>
+                  <div class="pt-stage">
+                    <div class="pt-icon active">🏗️</div>
+                    <div class="pt-lbl">Trong bãi</div>
+                    <div class="pt-date active">20/04 10:30</div>
+                  </div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage">
+                    <div class="pt-icon upcoming">✅</div>
+                    <div class="pt-lbl">Thông quan</div>
+                    <div class="pt-date">—</div>
+                  </div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage">
+                    <div class="pt-icon upcoming">🚢</div>
+                    <div class="pt-lbl">Giao hàng</div>
+                    <div class="pt-date">—</div>
+                  </div>
+                </div>
+              </div>
+              <div class="ct-status">
+                <div class="st-badge port">⏳ Trên bãi cảng</div>
+              </div>
+              <div>
+                <div class="cq-badge no">⚠ Chưa thông quan</div>
+              </div>
+            </div>
+
+            <!-- Container 3 – Stage 3: Đã TQ, chờ giao -->
+            <div class="ct-row">
+              <div class="ct-num">HLXU 5557891</div>
+              <div class="ct-type">20'GP</div>
+              <div>
+                <div class="progress-track">
+                  <div class="pt-stage">
+                    <div class="pt-icon done">🚛</div>
+                    <div class="pt-lbl">Vào cảng</div>
+                    <div class="pt-date done">19/04</div>
+                  </div>
+                  <div class="pt-line done"></div>
+                  <div class="pt-stage">
+                    <div class="pt-icon done">🏗️</div>
+                    <div class="pt-lbl">Trong bãi</div>
+                    <div class="pt-date done">20/04</div>
+                  </div>
+                  <div class="pt-line done"></div>
+                  <div class="pt-stage">
+                    <div class="pt-icon active">✅</div>
+                    <div class="pt-lbl">Thông quan</div>
+                    <div class="pt-date active">20/04 14:00</div>
+                  </div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage">
+                    <div class="pt-icon upcoming">🚢</div>
+                    <div class="pt-lbl">Giao hàng</div>
+                    <div class="pt-date">—</div>
+                  </div>
+                </div>
+              </div>
+              <div class="ct-status">
+                <div class="st-badge cleared">✓ Chờ giao hàng</div>
+              </div>
+              <div>
+                <div class="cq-badge yes">✓ Đã thông quan</div>
+              </div>
+            </div>
+
+            <!-- Container 4 – Stage 1: Chưa vào cảng (tàu đang đến) -->
+            <div class="ct-row">
+              <div class="ct-num">EVGU 3318820</div>
+              <div class="ct-type">40'HC</div>
+              <div>
+                <div class="progress-track">
+                  <div class="pt-stage">
+                    <div class="pt-icon active">🚛</div>
+                    <div class="pt-lbl">Vào cảng</div>
+                    <div class="pt-date active">ETA 22/04</div>
+                  </div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage">
+                    <div class="pt-icon upcoming">🏗️</div>
+                    <div class="pt-lbl">Trong bãi</div>
+                    <div class="pt-date">—</div>
+                  </div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage">
+                    <div class="pt-icon upcoming">✅</div>
+                    <div class="pt-lbl">Thông quan</div>
+                    <div class="pt-date">—</div>
+                  </div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage">
+                    <div class="pt-icon upcoming">🚢</div>
+                    <div class="pt-lbl">Giao hàng</div>
+                    <div class="pt-date">—</div>
+                  </div>
+                </div>
+              </div>
+              <div class="ct-status">
+                <div class="st-badge transit">▶ Đang vận chuyển</div>
+              </div>
+              <div>
+                <div class="cq-badge na">— Chưa đến cảng</div>
+              </div>
+            </div>
+
+          </div><!-- /booking-body -->
+        </div><!-- /booking-1 -->
+
+
+        <!-- ══ BOOKING 2: CMA-CM-3301 ══ -->
+        <div class="booking-card" id="bkg-2">
+          <div class="bkghdr" onclick="toggleBooking('bkg-2')">
+            <div class="bh-chevron">▶</div>
+
+            <div class="bh-cell bh-bkg">
+              <div class="bkg-num">CMA-CM-3301</div>
+              <div class="bkg-sub">KH1 · Dự án B</div>
+            </div>
+
+            <div class="bh-cell bh-ship">
+              <div class="ship-name">CMA CGM Virtue</div>
+              <div class="voyage">Voyage 001E · Cảng Đà Nẵng</div>
+            </div>
+
+            <div class="bh-cell bh-route">
+              <div class="port-tag">🇩🇪 HAM</div>
+              <span class="rarrow">→</span>
+              <div class="port-tag">🇻🇳 DAD</div>
+            </div>
+
+            <div class="bh-cell bh-tl">
+              <div class="tl-wrap">
+                <div class="tl-label">Lịch tàu</div>
+                <div class="tl-row">
+                  <div class="tl-node">
+                    <div class="nl">ETA</div>
+                    <div class="nv eta">25/04</div>
+                  </div>
+                  <div class="tl-conn"></div>
+                  <div class="tl-node">
+                    <div class="nl">ETB</div>
+                    <div class="nv pending">26/04</div>
+                  </div>
+                  <div class="tl-conn"></div>
+                  <div class="tl-node">
+                    <div class="nl">ETD</div>
+                    <div class="nv pending">28/04</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bh-cell bh-cutoff">
+              <div class="co-row">
+                <div class="co-item">
+                  <span class="co-lbl">SI Cutoff</span>
+                  <span class="co-val expired">22/04 12:00</span>
+                </div>
+                <div class="co-item">
+                  <span class="co-lbl">CY Cutoff</span>
+                  <span class="co-val expired">21/04 08:00</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bh-cell bh-count">
+              <div class="cnt-badge done">📦 2/2 xong</div>
+            </div>
+          </div>
+
+          <div class="booking-body">
+            <div class="body-head">
+              <div>Số container</div>
+              <div>Loại</div>
+              <div>Tiến trình</div>
+              <div>Trạng thái</div>
+              <div>Thông quan</div>
+            </div>
+            <!-- 2 containers: all delivered -->
+            <div class="ct-row">
+              <div class="ct-num">TCKU 1234567</div>
+              <div class="ct-type">20'GP</div>
+              <div>
+                <div class="progress-track">
+                  <div class="pt-stage"><div class="pt-icon done">🚛</div><div class="pt-lbl">Vào cảng</div><div class="pt-date done">15/04</div></div>
+                  <div class="pt-line done"></div>
+                  <div class="pt-stage"><div class="pt-icon done">🏗️</div><div class="pt-lbl">Trong bãi</div><div class="pt-date done">16/04</div></div>
+                  <div class="pt-line done"></div>
+                  <div class="pt-stage"><div class="pt-icon done">✅</div><div class="pt-lbl">Thông quan</div><div class="pt-date done">17/04</div></div>
+                  <div class="pt-line done"></div>
+                  <div class="pt-stage"><div class="pt-icon done">🚢</div><div class="pt-lbl">Đã giao</div><div class="pt-date done">18/04</div></div>
+                </div>
+              </div>
+              <div class="ct-status"><div class="st-badge delivered">● Đã giao hàng</div></div>
+              <div><div class="cq-badge yes">✓ Đã thông quan</div></div>
+            </div>
+            <div class="ct-row">
+              <div class="ct-num">TCKU 2345678</div>
+              <div class="ct-type">40'HC</div>
+              <div>
+                <div class="progress-track">
+                  <div class="pt-stage"><div class="pt-icon done">🚛</div><div class="pt-lbl">Vào cảng</div><div class="pt-date done">16/04</div></div>
+                  <div class="pt-line done"></div>
+                  <div class="pt-stage"><div class="pt-icon done">🏗️</div><div class="pt-lbl">Trong bãi</div><div class="pt-date done">17/04</div></div>
+                  <div class="pt-line done"></div>
+                  <div class="pt-stage"><div class="pt-icon done">✅</div><div class="pt-lbl">Thông quan</div><div class="pt-date done">18/04</div></div>
+                  <div class="pt-line done"></div>
+                  <div class="pt-stage"><div class="pt-icon done">🚢</div><div class="pt-lbl">Đã giao</div><div class="pt-date done">19/04</div></div>
+                </div>
+              </div>
+              <div class="ct-status"><div class="st-badge delivered">● Đã giao hàng</div></div>
+              <div><div class="cq-badge yes">✓ Đã thông quan</div></div>
+            </div>
+          </div>
+        </div><!-- /booking-2 -->
+
+
+        <!-- ══ BOOKING 3: EVG-2204-VN ══ -->
+        <div class="booking-card" id="bkg-3">
+          <div class="bkghdr" onclick="toggleBooking('bkg-3')">
+            <div class="bh-chevron">▶</div>
+
+            <div class="bh-cell bh-bkg">
+              <div class="bkg-num">EVG-2204-VN</div>
+              <div class="bkg-sub">KH2 · Dự án C</div>
+            </div>
+
+            <div class="bh-cell bh-ship">
+              <div class="ship-name">Evergreen Ever Max</div>
+              <div class="voyage">Voyage 0123 · Cảng Tiên Sa</div>
+            </div>
+
+            <div class="bh-cell bh-route">
+              <div class="port-tag">🇸🇬 SGP</div>
+              <span class="rarrow">→</span>
+              <div class="port-tag">🇻🇳 DAD</div>
+            </div>
+
+            <div class="bh-cell bh-tl">
+              <div class="tl-wrap">
+                <div class="tl-label">Lịch tàu</div>
+                <div class="tl-row">
+                  <div class="tl-node">
+                    <div class="nl">ETA</div>
+                    <div class="nv eta">27/04</div>
+                  </div>
+                  <div class="tl-conn"></div>
+                  <div class="tl-node">
+                    <div class="nl">ETB</div>
+                    <div class="nv pending">28/04</div>
+                  </div>
+                  <div class="tl-conn"></div>
+                  <div class="tl-node">
+                    <div class="nl">ETD</div>
+                    <div class="nv pending">30/04</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bh-cell bh-cutoff">
+              <div class="co-row">
+                <div class="co-item">
+                  <span class="co-lbl">SI Cutoff</span>
+                  <span class="co-val soon">24/04 17:00</span>
+                </div>
+                <div class="co-item">
+                  <span class="co-lbl">CY Cutoff</span>
+                  <span class="co-val soon">23/04 12:00</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bh-cell bh-count">
+              <div class="cnt-badge transit">🚢 0/3 xong</div>
+            </div>
+          </div>
+
+          <div class="booking-body">
+            <div class="body-head">
+              <div>Số container</div>
+              <div>Loại</div>
+              <div>Tiến trình</div>
+              <div>Trạng thái</div>
+              <div>Thông quan</div>
+            </div>
+            <!-- 3 containers: all in transit -->
+            <div class="ct-row">
+              <div class="ct-num">EVGU 1111111</div>
+              <div class="ct-type">20'GP</div>
+              <div>
+                <div class="progress-track">
+                  <div class="pt-stage"><div class="pt-icon active">🚛</div><div class="pt-lbl">Vào cảng</div><div class="pt-date active">ETA 27/04</div></div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage"><div class="pt-icon upcoming">🏗️</div><div class="pt-lbl">Trong bãi</div><div class="pt-date">—</div></div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage"><div class="pt-icon upcoming">✅</div><div class="pt-lbl">Thông quan</div><div class="pt-date">—</div></div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage"><div class="pt-icon upcoming">🚢</div><div class="pt-lbl">Giao hàng</div><div class="pt-date">—</div></div>
+                </div>
+              </div>
+              <div class="ct-status"><div class="st-badge transit">▶ Đang vận chuyển</div></div>
+              <div><div class="cq-badge na">— Chưa đến cảng</div></div>
+            </div>
+            <div class="ct-row">
+              <div class="ct-num">EVGU 2222222</div>
+              <div class="ct-type">40'GP</div>
+              <div>
+                <div class="progress-track">
+                  <div class="pt-stage"><div class="pt-icon active">🚛</div><div class="pt-lbl">Vào cảng</div><div class="pt-date active">ETA 27/04</div></div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage"><div class="pt-icon upcoming">🏗️</div><div class="pt-lbl">Trong bãi</div><div class="pt-date">—</div></div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage"><div class="pt-icon upcoming">✅</div><div class="pt-lbl">Thông quan</div><div class="pt-date">—</div></div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage"><div class="pt-icon upcoming">🚢</div><div class="pt-lbl">Giao hàng</div><div class="pt-date">—</div></div>
+                </div>
+              </div>
+              <div class="ct-status"><div class="st-badge transit">▶ Đang vận chuyển</div></div>
+              <div><div class="cq-badge na">— Chưa đến cảng</div></div>
+            </div>
+            <div class="ct-row">
+              <div class="ct-num">EVGU 3333333</div>
+              <div class="ct-type">40'HC</div>
+              <div>
+                <div class="progress-track">
+                  <div class="pt-stage"><div class="pt-icon active">🚛</div><div class="pt-lbl">Vào cảng</div><div class="pt-date active">ETA 27/04</div></div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage"><div class="pt-icon upcoming">🏗️</div><div class="pt-lbl">Trong bãi</div><div class="pt-date">—</div></div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage"><div class="pt-icon upcoming">✅</div><div class="pt-lbl">Thông quan</div><div class="pt-date">—</div></div>
+                  <div class="pt-line"></div>
+                  <div class="pt-stage"><div class="pt-icon upcoming">🚢</div><div class="pt-lbl">Giao hàng</div><div class="pt-date">—</div></div>
+                </div>
+              </div>
+              <div class="ct-status"><div class="st-badge transit">▶ Đang vận chuyển</div></div>
+              <div><div class="cq-badge na">— Chưa đến cảng</div></div>
+            </div>
+          </div>
+        </div><!-- /booking-3 -->
+
+      </div><!-- /booking-list -->
+
+    </div><!-- /main-inner -->
+  </main>
+</div><!-- /layout -->
+
+<script>
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('collapsed');
+  }
+
+  function toggleGroup(hdr) {
+    hdr.closest('.sb-group').classList.toggle('open');
+  }
+
+  function setActive(el) {
+    document.querySelectorAll('.sidebar-child').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function toggleBooking(id) {
+    const card = document.getElementById(id);
+    const open = card.classList.toggle('open');
+    card.querySelector('.bh-chevron').textContent = open ? '▾' : '▶';
+  }
+
+  function filterBookings(q) {
+    q = q.toLowerCase();
+    document.querySelectorAll('.booking-card').forEach(card => {
+      card.style.display = !q || card.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>

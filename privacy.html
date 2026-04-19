@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chính sách bảo mật – LogiTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-dark: #050d1a;
+      --bg-card: #0b1628;
+      --bg-card2: #0e1e35;
+      --accent: #2563eb;
+      --accent-2: #38bdf8;
+      --text: #f0f6ff;
+      --text-muted: #8ba3c7;
+      --border: rgba(255,255,255,0.08);
+      --yellow: #f59e0b;
+      --green: #22c55e;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, #050d1a 0%, #07162b 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .bg-glow {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 700px 520px at 85% 18%, rgba(37,99,235,0.12) 0%, transparent 68%),
+        radial-gradient(ellipse 540px 420px at 12% 30%, rgba(56,189,248,0.09) 0%, transparent 62%);
+    }
+
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 68px;
+      background: rgba(5,13,26,0.86);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--text); text-decoration: none;
+      font-weight: 800; font-size: 1.15rem;
+    }
+    .logo-icon {
+      width: 34px; height: 34px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      font-size: 16px;
+    }
+    .nav-logo em { color: var(--accent-2); font-style: normal; }
+    .nav-links {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .nav-link {
+      color: var(--text-muted); text-decoration: none; font-size: 0.92rem; font-weight: 600;
+    }
+    .nav-link:hover { color: var(--text); }
+    .nav-cta {
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 40px; padding: 0 16px; border-radius: 10px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff; text-decoration: none; font-size: 0.9rem; font-weight: 700;
+      box-shadow: 0 0 24px rgba(37,99,235,0.26);
+    }
+
+    main {
+      position: relative; z-index: 1;
+      max-width: 1180px; margin: 0 auto; padding: 44px 24px 72px;
+    }
+    .hero {
+      display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px;
+      margin-bottom: 28px;
+    }
+    .hero-card, .summary-card, .content-card, .toc-card {
+      background: rgba(11,22,40,0.88);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: 0 28px 60px rgba(0,0,0,0.32);
+    }
+    .hero-card {
+      padding: 34px 34px 30px;
+      background:
+        linear-gradient(145deg, rgba(15,34,67,0.96), rgba(10,22,42,0.96)),
+        radial-gradient(circle at top right, rgba(245,158,11,0.10), transparent 45%);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 12px; border-radius: 999px;
+      background: rgba(245,158,11,0.10); color: #ffd38a;
+      border: 1px solid rgba(245,158,11,0.18);
+      font-size: 0.78rem; font-weight: 700; margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.08; margin-bottom: 14px;
+    }
+    .hero p {
+      color: var(--text-muted); line-height: 1.75; font-size: 0.98rem; max-width: 700px;
+    }
+    .summary-card {
+      padding: 28px;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 18px;
+    }
+    .summary-title {
+      font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);
+      font-weight: 800;
+    }
+    .summary-list {
+      display: grid; gap: 12px;
+    }
+    .summary-item {
+      padding: 14px 16px; border-radius: 14px;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    }
+    .summary-item strong { display: block; margin-bottom: 4px; font-size: 0.92rem; }
+    .summary-item span { color: var(--text-muted); font-size: 0.84rem; line-height: 1.55; }
+
+    .legal-grid {
+      display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 24px;
+      align-items: start;
+    }
+    .toc-card {
+      position: sticky; top: 92px; padding: 22px;
+    }
+    .toc-title {
+      font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 14px; font-weight: 800;
+    }
+    .toc-links {
+      display: grid; gap: 10px;
+    }
+    .toc-links a {
+      color: var(--text-muted); text-decoration: none; padding: 10px 12px; border-radius: 12px;
+      background: rgba(255,255,255,0.02); border: 1px solid transparent; font-size: 0.92rem;
+    }
+    .toc-links a:hover {
+      color: var(--text); border-color: var(--border); background: rgba(245,158,11,0.08);
+    }
+
+    .content-card {
+      padding: 30px;
+    }
+    .meta-row {
+      display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px;
+    }
+    .meta-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 12px; border-radius: 999px; font-size: 0.8rem;
+      color: var(--text-muted); background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    }
+    .section {
+      padding-top: 8px; margin-bottom: 28px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+    .section:first-of-type { border-top: none; padding-top: 0; }
+    .section h2 {
+      font-size: 1.18rem; margin-bottom: 12px;
+    }
+    .section p {
+      color: var(--text-muted); line-height: 1.8; margin-bottom: 12px;
+    }
+    .section ul {
+      padding-left: 20px; color: var(--text-muted); line-height: 1.8;
+    }
+    .section li + li { margin-top: 8px; }
+    .notice {
+      margin-top: 14px; padding: 16px 18px; border-radius: 16px;
+      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.18);
+      color: #ffe2ab;
+    }
+
+    footer {
+      position: relative; z-index: 1;
+      max-width: 1180px; margin: 0 auto; padding: 0 24px 36px;
+      color: var(--text-muted); font-size: 0.84rem;
+    }
+    .footer-card {
+      padding: 18px 22px; border-radius: 18px;
+      background: rgba(11,22,40,0.88); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .footer-links {
+      display: flex; gap: 14px; flex-wrap: wrap;
+    }
+    .footer-links a { color: var(--accent-2); text-decoration: none; }
+
+    @media (max-width: 980px) {
+      .hero, .legal-grid { grid-template-columns: 1fr; }
+      .toc-card { position: static; }
+    }
+
+    @media (max-width: 680px) {
+      nav { padding: 0 18px; }
+      .nav-links { gap: 10px; }
+      .nav-link { display: none; }
+      main { padding: 28px 16px 52px; }
+      .hero-card, .summary-card, .content-card, .toc-card { border-radius: 18px; }
+      .hero-card, .summary-card, .content-card, .toc-card { padding-left: 20px; padding-right: 20px; }
+      .content-card { padding-top: 24px; padding-bottom: 24px; }
+      .footer-card { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">🔒</div>
+      <span>Logi<em>Track</em></span>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="terms.html">Điều khoản dịch vụ</a>
+      <a class="nav-link" href="login.html">Đăng nhập</a>
+      <a class="nav-cta" href="register.html">Tạo tài khoản</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-card">
+        <div class="hero-badge">Quyền riêng tư · Cập nhật 19/04/2026</div>
+        <h1>Chính sách bảo mật của LogiTrack</h1>
+        <p>
+          Chính sách này giải thích cách LogiTrack thu thập, sử dụng, lưu trữ, chia sẻ và bảo vệ dữ liệu cá nhân cũng như dữ liệu vận hành khi bạn sử dụng website, dashboard, form đăng ký, cảnh báo tự động và các tính năng tích hợp.
+        </p>
+      </div>
+
+      <aside class="summary-card">
+        <div class="summary-title">Bạn cần biết</div>
+        <div class="summary-list">
+          <div class="summary-item">
+            <strong>Dữ liệu nào được thu thập</strong>
+            <span>Thông tin tài khoản, lịch sử sử dụng, danh sách container, cài đặt cảnh báo và log truy cập phục vụ bảo mật.</span>
+          </div>
+          <div class="summary-item">
+            <strong>Dùng để làm gì</strong>
+            <span>Vận hành dịch vụ, gửi cảnh báo, hỗ trợ kỹ thuật, cải thiện trải nghiệm và đáp ứng nghĩa vụ pháp lý.</span>
+          </div>
+          <div class="summary-item">
+            <strong>Quyền của bạn</strong>
+            <span>Bạn có thể yêu cầu truy cập, chỉnh sửa, xuất hoặc xóa dữ liệu theo phạm vi pháp luật và hợp đồng cho phép.</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="legal-grid">
+      <aside class="toc-card">
+        <div class="toc-title">Nội dung</div>
+        <div class="toc-links">
+          <a href="#thu-thap">1. Loại dữ liệu được thu thập</a>
+          <a href="#muc-dich">2. Mục đích sử dụng dữ liệu</a>
+          <a href="#chia-se">3. Chia sẻ dữ liệu</a>
+          <a href="#luu-tru">4. Lưu trữ và bảo mật</a>
+          <a href="#quyen">5. Quyền của người dùng</a>
+          <a href="#cookie">6. Cookie và phân tích</a>
+          <a href="#cap-nhat">7. Cập nhật chính sách</a>
+          <a href="#lien-he">8. Liên hệ</a>
+        </div>
+      </aside>
+
+      <article class="content-card">
+        <div class="meta-row">
+          <div class="meta-pill">Hiệu lực từ: 19/04/2026</div>
+          <div class="meta-pill">Phạm vi: website, đăng nhập, đăng ký, dashboard, API</div>
+          <div class="meta-pill">Hỗ trợ: privacy@logitrack.vn</div>
+        </div>
+
+        <section class="section" id="thu-thap">
+          <h2>1. Loại dữ liệu được thu thập</h2>
+          <p>
+            Khi bạn sử dụng LogiTrack, chúng tôi có thể thu thập các loại dữ liệu sau: thông tin nhận dạng cơ bản như họ tên, email công việc, số điện thoại; dữ liệu tổ chức như tên công ty, phòng ban; dữ liệu nghiệp vụ như số container, booking, cảnh báo và cấu hình theo dõi; cùng với log hệ thống như địa chỉ IP, thiết bị, phiên truy cập và hành vi sử dụng các tính năng.
+          </p>
+          <p>
+            Một số dữ liệu được bạn cung cấp trực tiếp, một số được sinh ra trong quá trình sử dụng dịch vụ và một số có thể được đồng bộ từ tích hợp được bạn cho phép.
+          </p>
+        </section>
+
+        <section class="section" id="muc-dich">
+          <h2>2. Mục đích sử dụng dữ liệu</h2>
+          <ul>
+            <li>Xác thực tài khoản, phân quyền người dùng và duy trì an toàn đăng nhập.</li>
+            <li>Tra cứu trạng thái container, lịch tàu, ETA và phát hành cảnh báo tự động.</li>
+            <li>Hỗ trợ kỹ thuật, xử lý sự cố, phản hồi yêu cầu và chăm sóc khách hàng.</li>
+            <li>Phân tích hiệu năng, phát hiện truy cập bất thường và cải thiện tính năng.</li>
+            <li>Thực hiện nghĩa vụ lưu trữ, báo cáo hoặc hợp tác với cơ quan có thẩm quyền khi pháp luật yêu cầu.</li>
+          </ul>
+        </section>
+
+        <section class="section" id="chia-se">
+          <h2>3. Chia sẻ dữ liệu</h2>
+          <p>
+            LogiTrack không bán dữ liệu cá nhân cho bên thứ ba. Chúng tôi chỉ chia sẻ dữ liệu trong các trường hợp cần thiết để vận hành dịch vụ, bao gồm nhà cung cấp hạ tầng, công cụ gửi email, dịch vụ xác thực, đối tác hỗ trợ kỹ thuật hoặc khi có yêu cầu hợp pháp từ cơ quan nhà nước.
+          </p>
+          <div class="notice">
+            Khi tích hợp với nguồn dữ liệu cảng, hãng tàu hoặc webhook nội bộ của doanh nghiệp, dữ liệu chỉ được truyền trong phạm vi cấu hình mà bạn hoặc tổ chức của bạn đã chủ động bật.
+          </div>
+        </section>
+
+        <section class="section" id="luu-tru">
+          <h2>4. Lưu trữ và bảo mật</h2>
+          <p>
+            Dữ liệu được lưu trữ trên hạ tầng có kiểm soát truy cập, sao lưu định kỳ và cơ chế giám sát bảo mật phù hợp với quy mô dịch vụ. Chúng tôi áp dụng các biện pháp kỹ thuật và tổ chức hợp lý như mã hóa khi truyền, quản lý quyền truy cập và ghi log sự kiện để giảm thiểu rủi ro rò rỉ dữ liệu.
+          </p>
+          <p>
+            Mặc dù vậy, không có hệ thống nào an toàn tuyệt đối. Người dùng cũng cần bảo vệ thông tin đăng nhập, bật xác thực phù hợp và chỉ cấp quyền cho nhân sự cần thiết.
+          </p>
+        </section>
+
+        <section class="section" id="quyen">
+          <h2>5. Quyền của người dùng</h2>
+          <p>
+            Tùy theo vai trò tài khoản và quy định pháp luật áp dụng, bạn có thể yêu cầu truy cập, cập nhật, xuất dữ liệu, giới hạn xử lý hoặc yêu cầu xóa một phần dữ liệu cá nhân. Một số yêu cầu có thể bị giới hạn nếu dữ liệu đó cần được giữ lại để phục vụ bảo mật, kế toán, nghĩa vụ hợp đồng hoặc yêu cầu của cơ quan quản lý.
+          </p>
+        </section>
+
+        <section class="section" id="cookie">
+          <h2>6. Cookie và phân tích</h2>
+          <p>
+            Website và dashboard có thể sử dụng cookie hoặc cơ chế lưu trữ cục bộ tương tự để duy trì phiên đăng nhập, ghi nhớ tùy chọn giao diện, đo lường hiệu năng và phát hiện truy cập bất thường. Bạn có thể điều chỉnh trình duyệt để từ chối một số cookie, tuy nhiên điều này có thể ảnh hưởng đến trải nghiệm hoặc khả năng đăng nhập.
+          </p>
+        </section>
+
+        <section class="section" id="cap-nhat">
+          <h2>7. Cập nhật chính sách</h2>
+          <p>
+            LogiTrack có thể cập nhật chính sách bảo mật để phản ánh thay đổi về pháp luật, sản phẩm hoặc quy trình xử lý dữ liệu. Khi có thay đổi quan trọng, chúng tôi sẽ thông báo qua website, email tài khoản quản trị hoặc trong dashboard trước khi chính sách mới có hiệu lực.
+          </p>
+        </section>
+
+        <section class="section" id="lien-he">
+          <h2>8. Liên hệ</h2>
+          <p>
+            Nếu bạn cần yêu cầu truy cập dữ liệu, phản ánh về quyền riêng tư hoặc hỏi thêm về cách LogiTrack xử lý thông tin, vui lòng liên hệ privacy@logitrack.vn hoặc gửi yêu cầu qua kênh hỗ trợ khách hàng.
+          </p>
+        </section>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-card">
+      <span>© 2026 LogiTrack. Chính sách này phục vụ bản demo frontend và có thể được tinh chỉnh theo quy trình pháp chế thực tế.</span>
+      <div class="footer-links">
+        <a href="terms.html">Điều khoản dịch vụ</a>
+        <a href="login.html">Đăng nhập</a>
+        <a href="register.html">Đăng ký</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
