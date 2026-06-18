@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mockup Apex - Báo cáo tháng dự án và nhân sự</title>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <style>
+    :root {
+      --bg: #f3f5f9; --surface: #fff; --border: #e7ebf3; --text: #111827; --text-2: #4b5563; --text-3: #8a93a5;
+      --accent: #1e3a8a; --accent-soft: #e7edff; --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: "Manrope", "Segoe UI", Arial, sans-serif; }
+    .page { max-width: 1520px; margin: 18px auto 34px; padding: 0 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 10px 24px rgba(15, 23, 42, .04); }
+    .topbar { padding: 16px 18px; margin-bottom: 14px; display: flex; justify-content: space-between; gap: 12px; }
+    .title h1 { margin: 0; font-size: 22px; letter-spacing: -.02em; }
+    .title p { margin: 4px 0 0; color: var(--text-2); font-size: 13px; }
+    .btns { display: flex; flex-wrap: wrap; gap: 8px; }
+    .btn { border: 1px solid #d6deea; background: #fff; color: var(--text-2); padding: 9px 12px; border-radius: 9px; font-size: 12px; font-weight: 700; }
+    .btn.primary { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .btn.warn { border-color: #f3d9a5; background: #fff5e4; color: #734c0d; }
+    .filters { padding: 14px 16px; margin-bottom: 14px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
+    .f { display: flex; flex-direction: column; gap: 6px; }
+    .f label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--text-3); }
+    .f select { border: 1px solid #d6deea; border-radius: 8px; padding: 9px 10px; font-size: 13px; color: var(--text); background: #fff; }
+    .kpi-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+    .kpi { padding: 16px; position: relative; overflow: hidden; }
+    .kpi::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: linear-gradient(90deg, #2d8659, #5165b8); }
+    .kpi .label { font-size: 11px; color: var(--text-3); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; }
+    .kpi .value { font-size: 30px; font-weight: 800; line-height: 1; }
+    .kpi .value span { font-size: 15px; color: var(--text-3); font-weight: 600; }
+    .meta { margin-top: 8px; font-size: 12px; color: var(--text-2); }
+    .section-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--text-3); margin: 14px 0 10px; }
+    .chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+    .chart-card { padding: 14px; min-height: 300px; position: relative; overflow: hidden; }
+    .chart-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, #1e3a8a, #5165b8); }
+    .chart-head { display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px dashed var(--border); padding-bottom: 8px; margin-bottom: 6px; }
+    .chart-title { margin: 0; font-size: 14px; font-weight: 800; }
+    .chart-sub { margin: 0; font-size: 12px; color: var(--text-2); }
+    .badge { padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+    .plot-note { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+    .chart-host { width: 100%; height: 210px; }
+    .table-wrap { display: grid; grid-template-columns: 1.3fr 1fr; gap: 12px; margin-bottom: 14px; }
+    .table-card { padding: 14px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { border-bottom: 1px solid var(--border); padding: 8px 6px; text-align: left; }
+    th { font-size: 11px; text-transform: uppercase; color: var(--text-3); letter-spacing: .03em; }
+    .data-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .data-chip { border: 1px solid var(--border); border-radius: 10px; padding: 8px; background: #fbfcff; }
+    .data-chip .k { font-size: 10px; text-transform: uppercase; color: var(--text-3); font-weight: 700; }
+    .data-chip .v { font-size: 14px; font-weight: 800; margin-top: 4px; }
+    @media (max-width: 1280px) { .filters { grid-template-columns: repeat(3, minmax(0, 1fr)); } .kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } .chart-grid, .table-wrap, .data-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="card topbar">
+      <div class="title">
+        <h1>Màn hình báo cáo tháng dự án và nhân sự</h1>
+        <p>Kỳ báo cáo: Tháng 04/2026 · Dữ liệu hiển thị: 6 tháng gần nhất</p>
+      </div>
+      <div class="btns">
+        <button class="btn">Xem lịch sử xuất</button>
+        <button class="btn warn">Xóa báo cáo</button>
+        <button class="btn">Tạo lại báo cáo</button>
+        <button class="btn primary">Xuất Excel + Lưu mốc dữ liệu</button>
+      </div>
+    </section>
+
+    <section class="card filters">
+      <div class="f"><label>Tháng</label><select><option>04</option></select></div>
+      <div class="f"><label>Năm</label><select><option>2026</option></select></div>
+      <div class="f"><label>Đơn vị</label><select><option>Tất cả đơn vị</option></select></div>
+      <div class="f"><label>Quản lý dự án</label><select><option>Tất cả quản lý</option></select></div>
+      <div class="f"><label>Trạng thái dự án</label><select><option>Đang vận hành</option></select></div>
+      <div class="f"><label>Nhóm dự án</label><select><option>Tất cả nhóm</option></select></div>
+      <div class="f"><label>&nbsp;</label><button class="btn primary">Tạo báo cáo</button></div>
+    </section>
+
+    <section class="kpi-row">
+      <article class="card kpi"><div class="label">Tổng dự án active</div><div class="value">23 <span>dự án</span></div><div class="meta">Trong đó 5 dự án rủi ro trung bình/cao</div></article>
+      <article class="card kpi"><div class="label">Tổng nhân sự active</div><div class="value">128 <span>người</span></div><div class="meta">Assigned 84.3% · Unassigned 15.7%</div></article>
+      <article class="card kpi"><div class="label">Kế hoạch MM / Thực tế MM</div><div class="value">312 / 298 <span>MM</span></div><div class="meta">Chênh -14 MM so với kế hoạch</div></article>
+      <article class="card kpi"><div class="label">Doanh thu / Lợi nhuận</div><div class="value">9.2 / 2.4 <span>tỷ</span></div><div class="meta">Biên lợi nhuận 26.1%</div></article>
+    </section>
+
+    <section class="card table-card" style="margin-bottom:14px">
+      <div class="chart-head"><div><h3 class="chart-title">Dữ liệu tổng hợp đang hiển thị trên biểu đồ</h3><p class="chart-sub">Các chỉ số đã map đủ cho cả dự án và nhân sự</p></div><span class="badge">Snapshot Tháng 04/2026</span></div>
+      <div class="data-grid">
+        <div class="data-chip"><div class="k">Nhu cầu MM</div><div class="v">324</div></div>
+        <div class="data-chip"><div class="k">Năng lực MM</div><div class="v">301</div></div>
+        <div class="data-chip"><div class="k">Độ lệch MM</div><div class="v">+23</div></div>
+        <div class="data-chip"><div class="k">Cam kết MM</div><div class="v">315</div></div>
+        <div class="data-chip"><div class="k">Rảnh / Một phần / Đủ</div><div class="v">20 / 34 / 74</div></div>
+        <div class="data-chip"><div class="k">Dự án lệch lớn nhất</div><div class="v">Retail BI (+8 MM)</div></div>
+      </div>
+    </section>
+
+    <h2 class="section-title">Nhóm biểu đồ báo cáo tháng</h2>
+    <section class="chart-grid">
+      <article class="card chart-card"><div class="chart-head"><div><h3 class="chart-title">1) Chênh lệch MM theo tháng</h3><p class="chart-sub">Độ lệch giữa MM thực tế và MM kế hoạch theo từng tháng</p></div><span class="badge">Cột</span></div><div id="chart-demand-capacity" class="chart-host"></div><div class="plot-note">Độ lệch âm là thiếu so với kế hoạch</div></article>
+      <article class="card chart-card"><div class="chart-head"><div><h3 class="chart-title">2) Tỷ lệ hoàn thành MM theo tháng</h3><p class="chart-sub">Tỷ lệ Actual MM / Planned MM (%) theo từng tháng</p></div><span class="badge">Đường</span></div><div id="chart-plan-actual" class="chart-host"></div><div class="plot-note">Đo hiệu suất thực thi theo kỳ tháng</div></article>
+      <article class="card chart-card"><div class="chart-head"><div><h3 class="chart-title">3) MM kế hoạch vs thực tế theo dự án (tháng hiện tại)</h3><p class="chart-sub">So sánh Planned MM và Actual MM theo từng dự án</p></div><span class="badge">Cột nhóm</span></div><div id="chart-project-share" class="chart-host"></div><div class="plot-note">Xác định dự án kéo giảm hiệu suất chung</div></article>
+      <article class="card chart-card"><div class="chart-head"><div><h3 class="chart-title">4) Top dự án lệch MM lớn nhất</h3><p class="chart-sub">Xếp hạng dự án theo độ lệch MM tuyệt đối</p></div><span class="badge">Cột ngang</span></div><div id="chart-role-mix" class="chart-host"></div><div class="plot-note">Ưu tiên xử lý/điều phối cho dự án lệch lớn</div></article>
+      <article class="card chart-card"><div class="chart-head"><div><h3 class="chart-title">5) Cơ cấu nhân sự theo dự án</h3><p class="chart-sub">Tỷ trọng nhân sự tham gia theo nhóm dự án</p></div><span class="badge">Tròn</span></div><div id="chart-finance" class="chart-host"></div><div class="plot-note">Dự án khác gộp nhóm Khác</div></article>
+      <article class="card chart-card"><div class="chart-head"><div><h3 class="chart-title">6) Số lượng nhân sự assign theo dự án</h3><p class="chart-sub">Headcount assign của từng dự án trong tháng</p></div><span class="badge">Cột</span></div><div id="chart-risk-issue" class="chart-host"></div><div class="plot-note">So sánh quy mô nhân sự giữa các dự án</div></article>
+    </section>
+
+    <section class="table-wrap">
+      <article class="card table-card">
+        <div class="chart-head"><div><h3 class="chart-title">Bảng tổng hợp theo dự án</h3><p class="chart-sub">Dùng để đối chiếu chi tiết với biểu đồ</p></div><span class="badge">Có phân trang</span></div>
+        <table><thead><tr><th>Dự án</th><th>Nhân sự</th><th>Kế hoạch MM</th><th>Thực tế MM</th><th>Độ lệch MM</th><th>Biên lợi nhuận</th><th>Rủi ro</th></tr></thead><tbody>
+          <tr><td>Zen ERP</td><td>24</td><td>62</td><td>58</td><td>-4</td><td>31.2%</td><td>Thấp</td></tr>
+          <tr><td>HR Core</td><td>18</td><td>46</td><td>41</td><td>-5</td><td>26.7%</td><td>Trung bình</td></tr>
+          <tr><td>Retail BI</td><td>29</td><td>74</td><td>66</td><td>-8</td><td>18.9%</td><td>Cao</td></tr>
+          <tr><td>CRM Plus</td><td>16</td><td>38</td><td>40</td><td>+2</td><td>29.4%</td><td>Thấp</td></tr>
+        </tbody></table>
+      </article>
+      <article class="card table-card">
+        <div class="chart-head"><div><h3 class="chart-title">Lịch sử xuất báo cáo</h3><p class="chart-sub">Mỗi lần xuất lưu một mốc dữ liệu</p></div><span class="badge">Không chỉnh sửa</span></div>
+        <table><thead><tr><th>Mã mốc</th><th>Thời điểm xuất</th><th>Người xuất</th><th>Kỳ</th></tr></thead><tbody>
+          <tr><td>SNAP-202604-0012</td><td>07/05/2026 09:12</td><td>Minh H.</td><td>04/2026</td></tr>
+          <tr><td>SNAP-202604-0011</td><td>06/05/2026 16:45</td><td>Khanh T.</td><td>04/2026</td></tr>
+        </tbody></table>
+      </article>
+    </section>
+  </div>
+  <script>
+    const months = ["11/2025", "12/2025", "01/2026", "02/2026", "03/2026", "04/2026"];
+    const base = { chart: { toolbar: { show: false }, foreColor: "#64748b", fontFamily: "Manrope, Segoe UI, Arial, sans-serif" }, dataLabels: { enabled: false }, stroke: { curve: "smooth", width: 2.5 }, grid: { borderColor: "#e8edf5", strokeDashArray: 4 }, legend: { position: "top", horizontalAlign: "left", fontSize: "12px" } };
+    // Chart 1: Chênh lệch MM theo tháng
+    new ApexCharts(document.querySelector("#chart-demand-capacity"), { ...base, chart: { ...base.chart, type: "bar", height: 210 }, series: [{ name: "Chênh lệch MM", data: [-13,-10,-13,-14,-15,-14] }], xaxis: { categories: months }, colors: ["#c0392b"], plotOptions: { bar: { borderRadius: 4, columnWidth: "46%" } }, yaxis: { title: { text: "MM" } } }).render();
+    // Chart 2: Tỷ lệ hoàn thành MM theo tháng
+    new ApexCharts(document.querySelector("#chart-plan-actual"), { ...base, chart: { ...base.chart, type: "line", height: 210 }, series: [{ name: "Tỷ lệ hoàn thành (%)", data: [95.1,96.4,95.4,95.3,95.1,95.5] }], xaxis: { categories: months }, colors: ["#15803d"], yaxis: { title: { text: "%" }, min: 90, max: 100 }, stroke: { width: 3, curve: "smooth" } }).render();
+    // Chart 3: MM kế hoạch vs thực tế theo dự án
+    new ApexCharts(document.querySelector("#chart-project-share"), { ...base, chart: { ...base.chart, type: "bar", height: 210 }, series: [{ name: "Kế hoạch MM", data: [74,62,58,46,38] }, { name: "Thực tế MM", data: [66,58,61,41,40] }], xaxis: { categories: ["Retail BI","Zen ERP","Data Lake","HR Core","CRM Plus"] }, colors: ["#8fb4ff","#1f3a56"], plotOptions: { bar: { borderRadius: 4, columnWidth: "45%" } }, yaxis: { title: { text: "MM" } } }).render();
+    // Chart 4: Top dự án lệch MM lớn nhất
+    new ApexCharts(document.querySelector("#chart-role-mix"), { ...base, chart: { ...base.chart, type: "bar", height: 210 }, series: [{ name: "Độ lệch MM tuyệt đối", data: [8,6,5,4,3] }], xaxis: { categories: ["Retail BI","HR Core","Zen ERP","Mobile App","Data Lake"] }, colors: ["#b23a2a"], plotOptions: { bar: { horizontal: true, borderRadius: 4, barHeight: "52%" } }, yaxis: { labels: { maxWidth: 200 } } }).render();
+    // Chart 5: Cơ cấu nhân sự theo dự án
+    new ApexCharts(document.querySelector("#chart-finance"), { ...base, chart: { ...base.chart, type: "donut", height: 210 }, series: [46,26,18,10], labels: ["Zen ERP","Retail BI","HR Core","Khác"], colors: ["#2d8659","#c07d12","#5165b8","#93a4bf"], legend: { position: "right", fontSize: "12px" } }).render();
+    // Chart 6: Số lượng nhân sự assign theo dự án
+    new ApexCharts(document.querySelector("#chart-risk-issue"), { ...base, chart: { ...base.chart, type: "bar", height: 210 }, series: [{ name: "Số nhân sự assign", data: [29,24,18,16,13,11] }], xaxis: { categories: ["Retail BI","Zen ERP","Data Lake","HR Core","CRM Plus","Mobile App"] }, colors: ["#3d5a80"], plotOptions: { bar: { borderRadius: 4, columnWidth: "44%" } }, yaxis: { title: { text: "Nhân sự" } } }).render();
+  </script>
+</body>
+</html>

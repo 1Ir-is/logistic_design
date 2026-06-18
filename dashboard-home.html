@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tong quan Dashboard - LogiTrack</title>
+  <title>Tổng quan Dashboard – LogiTrack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -13,7 +13,6 @@
     :root {
       --bg-dark: #050d1a;
       --bg-card: #0b1628;
-      --bg-card2: #0e1e35;
       --accent: #2563eb;
       --accent-2: #38bdf8;
       --text: #f0f6ff;
@@ -35,223 +34,130 @@
       flex-direction: column;
     }
 
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
 
     .topnav {
-      height: var(--nav-h);
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0 16px;
+      height: var(--nav-h); flex-shrink: 0;
+      display: flex; align-items: center; gap: 12px; padding: 0 16px;
       background: rgba(11,22,40,0.96);
       border-bottom: 1px solid var(--border);
       backdrop-filter: blur(12px);
       z-index: 10;
     }
     .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: calc(var(--sidebar-w) - 16px);
-      flex-shrink: 0;
+      display: flex; align-items: center; gap: 10px;
+      width: calc(var(--sidebar-w) - 16px); flex-shrink: 0;
     }
     .btn-toggle {
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
+      width: 34px; height: 34px; border-radius: 8px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      color: var(--text-muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 15px;
     }
     .btn-toggle:hover { color: var(--text); background: rgba(37,99,235,0.15); }
     .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: var(--text);
-      font-size: 1.08rem;
-      font-weight: 800;
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--text);
+      font-size: 1.08rem; font-weight: 800;
     }
     .logo-box {
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
+      width: 30px; height: 30px; border-radius: 8px;
       background: linear-gradient(135deg, #2563eb, #38bdf8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 14px;
     }
     .nav-logo em { color: var(--accent-2); font-style: normal; }
 
     .nav-search { flex: 1; position: relative; }
     .nav-search input {
-      width: 100%;
-      padding: 8px 12px 8px 36px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-      font-size: 0.875rem;
-      outline: none;
+      width: 100%; padding: 8px 12px 8px 36px;
+      border-radius: 10px; border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04); color: var(--text);
+      font-family: inherit; font-size: 0.875rem; outline: none;
     }
     .nav-search input:focus { border-color: rgba(37,99,235,0.45); background: rgba(37,99,235,0.06); }
     .nav-search input::placeholder { color: var(--text-muted); }
     .nav-search .ico {
-      position: absolute;
-      left: 11px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      font-size: 13px;
+      position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+      color: var(--text-muted); font-size: 13px;
     }
 
     .nav-right { display: flex; align-items: center; gap: 8px; }
     .btn-primary {
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      border-radius: 9px;
+      border: none; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: 9px;
       background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #fff;
-      font-size: 0.84rem;
-      font-weight: 700;
+      color: #fff; font-family: inherit; font-size: 0.84rem; font-weight: 700;
       box-shadow: 0 0 18px rgba(37,99,235,0.32);
-      text-decoration: none;
-      white-space: nowrap;
+      text-decoration: none; white-space: nowrap;
     }
     .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 0 28px rgba(37,99,235,0.52); }
     .nav-icon-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.05);
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      position: relative;
+      width: 34px; height: 34px; border-radius: 8px;
+      border: 1px solid var(--border); background: rgba(255,255,255,0.05);
+      color: var(--text-muted); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; position: relative;
     }
-    .nav-icon-btn:hover { color: var(--text); background: rgba(255,255,255,0.08); }
     .badge {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      font-size: 9px;
-      font-weight: 700;
-      color: #fff;
-      background: var(--red);
-      border: 2px solid var(--bg-card);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: absolute; top: -4px; right: -4px;
+      width: 16px; height: 16px; border-radius: 50%;
+      font-size: 9px; font-weight: 700; color: #fff;
+      background: var(--red); border: 2px solid var(--bg-card);
+      display: flex; align-items: center; justify-content: center;
     }
     .user-chip {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 10px 4px 4px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.04);
+      display: flex; align-items: center; gap: 8px;
+      padding: 4px 10px 4px 4px; border-radius: 10px;
+      border: 1px solid var(--border); background: rgba(255,255,255,0.04);
       cursor: pointer;
     }
     .avatar {
-      width: 26px;
-      height: 26px;
-      border-radius: 6px;
+      width: 26px; height: 26px; border-radius: 6px;
       background: linear-gradient(135deg, #2563eb, #38bdf8);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      color: #fff; font-size: 11px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
     }
     .uname { font-size: 0.82rem; font-weight: 600; }
 
     .layout { flex: 1; display: flex; overflow: hidden; }
 
     .sidebar {
-      width: var(--sidebar-w);
-      flex-shrink: 0;
-      background: var(--bg-card);
-      border-right: 1px solid var(--border);
-      overflow-y: auto;
-      transition: width 0.22s ease;
-      display: flex;
-      flex-direction: column;
+      width: var(--sidebar-w); flex-shrink: 0;
+      background: var(--bg-card); border-right: 1px solid var(--border);
+      overflow-y: auto; transition: width 0.22s ease;
+      display: flex; flex-direction: column;
     }
     .sidebar.collapsed { width: 64px; }
-    .sidebar.collapsed .sl,
-    .sidebar.collapsed .slt,
-    .sidebar.collapsed .group-meta,
-    .sidebar.collapsed .btn-addgroup,
+    .sidebar.collapsed .sl, .sidebar.collapsed .slt,
+    .sidebar.collapsed .group-meta, .sidebar.collapsed .btn-addgroup,
     .sidebar.collapsed .pcount { display: none; }
-    .sidebar.collapsed .group-hdr,
-    .sidebar.collapsed .sidebar-item,
+    .sidebar.collapsed .group-hdr, .sidebar.collapsed .sidebar-item,
     .sidebar.collapsed .sidebar-child { justify-content: center; padding-left: 0; padding-right: 0; }
 
     .sb-section { padding: 10px 8px; }
     .sb-section + .sb-section { border-top: 1px solid var(--border); }
     .slt {
-      font-size: 0.67rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      font-weight: 800;
-      padding: 0 6px 6px;
-      display: block;
+      font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--text-muted); font-weight: 800; padding: 0 6px 6px; display: block;
     }
-
-    .sidebar-item,
-    .sidebar-child {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      padding: 8px 10px;
-      border-radius: 10px;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 500;
-      transition: all 0.15s;
-      white-space: nowrap;
-      overflow: hidden;
+    .sidebar-item, .sidebar-child {
+      display: flex; align-items: center; gap: 9px;
+      padding: 8px 10px; border-radius: 10px;
+      color: var(--text-muted); text-decoration: none;
+      font-size: 0.88rem; font-weight: 500; transition: all 0.15s;
+      white-space: nowrap; overflow: hidden;
     }
-    .sidebar-item:hover,
-    .sidebar-child:hover { background: rgba(255,255,255,0.05); color: var(--text); }
-    .sidebar-item.active,
-    .sidebar-child.active { background: rgba(37,99,235,0.14); color: var(--text); }
+    .sidebar-item:hover, .sidebar-child:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .sidebar-item.active, .sidebar-child.active { background: rgba(37,99,235,0.14); color: var(--text); }
     .ii { width: 18px; text-align: center; flex-shrink: 0; }
 
     .sb-group { margin-bottom: 2px; }
     .group-hdr {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 10px;
-      cursor: pointer;
-      white-space: nowrap;
-      overflow: hidden;
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px; border-radius: 10px; cursor: pointer;
+      white-space: nowrap; overflow: hidden;
     }
     .group-hdr:hover { background: rgba(255,255,255,0.04); }
     .group-children { display: none; padding-left: 12px; }
@@ -259,15 +165,9 @@
     .gchevron { font-size: 9px; color: var(--text-muted); transition: transform 0.2s; }
     .sb-group.open .gchevron { transform: rotate(90deg); }
     .gi {
-      width: 26px;
-      height: 26px;
-      border-radius: 7px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 800;
-      flex-shrink: 0;
+      width: 26px; height: 26px; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; flex-shrink: 0;
     }
     .gi.blue { background: rgba(37,99,235,0.2); color: #60a5fa; }
     .gi.teal { background: rgba(20,184,166,0.2); color: #2dd4bf; }
@@ -276,265 +176,237 @@
     .gsub { font-size: 0.72rem; color: var(--text-muted); }
     .cdot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.15); flex-shrink: 0; }
     .pcount {
-      margin-left: auto;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      background: rgba(255,255,255,0.06);
-      border-radius: 5px;
-      padding: 2px 6px;
+      margin-left: auto; font-size: 0.7rem; color: var(--text-muted);
+      background: rgba(255,255,255,0.06); border-radius: 5px; padding: 2px 6px;
     }
-
     .btn-addgroup {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 10px;
-      border-radius: 8px;
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px; border-radius: 8px;
       border: 1px dashed rgba(255,255,255,0.09);
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      cursor: pointer;
-      margin-top: 4px;
+      color: var(--text-muted); font-size: 0.8rem; cursor: pointer; margin-top: 4px;
     }
-    .btn-addgroup:hover { border-color: rgba(37,99,235,0.4); color: var(--accent-2); }
-
     .sb-bottom { margin-top: auto; padding: 10px 8px; border-top: 1px solid var(--border); }
 
     .main {
-      flex: 1;
-      overflow-y: auto;
+      flex: 1; overflow-y: auto;
       background:
-        radial-gradient(800px 360px at 20% -15%, rgba(37,99,235,0.2) 0%, transparent 62%),
-        radial-gradient(650px 280px at 92% 0%, rgba(56,189,248,0.16) 0%, transparent 55%),
+        radial-gradient(800px 360px at 20% -15%, rgba(37,99,235,0.18) 0%, transparent 62%),
         var(--bg-dark);
     }
-    .main-inner { padding: 22px 26px 44px; }
+    .main-inner { padding: 20px 24px 40px; }
 
     .page-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 12px; margin-bottom: 14px;
     }
     .breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.77rem;
-      color: var(--text-muted);
-      margin-bottom: 4px;
+      display: flex; align-items: center; gap: 5px;
+      font-size: 0.77rem; color: var(--text-muted); margin-bottom: 4px;
     }
     .page-title { font-size: 1.35rem; font-weight: 800; }
-    .page-sub { font-size: 0.84rem; color: var(--text-muted); margin-top: 4px; }
+    .page-sub { font-size: 0.84rem; color: var(--text-muted); margin-top: 4px; max-width: 52ch; }
 
-    .alert-strip {
+    .kpi-strip {
       display: grid;
-      grid-template-columns: repeat(3, minmax(190px, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 10px;
       margin-bottom: 14px;
     }
-    .alert-card {
-      border-radius: 12px;
-      padding: 11px 12px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: var(--text);
-      transition: transform 0.18s, border-color 0.18s;
+    .kpi {
+      border-radius: 12px; border: 1px solid var(--border);
+      background: var(--bg-card); padding: 11px 13px;
     }
-    .alert-card:hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.24); }
-    .alert-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-    .alert-card.danger .alert-icon { background: rgba(239,68,68,0.16); color: #fda4af; }
-    .alert-card.warn .alert-icon { background: rgba(245,158,11,0.14); color: #fcd34d; }
-    .alert-card.info .alert-icon { background: rgba(56,189,248,0.14); color: #7dd3fc; }
-    .alert-title { font-size: 0.76rem; color: var(--text-muted); }
-    .alert-val { font-size: 0.96rem; font-weight: 800; margin-top: 2px; }
+    .kpi-lbl { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; }
+    .kpi-val { font-size: 1.3rem; font-weight: 800; margin-top: 4px; line-height: 1; }
 
-    .kpi-grid {
+    .dash-layout {
       display: grid;
-      grid-template-columns: repeat(6, minmax(140px, 1fr));
-      gap: 10px;
-      margin-bottom: 16px;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 14px;
+      align-items: start;
     }
-    .kpi-card {
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      padding: 12px;
+    .dash-main { min-width: 0; }
+    .dash-aside {
+      display: flex; flex-direction: column; gap: 12px;
+      position: sticky; top: 0;
     }
-    .kpi-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
-    .kpi-val { font-size: 1.35rem; font-weight: 800; margin-top: 6px; line-height: 1; }
-    .kpi-delta { font-size: 0.72rem; margin-top: 6px; color: var(--text-muted); }
-    .up { color: #4ade80; }
-    .down { color: #fca5a5; }
 
     .panel {
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      overflow: hidden;
+      border-radius: 14px; border: 1px solid var(--border);
+      background: var(--bg-card); overflow: hidden;
     }
     .panel-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 11px 14px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; padding: 11px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.015);
+      flex-wrap: wrap;
+    }
+    .panel-head h3 { font-size: 0.92rem; font-weight: 800; }
+    .panel-head span { font-size: 0.74rem; color: var(--text-muted); }
+
+    .filter-tabs {
+      display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .ftab {
+      padding: 5px 10px; border-radius: 8px; border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted);
+      font-family: inherit; font-size: 0.74rem; font-weight: 700;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .ftab:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+    .ftab.active {
+      background: rgba(37,99,235,0.14); color: var(--text);
+      border-color: rgba(37,99,235,0.35);
+    }
+    .ftab .n {
+      display: inline-block; margin-left: 4px;
+      padding: 1px 5px; border-radius: 5px;
+      background: rgba(255,255,255,0.08); font-size: 0.68rem;
+    }
+
+    .master-table-wrap { overflow-x: auto; }
+    .master-table { width: 100%; border-collapse: collapse; min-width: 640px; }
+    .master-table th, .master-table td {
+      padding: 10px 12px; text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.82rem;
+    }
+    .master-table th {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--text-muted); font-weight: 800;
+      background: rgba(255,255,255,0.02);
+    }
+    .master-table tr { transition: background 0.12s; cursor: pointer; }
+    .master-table tbody tr:hover { background: rgba(37,99,235,0.05); }
+    .master-table tr:last-child td { border-bottom: none; }
+    .master-table tr.hidden { display: none; }
+
+    .c-num { font-weight: 800; font-variant-numeric: tabular-nums; }
+    .c-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+    .st-pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px; border-radius: 999px;
+      font-size: 0.7rem; font-weight: 700; white-space: nowrap;
+    }
+    .st-pill.done { background: rgba(34,197,94,0.12); color: #86efac; border: 1px solid rgba(34,197,94,0.2); }
+    .st-pill.yard { background: rgba(245,158,11,0.1); color: #fcd34d; border: 1px solid rgba(245,158,11,0.2); }
+    .st-pill.ship { background: rgba(37,99,235,0.1); color: #93c5fd; border: 1px solid rgba(37,99,235,0.2); }
+    .st-pill.warn { background: rgba(239,68,68,0.12); color: #fda4af; border: 1px solid rgba(239,68,68,0.22); }
+    .mini-bar {
+      width: 72px; height: 5px; border-radius: 999px;
+      background: rgba(255,255,255,0.06); overflow: hidden;
+    }
+    .mini-bar i {
+      display: block; height: 100%; border-radius: 999px;
+    }
+    .mini-bar i.full { width: 100%; background: linear-gradient(90deg, #16a34a, #4ade80); }
+    .mini-bar i.none { width: 10%; background: linear-gradient(90deg, #1d4ed8, #60a5fa); }
+    .link-sm {
+      color: var(--accent-2); text-decoration: none; font-size: 0.74rem; font-weight: 700;
+    }
+    .link-sm:hover { text-decoration: underline; }
+
+    /* Side cards */
+    .side-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+    }
+    .side-card.warn-card {
+      border-color: rgba(239,68,68,0.28);
+      box-shadow: 0 0 0 1px rgba(239,68,68,0.06), 0 8px 28px rgba(239,68,68,0.08);
+    }
+    .side-card-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px; padding: 12px 14px;
       border-bottom: 1px solid rgba(255,255,255,0.05);
       background: rgba(255,255,255,0.015);
     }
-    .panel-head h3 { font-size: 0.92rem; font-weight: 700; }
-    .panel-head span { font-size: 0.74rem; color: var(--text-muted); }
+    .side-card-head h2 {
+      font-size: 0.9rem; font-weight: 800;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .dot.info { background: var(--accent-2); box-shadow: 0 0 8px rgba(56,189,248,0.5); }
+    .dot.danger { background: var(--red); box-shadow: 0 0 8px rgba(239,68,68,0.55); animation: blink 1.4s ease-in-out infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+    .side-card-meta { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
+    .urgency-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 9px; border-radius: 999px;
+      font-size: 0.72rem; font-weight: 800; white-space: nowrap;
+    }
+    .urgency-pill.critical { background: rgba(239,68,68,0.14); color: #fda4af; border: 1px solid rgba(239,68,68,0.28); }
+    .urgency-pill.soon { background: rgba(245,158,11,0.12); color: #fcd34d; border: 1px solid rgba(245,158,11,0.25); }
 
-    .trend-body {
-      padding: 16px 14px 18px;
-      display: grid;
-      grid-template-columns: 1fr 270px;
-      gap: 14px;
-      align-items: end;
+    .notify-list, .warn-list {
+      list-style: none; padding: 10px;
+      display: flex; flex-direction: column; gap: 8px;
+      max-height: 380px; overflow-y: auto;
     }
-    .bars {
-      height: 150px;
-      display: flex;
-      align-items: flex-end;
-      gap: 9px;
-      padding-top: 10px;
-    }
-    .bar {
-      flex: 1;
-      min-width: 24px;
-      border-radius: 8px 8px 5px 5px;
-      background: linear-gradient(180deg, #38bdf8 0%, #2563eb 100%);
-      position: relative;
-    }
-    .bar::after {
-      content: attr(data-day);
-      position: absolute;
-      bottom: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.68rem;
-      color: var(--text-muted);
-    }
-    .trend-meta {
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .meta-item { display: flex; justify-content: space-between; font-size: 0.84rem; }
-    .meta-item span { color: var(--text-muted); }
-    .meta-item strong { font-weight: 700; }
+    .warn-list { max-height: 360px; }
 
-    .grid-2 {
-      margin-top: 16px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 11px 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
-    td { font-size: 0.84rem; }
-    tr:last-child td { border-bottom: none; }
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    .tag.high { background: rgba(239,68,68,0.15); color: #fda4af; }
-    .tag.mid { background: rgba(245,158,11,0.14); color: #fcd34d; }
-    .tag.ok { background: rgba(34,197,94,0.14); color: #86efac; }
-
-    .link-btn {
-      color: var(--accent-2);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.78rem;
-    }
-    .link-btn:hover { text-decoration: underline; }
-
-    .timeline-list {
-      list-style: none;
-      padding: 12px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .timeline-item {
-      border-radius: 10px;
+    .notify-item {
+      padding: 10px 11px; border-radius: 10px;
       border: 1px solid rgba(255,255,255,0.05);
       background: rgba(255,255,255,0.02);
-      padding: 10px 11px;
-      display: grid;
-      grid-template-columns: 80px 1fr;
-      gap: 10px;
-      align-items: start;
+      transition: border-color 0.15s, background 0.15s;
     }
-    .timeline-time { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; }
-    .timeline-text { font-size: 0.84rem; line-height: 1.45; }
-    .timeline-text strong { color: var(--accent-2); }
+    .notify-item:hover { border-color: rgba(37,99,235,0.25); background: rgba(37,99,235,0.04); }
+    .notify-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 8px; margin-bottom: 8px;
+    }
+    .notify-cont { font-size: 0.82rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .notify-bkg { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+    .notify-proj { font-size: 0.66rem; color: var(--text-muted); margin-top: 1px; }
+    .notify-status {
+      font-size: 0.68rem; font-weight: 800; padding: 3px 7px;
+      border-radius: 6px; white-space: nowrap; flex-shrink: 0;
+    }
+    .notify-status.done { background: rgba(34,197,94,0.12); color: #86efac; border: 1px solid rgba(34,197,94,0.22); }
+    .notify-status.transit { background: rgba(37,99,235,0.1); color: #93c5fd; border: 1px solid rgba(37,99,235,0.2); }
+    .port-bar { height: 6px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; }
+    .port-bar-fill { height: 100%; border-radius: 999px; }
+    .port-bar-fill.done { width: 100%; background: linear-gradient(90deg, #16a34a, #4ade80); }
+    .port-bar-fill.none { width: 8%; background: linear-gradient(90deg, #1d4ed8, #60a5fa); }
+    .notify-caption { margin-top: 6px; font-size: 0.72rem; color: var(--text-muted); line-height: 1.35; }
+    .notify-caption strong { color: var(--text); font-weight: 700; }
 
-    .quick-actions {
-      margin-top: 14px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(180px, 1fr));
-      gap: 10px;
+    .warn-item {
+      padding: 11px 12px; border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.02);
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 6px 10px; align-items: start;
+      transition: border-color 0.15s;
     }
-    .action-btn {
-      border-radius: 11px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      color: var(--text);
-      text-decoration: none;
-      font-size: 0.84rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 11px 12px;
-    }
-    .action-btn:hover { border-color: rgba(37,99,235,0.45); background: rgba(37,99,235,0.09); }
+    .warn-item:hover { border-color: rgba(239,68,68,0.22); }
+    .warn-item.critical { border-color: rgba(239,68,68,0.22); background: rgba(239,68,68,0.04); }
+    .warn-item.soon { border-color: rgba(245,158,11,0.2); background: rgba(245,158,11,0.03); }
+    .warn-cont { font-size: 0.84rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .warn-sub { grid-column: 1 / -1; font-size: 0.72rem; color: var(--text-muted); line-height: 1.35; }
+    .warn-sub strong { color: var(--text); font-weight: 700; }
+    .warn-countdown { font-size: 0.78rem; font-weight: 800; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+    .warn-countdown.critical { color: #fda4af; }
+    .warn-countdown.soon { color: #fcd34d; }
+    .warn-deadline { font-size: 0.66rem; color: var(--text-muted); text-align: right; font-weight: 600; }
 
-    @media (max-width: 1260px) {
-      .kpi-grid { grid-template-columns: repeat(3, minmax(140px, 1fr)); }
-      .trend-body { grid-template-columns: 1fr; }
+    @media (max-width: 1200px) {
+      .dash-layout { grid-template-columns: 1fr; }
+      .dash-aside { position: static; display: grid; grid-template-columns: 1fr 1fr; }
+      .kpi-strip { grid-template-columns: repeat(3, 1fr); }
     }
     @media (max-width: 1000px) {
       .sidebar { width: 64px; }
       .sl, .slt, .group-meta, .btn-addgroup, .pcount { display: none !important; }
       .group-hdr, .sidebar-item, .sidebar-child { justify-content: center; padding-left: 0; padding-right: 0; }
       .nav-brand { width: 84px; }
-      .grid-2 { grid-template-columns: 1fr; }
-      .quick-actions { grid-template-columns: 1fr; }
     }
-    @media (max-width: 740px) {
+    @media (max-width: 760px) {
+      .dash-aside { grid-template-columns: 1fr; }
+      .kpi-strip { grid-template-columns: repeat(2, 1fr); }
       .main-inner { padding: 14px; }
-      .alert-strip { grid-template-columns: 1fr; }
-      .kpi-grid { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
-      .topnav { gap: 8px; }
       .nav-search { display: none; }
     }
   </style>
@@ -542,24 +414,22 @@
 <body>
   <nav class="topnav">
     <div class="nav-brand">
-      <button class="btn-toggle" onclick="toggleSidebar()" title="Thu/mo sidebar">☰</button>
+      <button class="btn-toggle" onclick="toggleSidebar()" title="Thu/mở sidebar">☰</button>
       <a href="index.html" class="nav-logo">
         <div class="logo-box">🚢</div>
         <span>Logi<em>Track</em></span>
       </a>
     </div>
-
     <div class="nav-search">
       <span class="ico">🔍</span>
-      <input type="text" placeholder="Tim nhanh du an, booking, container..." />
+      <input type="text" id="globalSearch" placeholder="Tìm container, booking, dự án, cảng..." oninput="filterAll(this.value)" />
     </div>
-
     <div class="nav-right">
-      <a class="btn-primary" href="dashboard.html">📦 Xem tat ca booking</a>
-      <div class="nav-icon-btn" title="Thong bao">🔔<div class="badge">5</div></div>
-      <div class="user-chip" title="Tai khoan">
+      <a class="btn-primary" href="dashboard.html">📦 Chi tiết booking</a>
+      <div class="nav-icon-btn" title="Thông báo">🔔<div class="badge">4</div></div>
+      <div class="user-chip">
         <div class="avatar">N</div>
-        <span class="uname">Nguyen Van A</span>
+        <span class="uname">Nguyễn Văn A</span>
       </div>
     </div>
   </nav>
@@ -567,60 +437,51 @@
   <div class="layout">
     <aside class="sidebar" id="sidebar">
       <div class="sb-section">
-        <span class="slt">Tong quan</span>
-        <a class="sidebar-item active" href="dashboard-home.html"><span class="ii">🏠</span><span class="sl">Dashboard Home</span></a>
-        <a class="sidebar-item" href="dashboard.html"><span class="ii">📦</span><span class="sl">Tat ca booking</span></a>
-        <a class="sidebar-item" href="#"><span class="ii">📅</span><span class="sl">Lich tau</span></a>
+        <span class="slt">Tổng quan</span>
+        <a class="sidebar-item active" href="dashboard-home.html"><span class="ii">🏠</span><span class="sl">Dashboard</span></a>
+        <a class="sidebar-item" href="dashboard.html"><span class="ii">📦</span><span class="sl">Tất cả booking</span></a>
+        <a class="sidebar-item" href="#"><span class="ii">📅</span><span class="sl">Lịch tàu</span></a>
       </div>
-
       <div class="sb-section">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:0 6px 6px;">
-          <span class="slt" style="padding:0;">Du an trong diem</span>
-          <span class="sl" style="cursor:pointer;font-size:14px;color:var(--accent-2);">＋</span>
+          <span class="slt" style="padding:0;">Dự án</span>
         </div>
-
         <div class="sb-group open">
           <div class="group-hdr" onclick="toggleGroup(this)">
             <div class="gi blue">K1</div>
             <div class="group-meta">
-              <div class="gname">KH1 - Cong ty ABC</div>
-              <div class="gsub">2 du an · 6 container</div>
+              <div class="gname">KH1 – Công ty ABC</div>
+              <div class="gsub">2 dự án · 6 container</div>
             </div>
             <span class="gchevron">▶</span>
           </div>
           <div class="group-children">
-            <a class="sidebar-child" href="dashboard.html"><div class="cdot"></div><span class="sl">Du an A - Hang My</span><span class="pcount sl">4</span></a>
-            <a class="sidebar-child" href="dashboard.html"><div class="cdot"></div><span class="sl">Du an B - Hang EU</span><span class="pcount sl">2</span></a>
+            <a class="sidebar-child" href="dashboard.html"><div class="cdot"></div><span class="sl">Dự án A – Hàng Mỹ</span><span class="pcount sl">4</span></a>
+            <a class="sidebar-child" href="dashboard.html"><div class="cdot"></div><span class="sl">Dự án B – Hàng EU</span><span class="pcount sl">2</span></a>
           </div>
         </div>
-
         <div class="sb-group">
           <div class="group-hdr" onclick="toggleGroup(this)">
             <div class="gi teal">K2</div>
             <div class="group-meta">
-              <div class="gname">KH2 - Cong ty XYZ</div>
-              <div class="gsub">1 du an · 3 container</div>
+              <div class="gname">KH2 – Công ty XYZ</div>
+              <div class="gsub">1 dự án · 3 container</div>
             </div>
             <span class="gchevron">▶</span>
           </div>
           <div class="group-children">
-            <a class="sidebar-child" href="dashboard.html"><div class="cdot"></div><span class="sl">Du an C - Hang Singapore</span><span class="pcount sl">3</span></a>
+            <a class="sidebar-child" href="dashboard.html"><div class="cdot"></div><span class="sl">Dự án C – Singapore</span><span class="pcount sl">3</span></a>
           </div>
         </div>
-
-        <div class="btn-addgroup sl"><span>＋</span><span>Them nhom khach hang</span></div>
       </div>
-
       <div class="sb-section">
-        <span class="slt">Cong cu</span>
-        <a class="sidebar-item" href="#"><span class="ii">📊</span><span class="sl">Bao cao</span></a>
-        <a class="sidebar-item" href="#"><span class="ii">🔔</span><span class="sl">Canh bao</span></a>
-        <a class="sidebar-item" href="#"><span class="ii">⚙️</span><span class="sl">Cai dat</span></a>
+        <span class="slt">Công cụ</span>
+        <a class="sidebar-item" href="#"><span class="ii">📊</span><span class="sl">Báo cáo</span></a>
+        <a class="sidebar-item" href="#"><span class="ii">🔔</span><span class="sl">Cài đặt cảnh báo</span></a>
       </div>
-
       <div class="sb-bottom">
-        <a class="sidebar-item" href="index.html"><span class="ii">🏠</span><span class="sl">Ve trang chu</span></a>
-        <a class="sidebar-item" href="login.html"><span class="ii">🚪</span><span class="sl">Dang xuat</span></a>
+        <a class="sidebar-item" href="index.html"><span class="ii">🏠</span><span class="sl">Về trang chủ</span></a>
+        <a class="sidebar-item" href="login.html"><span class="ii">🚪</span><span class="sl">Đăng xuất</span></a>
       </div>
     </aside>
 
@@ -628,210 +489,366 @@
       <div class="main-inner">
         <div class="page-header">
           <div>
-            <div class="breadcrumb"><span>Dashboard</span><span>›</span><span>Tong quan van hanh</span></div>
-            <h1 class="page-title">Tong quan van hanh</h1>
-            <div class="page-sub">Nhin nhanh toan bo tinh hinh booking, container, thong quan va rui ro trong ngay.</div>
+            <div class="breadcrumb"><span>Dashboard</span><span>›</span><span>Toàn hệ thống</span></div>
+            <h1 class="page-title">Tổng quan vận hành</h1>
+            <p class="page-sub">Theo dõi toàn bộ container đang chạy trên 3 khách hàng, 4 dự án và 3 booking. Cập nhật realtime trạng thái hạ cảng và cảnh báo cutoff.</p>
           </div>
-          <a class="btn-primary" href="dashboard.html">+ Mo man chi tiet</a>
+          <a class="btn-primary" href="dashboard.html">+ Thêm booking</a>
         </div>
 
-        <div class="alert-strip">
-          <a class="alert-card danger" href="dashboard.html">
-            <div class="alert-icon">⚠</div>
-            <div>
-              <div class="alert-title">Can xu ly ngay</div>
-              <div class="alert-val">4 SI cutoff qua han</div>
-            </div>
-          </a>
-          <a class="alert-card warn" href="dashboard.html">
-            <div class="alert-icon">⏳</div>
-            <div>
-              <div class="alert-title">Canh bao thong quan</div>
-              <div class="alert-val">6 lo chua thong quan</div>
-            </div>
-          </a>
-          <a class="alert-card info" href="dashboard.html">
-            <div class="alert-icon">📄</div>
-            <div>
-              <div class="alert-title">Thieu chung tu</div>
-              <div class="alert-val">3 booking can bo sung</div>
-            </div>
-          </a>
-        </div>
-
-        <div class="kpi-grid">
-          <div class="kpi-card">
-            <div class="kpi-label">Tong container</div>
-            <div class="kpi-val">126</div>
-            <div class="kpi-delta up">+8.6% so voi tuan truoc</div>
+        <div class="kpi-strip">
+          <div class="kpi">
+            <div class="kpi-lbl">Tổng container</div>
+            <div class="kpi-val">9</div>
           </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Dang van chuyen</div>
-            <div class="kpi-val" style="color: var(--accent-2);">34</div>
-            <div class="kpi-delta up">+3 lo moi trong 24h</div>
+          <div class="kpi">
+            <div class="kpi-lbl">Đã hạ cảng</div>
+            <div class="kpi-val" style="color:var(--green)">5</div>
           </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Da giao thanh cong</div>
-            <div class="kpi-val" style="color: var(--green);">68</div>
-            <div class="kpi-delta up">On-time 94.1%</div>
+          <div class="kpi">
+            <div class="kpi-lbl">Chưa hạ cảng</div>
+            <div class="kpi-val" style="color:var(--red)">4</div>
           </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Cham tien do</div>
-            <div class="kpi-val" style="color: var(--red);">9</div>
-            <div class="kpi-delta down">+2 so voi hom qua</div>
+          <div class="kpi">
+            <div class="kpi-lbl">Chờ thông quan</div>
+            <div class="kpi-val" style="color:var(--yellow)">2</div>
           </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Cho thong quan</div>
-            <div class="kpi-val" style="color: var(--yellow);">11</div>
-            <div class="kpi-delta">3 lo da qua 48h</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Rui ro cao</div>
-            <div class="kpi-val" style="color: #fda4af;">5</div>
-            <div class="kpi-delta down">Can uu tien dieu phoi</div>
+          <div class="kpi">
+            <div class="kpi-lbl">Đã giao</div>
+            <div class="kpi-val" style="color:var(--accent-2)">3</div>
           </div>
         </div>
 
-        <section class="panel">
-          <div class="panel-head">
-            <h3>Xu huong 7 ngay gan nhat</h3>
-            <span>Dang van chuyen theo ngay</span>
+        <div class="dash-layout">
+          <div class="dash-main">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Tất cả container</h3>
+                  <span>9 lô · 3 booking · 3 khách hàng</span>
+                </div>
+                <div class="filter-tabs">
+                  <button class="ftab active" data-filter="all" onclick="setFilter('all', this)">Tất cả <span class="n">9</span></button>
+                  <button class="ftab" data-filter="dropped" onclick="setFilter('dropped', this)">Đã hạ cảng <span class="n">5</span></button>
+                  <button class="ftab" data-filter="pending" onclick="setFilter('pending', this)">Chưa hạ <span class="n">4</span></button>
+                  <button class="ftab" data-filter="warn" onclick="setFilter('warn', this)">Cảnh báo <span class="n">4</span></button>
+                </div>
+              </div>
+              <div class="master-table-wrap">
+                <table class="master-table" id="masterTable">
+                  <thead>
+                    <tr>
+                      <th>Container</th>
+                      <th>Booking / Dự án</th>
+                      <th>Cảng đến</th>
+                      <th>Hạ cảng</th>
+                      <th>Trạng thái</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr data-filter="dropped" data-search="mscu 1234567 msc-vn-8821 du an a dad">
+                      <td><div class="c-num">MSCU 1234567</div><div class="c-sub">20'GP</div></td>
+                      <td><div class="c-num" style="font-size:0.78rem">MSC-VN-8821</div><div class="c-sub">KH1 · Dự án A</div></td>
+                      <td>Đà Nẵng (DAD)</td>
+                      <td><div class="mini-bar"><i class="full"></i></div></td>
+                      <td><span class="st-pill done">Đã giao</span></td>
+                      <td><a class="link-sm" href="dashboard.html">Chi tiết</a></td>
+                    </tr>
+                    <tr data-filter="dropped" data-search="cmau 9876543 msc-vn-8821 du an a dad">
+                      <td><div class="c-num">CMAU 9876543</div><div class="c-sub">40'HC</div></td>
+                      <td><div class="c-num" style="font-size:0.78rem">MSC-VN-8821</div><div class="c-sub">KH1 · Dự án A</div></td>
+                      <td>Đà Nẵng (DAD)</td>
+                      <td><div class="mini-bar"><i class="full"></i></div></td>
+                      <td><span class="st-pill yard">Trên bãi</span></td>
+                      <td><a class="link-sm" href="dashboard.html">Chi tiết</a></td>
+                    </tr>
+                    <tr data-filter="dropped" data-search="hlxu 5557891 msc-vn-8821 du an a dad">
+                      <td><div class="c-num">HLXU 5557891</div><div class="c-sub">20'GP</div></td>
+                      <td><div class="c-num" style="font-size:0.78rem">MSC-VN-8821</div><div class="c-sub">KH1 · Dự án A</div></td>
+                      <td>Đà Nẵng (DAD)</td>
+                      <td><div class="mini-bar"><i class="full"></i></div></td>
+                      <td><span class="st-pill yard">Chờ giao</span></td>
+                      <td><a class="link-sm" href="dashboard.html">Chi tiết</a></td>
+                    </tr>
+                    <tr data-filter="pending warn" data-search="evgu 3318820 msc-vn-8821 du an a dad">
+                      <td><div class="c-num">EVGU 3318820</div><div class="c-sub">40'HC</div></td>
+                      <td><div class="c-num" style="font-size:0.78rem">MSC-VN-8821</div><div class="c-sub">KH1 · Dự án A</div></td>
+                      <td>Đà Nẵng (DAD)</td>
+                      <td><div class="mini-bar"><i class="none"></i></div></td>
+                      <td><span class="st-pill warn">Chưa hạ · sắp cutoff</span></td>
+                      <td><a class="link-sm" href="dashboard.html">Chi tiết</a></td>
+                    </tr>
+                    <tr data-filter="dropped" data-search="tcku 1234567 cma-cm-3301 du an b dad">
+                      <td><div class="c-num">TCKU 1234567</div><div class="c-sub">20'GP</div></td>
+                      <td><div class="c-num" style="font-size:0.78rem">CMA-CM-3301</div><div class="c-sub">KH1 · Dự án B</div></td>
+                      <td>Đà Nẵng (DAD)</td>
+                      <td><div class="mini-bar"><i class="full"></i></div></td>
+                      <td><span class="st-pill done">Đã giao</span></td>
+                      <td><a class="link-sm" href="dashboard.html">Chi tiết</a></td>
+                    </tr>
+                    <tr data-filter="dropped" data-search="tcku 2345678 cma-cm-3301 du an b dad">
+                      <td><div class="c-num">TCKU 2345678</div><div class="c-sub">40'HC</div></td>
+                      <td><div class="c-num" style="font-size:0.78rem">CMA-CM-3301</div><div class="c-sub">KH1 · Dự án B</div></td>
+                      <td>Đà Nẵng (DAD)</td>
+                      <td><div class="mini-bar"><i class="full"></i></div></td>
+                      <td><span class="st-pill done">Đã giao</span></td>
+                      <td><a class="link-sm" href="dashboard.html">Chi tiết</a></td>
+                    </tr>
+                    <tr data-filter="pending warn" data-search="evgu 1111111 evg-2204-vn du an c tien sa">
+                      <td><div class="c-num">EVGU 1111111</div><div class="c-sub">20'GP</div></td>
+                      <td><div class="c-num" style="font-size:0.78rem">EVG-2204-VN</div><div class="c-sub">KH2 · Dự án C</div></td>
+                      <td>Tiên Sa (DAD)</td>
+                      <td><div class="mini-bar"><i class="none"></i></div></td>
+                      <td><span class="st-pill ship">Đang trên tàu</span></td>
+                      <td><a class="link-sm" href="dashboard.html">Chi tiết</a></td>
+                    </tr>
+                    <tr data-filter="pending warn" data-search="evgu 2222222 evg-2204-vn du an c tien sa">
+                      <td><div class="c-num">EVGU 2222222</div><div class="c-sub">40'GP</div></td>
+                      <td><div class="c-num" style="font-size:0.78rem">EVG-2204-VN</div><div class="c-sub">KH2 · Dự án C</div></td>
+                      <td>Tiên Sa (DAD)</td>
+                      <td><div class="mini-bar"><i class="none"></i></div></td>
+                      <td><span class="st-pill ship">Đang trên tàu</span></td>
+                      <td><a class="link-sm" href="dashboard.html">Chi tiết</a></td>
+                    </tr>
+                    <tr data-filter="pending warn" data-search="evgu 3333333 evg-2204-vn du an c tien sa">
+                      <td><div class="c-num">EVGU 3333333</div><div class="c-sub">40'HC</div></td>
+                      <td><div class="c-num" style="font-size:0.78rem">EVG-2204-VN</div><div class="c-sub">KH2 · Dự án C</div></td>
+                      <td>Tiên Sa (DAD)</td>
+                      <td><div class="mini-bar"><i class="none"></i></div></td>
+                      <td><span class="st-pill ship">Đang trên tàu</span></td>
+                      <td><a class="link-sm" href="dashboard.html">Chi tiết</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
           </div>
-          <div class="trend-body">
-            <div class="bars" aria-label="Bieu do xu huong">
-              <div class="bar" data-day="T2" style="height: 62%;"></div>
-              <div class="bar" data-day="T3" style="height: 74%;"></div>
-              <div class="bar" data-day="T4" style="height: 58%;"></div>
-              <div class="bar" data-day="T5" style="height: 80%;"></div>
-              <div class="bar" data-day="T6" style="height: 86%;"></div>
-              <div class="bar" data-day="T7" style="height: 71%;"></div>
-              <div class="bar" data-day="CN" style="height: 65%;"></div>
-            </div>
-            <div class="trend-meta">
-              <div class="meta-item"><span>Ty le giao dung han</span><strong class="up">94.1%</strong></div>
-              <div class="meta-item"><span>Top tuyen rui ro</span><strong>USLAX → VNDAD</strong></div>
-              <div class="meta-item"><span>So lo ETA tre</span><strong class="down">7 lo</strong></div>
-              <div class="meta-item"><span>Canh bao phat sinh</span><strong>18 su kien</strong></div>
-            </div>
-          </div>
-        </section>
 
-        <div class="grid-2">
-          <section class="panel">
-            <div class="panel-head">
-              <h3>Can xu ly hom nay</h3>
-              <span>Uu tien theo deadline</span>
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Task</th>
-                  <th>Han</th>
-                  <th>Muc do</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Bo sung SI cho BKG MSC-VN-8821</td>
-                  <td>11:30</td>
-                  <td><span class="tag high">Cao</span></td>
-                </tr>
-                <tr>
-                  <td>Cap nhat ETA chuyen EVG-2204-VN</td>
-                  <td>13:00</td>
-                  <td><span class="tag mid">Trung binh</span></td>
-                </tr>
-                <tr>
-                  <td>Gui bo chung tu cho du an B</td>
-                  <td>15:30</td>
-                  <td><span class="tag mid">Trung binh</span></td>
-                </tr>
-                <tr>
-                  <td>Xac nhan thong quan lo CMAU 9876543</td>
-                  <td>17:00</td>
-                  <td><span class="tag ok">On track</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
+          <aside class="dash-aside" aria-label="Thông báo và cảnh báo toàn hệ thống">
+            <section class="side-card">
+              <div class="side-card-head">
+                <h2><span class="dot info"></span> Thông báo</h2>
+                <span class="side-card-meta">9 container</span>
+              </div>
+              <ul class="notify-list">
+                <li class="notify-item">
+                  <div class="notify-top">
+                    <div>
+                      <div class="notify-cont">CMAU 9876543</div>
+                      <div class="notify-bkg">MSC-VN-8821</div>
+                      <div class="notify-proj">KH1 · Dự án A</div>
+                    </div>
+                    <span class="notify-status done">Đã hạ cảng</span>
+                  </div>
+                  <div class="port-bar"><div class="port-bar-fill done"></div></div>
+                  <div class="notify-caption">Container của booking <strong>MSC-VN-8821</strong> đã hạ tại <strong>Cảng Đà Nẵng (DAD)</strong> lúc 19/04 08:40</div>
+                </li>
+                <li class="notify-item">
+                  <div class="notify-top">
+                    <div>
+                      <div class="notify-cont">MSCU 1234567</div>
+                      <div class="notify-bkg">MSC-VN-8821</div>
+                      <div class="notify-proj">KH1 · Dự án A</div>
+                    </div>
+                    <span class="notify-status done">Đã hạ cảng</span>
+                  </div>
+                  <div class="port-bar"><div class="port-bar-fill done"></div></div>
+                  <div class="notify-caption">Container của booking <strong>MSC-VN-8821</strong> đã hạ tại <strong>Cảng Đà Nẵng (DAD)</strong> lúc 18/04 07:15</div>
+                </li>
+                <li class="notify-item">
+                  <div class="notify-top">
+                    <div>
+                      <div class="notify-cont">HLXU 5557891</div>
+                      <div class="notify-bkg">MSC-VN-8821</div>
+                      <div class="notify-proj">KH1 · Dự án A</div>
+                    </div>
+                    <span class="notify-status done">Đã hạ cảng</span>
+                  </div>
+                  <div class="port-bar"><div class="port-bar-fill done"></div></div>
+                  <div class="notify-caption">Container của booking <strong>MSC-VN-8821</strong> đã hạ tại <strong>Cảng Đà Nẵng (DAD)</strong> lúc 19/04 06:20</div>
+                </li>
+                <li class="notify-item">
+                  <div class="notify-top">
+                    <div>
+                      <div class="notify-cont">TCKU 1234567</div>
+                      <div class="notify-bkg">CMA-CM-3301</div>
+                      <div class="notify-proj">KH1 · Dự án B</div>
+                    </div>
+                    <span class="notify-status done">Đã hạ cảng</span>
+                  </div>
+                  <div class="port-bar"><div class="port-bar-fill done"></div></div>
+                  <div class="notify-caption">Container của booking <strong>CMA-CM-3301</strong> đã hạ tại <strong>Cảng Đà Nẵng (DAD)</strong> lúc 15/04 14:00</div>
+                </li>
+                <li class="notify-item">
+                  <div class="notify-top">
+                    <div>
+                      <div class="notify-cont">TCKU 2345678</div>
+                      <div class="notify-bkg">CMA-CM-3301</div>
+                      <div class="notify-proj">KH1 · Dự án B</div>
+                    </div>
+                    <span class="notify-status done">Đã hạ cảng</span>
+                  </div>
+                  <div class="port-bar"><div class="port-bar-fill done"></div></div>
+                  <div class="notify-caption">Container của booking <strong>CMA-CM-3301</strong> đã hạ tại <strong>Cảng Đà Nẵng (DAD)</strong> lúc 16/04 09:30</div>
+                </li>
+                <li class="notify-item">
+                  <div class="notify-top">
+                    <div>
+                      <div class="notify-cont">EVGU 3318820</div>
+                      <div class="notify-bkg">MSC-VN-8821</div>
+                      <div class="notify-proj">KH1 · Dự án A</div>
+                    </div>
+                    <span class="notify-status transit">Chưa hạ cảng</span>
+                  </div>
+                  <div class="port-bar"><div class="port-bar-fill none"></div></div>
+                  <div class="notify-caption">Container của booking <strong>MSC-VN-8821</strong> chưa hạ cảng. ETA <strong>Đà Nẵng</strong> 22/04</div>
+                </li>
+                <li class="notify-item">
+                  <div class="notify-top">
+                    <div>
+                      <div class="notify-cont">EVGU 1111111</div>
+                      <div class="notify-bkg">EVG-2204-VN</div>
+                      <div class="notify-proj">KH2 · Dự án C</div>
+                    </div>
+                    <span class="notify-status transit">Chưa hạ cảng</span>
+                  </div>
+                  <div class="port-bar"><div class="port-bar-fill none"></div></div>
+                  <div class="notify-caption">Container của booking <strong>EVG-2204-VN</strong> chưa hạ cảng. ETA <strong>Cảng Tiên Sa</strong> 27/04</div>
+                </li>
+              </ul>
+            </section>
 
-          <section class="panel">
-            <div class="panel-head">
-              <h3>Du an trong diem</h3>
-              <span>Top theo so container</span>
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Du an</th>
-                  <th>SLA</th>
-                  <th>Chi tiet</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>KH1 - Du an A (4 container)</td>
-                  <td><span class="tag ok">95%</span></td>
-                  <td><a class="link-btn" href="dashboard.html">Mo</a></td>
-                </tr>
-                <tr>
-                  <td>KH1 - Du an B (2 container)</td>
-                  <td><span class="tag ok">97%</span></td>
-                  <td><a class="link-btn" href="dashboard.html">Mo</a></td>
-                </tr>
-                <tr>
-                  <td>KH2 - Du an C (3 container)</td>
-                  <td><span class="tag mid">89%</span></td>
-                  <td><a class="link-btn" href="dashboard.html">Mo</a></td>
-                </tr>
-                <tr>
-                  <td>KH3 - Du an D (2 container)</td>
-                  <td><span class="tag mid">86%</span></td>
-                  <td><a class="link-btn" href="dashboard.html">Mo</a></td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-        </div>
-
-        <section class="panel" style="margin-top: 12px;">
-          <div class="panel-head">
-            <h3>Timeline su kien gan day</h3>
-            <span>Realtime update</span>
-          </div>
-          <ul class="timeline-list">
-            <li class="timeline-item">
-              <div class="timeline-time">10:42</div>
-              <div class="timeline-text"><strong>CMAU 9876543</strong> da vao bai tai cang Da Nang, cho buoc thong quan.</div>
-            </li>
-            <li class="timeline-item">
-              <div class="timeline-time">09:58</div>
-              <div class="timeline-text"><strong>MSCU 1234567</strong> duoc xac nhan da giao den kho khach hang, cap nhat SLA thanh cong.</div>
-            </li>
-            <li class="timeline-item">
-              <div class="timeline-time">09:05</div>
-              <div class="timeline-text">He thong phat hien <strong>3 booking thieu chung tu</strong>, da tao nhac viec cho phu trach.</div>
-            </li>
-          </ul>
-        </section>
-
-        <div class="quick-actions">
-          <a class="action-btn" href="dashboard.html">➜ Xem booking qua han</a>
-          <a class="action-btn" href="dashboard.html">➜ Loc danh sach cho thong quan</a>
-          <a class="action-btn" href="dashboard.html">➜ Mo danh sach du an chi tiet</a>
+            <section class="side-card warn-card">
+              <div class="side-card-head">
+                <h2><span class="dot danger"></span> Cảnh báo</h2>
+                <span class="urgency-pill critical" id="nearestDeadline">Đang tính...</span>
+              </div>
+              <ul class="warn-list">
+                <li class="warn-item critical" data-deadline="2026-06-18T20:00:00">
+                  <div>
+                    <div class="warn-cont">EVGU 3318820</div>
+                    <div class="warn-sub">Booking <strong>MSC-VN-8821</strong> · KH1 Dự án A · CY Cutoff <strong>Đà Nẵng</strong></div>
+                  </div>
+                  <div>
+                    <div class="warn-countdown critical" data-countdown>--</div>
+                    <div class="warn-deadline">Hạn 18/06 20:00</div>
+                  </div>
+                </li>
+                <li class="warn-item soon" data-deadline="2026-06-19T08:00:00">
+                  <div>
+                    <div class="warn-cont">EVGU 1111111</div>
+                    <div class="warn-sub">Booking <strong>EVG-2204-VN</strong> · KH2 Dự án C · CY Cutoff <strong>Tiên Sa</strong></div>
+                  </div>
+                  <div>
+                    <div class="warn-countdown soon" data-countdown>--</div>
+                    <div class="warn-deadline">Hạn 19/06 08:00</div>
+                  </div>
+                </li>
+                <li class="warn-item soon" data-deadline="2026-06-19T14:30:00">
+                  <div>
+                    <div class="warn-cont">EVGU 2222222</div>
+                    <div class="warn-sub">Booking <strong>EVG-2204-VN</strong> · KH2 Dự án C · CY Cutoff <strong>Tiên Sa</strong></div>
+                  </div>
+                  <div>
+                    <div class="warn-countdown soon" data-countdown>--</div>
+                    <div class="warn-deadline">Hạn 19/06 14:30</div>
+                  </div>
+                </li>
+                <li class="warn-item soon" data-deadline="2026-06-20T08:00:00">
+                  <div>
+                    <div class="warn-cont">EVGU 3333333</div>
+                    <div class="warn-sub">Booking <strong>EVG-2204-VN</strong> · KH2 Dự án C · CY Cutoff <strong>Tiên Sa</strong></div>
+                  </div>
+                  <div>
+                    <div class="warn-countdown soon" data-countdown>--</div>
+                    <div class="warn-deadline">Hạn 20/06 08:00</div>
+                  </div>
+                </li>
+              </ul>
+            </section>
+          </aside>
         </div>
       </div>
     </main>
   </div>
 
   <script>
+    let currentFilter = 'all';
+
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('collapsed');
     }
-
     function toggleGroup(el) {
       el.parentElement.classList.toggle('open');
     }
+
+    function setFilter(filter, btn) {
+      currentFilter = filter;
+      document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const q = (document.getElementById('globalSearch').value || '').toLowerCase();
+      document.querySelectorAll('#masterTable tbody tr').forEach(row => {
+        const filters = (row.dataset.filter || '').split(' ');
+        const matchFilter = currentFilter === 'all' || filters.includes(currentFilter);
+        const matchSearch = !q || (row.dataset.search || '').includes(q) || row.textContent.toLowerCase().includes(q);
+        row.classList.toggle('hidden', !(matchFilter && matchSearch));
+      });
+    }
+
+    function filterAll(q) { applyFilters(); }
+
+    function formatCountdown(ms) {
+      if (ms <= 0) return 'Quá hạn';
+      const totalMin = Math.floor(ms / 60000);
+      const days = Math.floor(totalMin / 1440);
+      const hours = Math.floor((totalMin % 1440) / 60);
+      const mins = totalMin % 60;
+      if (days > 0) return `Còn ${days}d ${hours}h`;
+      if (hours > 0) return `Còn ${hours}h ${mins}p`;
+      return `Còn ${mins}p`;
+    }
+
+    function updateCountdowns() {
+      const now = Date.now();
+      const items = [...document.querySelectorAll('.warn-item[data-deadline]')];
+      let nearest = null;
+
+      items.forEach(item => {
+        const deadline = new Date(item.dataset.deadline).getTime();
+        const diff = deadline - now;
+        const el = item.querySelector('[data-countdown]');
+        if (el) el.textContent = formatCountdown(diff);
+        if (diff > 0 && (!nearest || diff < nearest.diff)) {
+          nearest = { diff, deadline: item.dataset.deadline };
+        }
+        item.classList.remove('critical', 'soon');
+        if (diff <= 0 || diff < 24 * 3600000) {
+          item.classList.add('critical');
+          if (el) el.className = 'warn-countdown critical';
+        } else if (diff < 72 * 3600000) {
+          item.classList.add('soon');
+          if (el) el.className = 'warn-countdown soon';
+        }
+      });
+
+      const pill = document.getElementById('nearestDeadline');
+      if (pill && nearest) {
+        const d = new Date(nearest.deadline);
+        const dd = String(d.getDate()).padStart(2, '0');
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const hours = Math.floor(nearest.diff / 3600000);
+        pill.textContent = hours < 24 ? `Còn ${hours}h · ${dd}/${mm}` : formatCountdown(nearest.diff) + ` · ${dd}/${mm}`;
+        pill.className = 'urgency-pill ' + (nearest.diff < 24 * 3600000 ? 'critical' : 'soon');
+      }
+    }
+
+    updateCountdowns();
+    setInterval(updateCountdowns, 60000);
   </script>
 </body>
 </html>

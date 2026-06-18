@@ -1,0 +1,3579 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý check-in checkout — TechResource</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f8f9fb;
+      --surface: #ffffff;
+      --surface-soft: #f9fafb;
+      --border: #e4e7ec;
+      --border-subtle: #f2f4f7;
+      --text-primary: #101828;
+      --text-secondary: #475467;
+      --text-muted: #98a2b3;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-light: #eff6ff;
+      --accent-light2: #dbeafe;
+      --success: #15803d;
+      --success-light: #f0fdf4;
+      --warning: #d97706;
+      --warning-light: #fffbeb;
+      --danger: #d92d20;
+      --danger-light: #fef3f2;
+      --violet: #7c3aed;
+      --violet-light: #f5f3ff;
+      --radius: 10px;
+      --radius-sm: 7px;
+      --shadow-sm: 0 1px 2px rgba(16, 24, 40, .05);
+      --shadow: 0 1px 3px rgba(16, 24, 40, .1), 0 1px 2px rgba(16, 24, 40, .06);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 13px;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 220px;
+      background: #fff;
+      border-right: 1px solid var(--border);
+      flex-shrink: 0;
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-logo {
+      padding: 0 16px 20px;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 12px;
+    }
+
+    .sidebar-logo-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .sidebar-section-title {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      padding: 10px 16px 4px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all .12s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-item.active {
+      background: var(--accent-light);
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: 24px 28px 40px;
+    }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+
+    .title {
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: -.03em;
+      color: #0f172a;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      margin-top: 4px;
+      max-width: 760px;
+    }
+
+    .head-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      height: 36px;
+      padding: 0 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: #fff;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .kpi-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .kpi-label {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .kpi-value {
+      font-size: 22px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .kpi-sub {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      margin-top: 1px;
+    }
+
+    .toolbar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 14px;
+    }
+
+    .toolbar-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 1fr 160px 120px 120px;
+      gap: 12px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+    }
+
+    .input,
+    .select {
+      width: 100%;
+      height: 36px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0 11px;
+      background: #fff;
+      font: inherit;
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .input:focus,
+    .select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, .1);
+    }
+
+    .segmented {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: 9px;
+      background: #f2f4f7;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .seg-btn {
+      height: 30px;
+      padding: 0 13px;
+      border: none;
+      border-radius: 7px;
+      background: transparent;
+      font-weight: 700;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .seg-btn.active {
+      background: #fff;
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hint-row {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      align-items: center;
+    }
+
+    .hint-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      background: var(--accent-light);
+      border: 1px solid var(--accent-light2);
+      border-radius: 999px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .panel-head {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .panel-desc {
+      color: var(--text-secondary);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .status-legend {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1040px;
+    }
+
+    th {
+      text-align: left;
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      padding: 10px 14px;
+      background: var(--surface-soft);
+      border-bottom: 1px solid var(--border-subtle);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    tr:hover td {
+      background: #fcfcfd;
+    }
+
+    .project-pill {
+      display: inline-flex;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--accent-light);
+      color: var(--accent);
+      border: 1px solid var(--accent-light2);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .employee-cell {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: #fff;
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .emp-name {
+      font-weight: 700;
+    }
+
+    .emp-meta {
+      color: var(--text-muted);
+      font-size: 11.5px;
+      margin-top: 1px;
+    }
+
+    .time {
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .duration {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #f0f9ff;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 11.5px;
+    }
+
+    .badge-ok {
+      background: var(--success-light);
+      color: var(--success);
+      border: 1px solid #bbf7d0;
+    }
+
+    .badge-late {
+      background: var(--warning-light);
+      color: var(--warning);
+      border: 1px solid #fde68a;
+    }
+
+    .badge-missing {
+      background: var(--danger-light);
+      color: var(--danger);
+      border: 1px solid #fecaca;
+    }
+
+    .group-row td {
+      background: #eef2ff;
+      color: #3730a3;
+      font-weight: 800;
+      padding: 9px 14px;
+      border-top: 1px solid #dbeafe;
+      border-bottom: 1px solid #dbeafe;
+    }
+
+    .group-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .group-count {
+      font-size: 11px;
+      background: #e0e7ff;
+      border: 1px solid #c7d2fe;
+      color: #4338ca;
+      border-radius: 999px;
+      padding: 2px 8px;
+    }
+
+    .pagination {
+      padding: 11px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .calendar {
+      padding: 14px;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .day-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      overflow: hidden;
+      min-height: 320px;
+    }
+
+    .day-head {
+      padding: 12px;
+      background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .day-title {
+      font-weight: 800;
+      color: #1e3a8a;
+    }
+
+    .day-sub {
+      color: var(--text-secondary);
+      font-size: 11.5px;
+      margin-top: 2px;
+    }
+
+    .day-total {
+      background: #fff;
+      border: 1px solid #dbeafe;
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .calendar-list {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .shift-card {
+      border: 1px solid var(--border-subtle);
+      border-radius: 9px;
+      padding: 10px;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
+    }
+
+    .shift-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .shift-name {
+      font-weight: 800;
+      color: #0f172a;
+      font-size: 12.5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .shift-role {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .shift-times {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 7px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .time-block {
+      border-radius: 8px;
+      background: var(--surface-soft);
+      padding: 7px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .time-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--text-muted);
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+
+    .time-value {
+      font-weight: 900;
+      color: #0f172a;
+    }
+
+    .arrow {
+      color: var(--text-muted);
+      font-weight: 800;
+    }
+
+    .shift-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      gap: 8px;
+    }
+
+    .small-pill {
+      display: inline-flex;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #f2f4f7;
+      color: var(--text-secondary);
+      font-size: 10.5px;
+      font-weight: 700;
+      max-width: 130px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .note-box {
+      margin: 14px;
+      padding: 12px;
+      border-radius: var(--radius);
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+      font-size: 12px;
+    }
+
+    .day-selector {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      padding: 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: #fcfcfd;
+    }
+
+    .day-chip {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 11px 12px;
+      text-align: left;
+      cursor: pointer;
+      transition: all .14s;
+    }
+
+    .day-chip.active {
+      border-color: var(--accent);
+      background: var(--accent-light);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, .08);
+    }
+
+    .day-chip-title {
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .day-chip-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      font-size: 11.5px;
+      margin-top: 4px;
+    }
+
+    .table-note {
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      background: #fff;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+    }
+
+    .table-note strong {
+      color: var(--text-primary);
+    }
+
+    .all-day-table {
+      max-height: 520px;
+      overflow: auto;
+    }
+
+    .all-day-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .more-row td {
+      text-align: center;
+      color: var(--text-secondary);
+      background: #fcfcfd;
+      font-weight: 700;
+    }
+
+    .month-table-intro {
+      padding: 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: #fcfcfd;
+    }
+
+    .month-table-intro h3 {
+      font-size: 14px;
+      font-weight: 900;
+      margin-bottom: 3px;
+    }
+
+    .month-table-intro p {
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .matrix-wrap {
+      overflow: auto;
+      max-height: 590px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .matrix-table {
+      min-width: 2280px;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .matrix-table th,
+    .matrix-table td {
+      border-bottom: 1px solid var(--border-subtle);
+      border-right: 1px solid var(--border-subtle);
+      padding: 7px;
+      white-space: normal;
+      vertical-align: top;
+    }
+
+    .matrix-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      text-align: center;
+      background: #f8fafc;
+      min-width: 66px;
+    }
+
+    .matrix-table .sticky-employee {
+      position: sticky;
+      left: 0;
+      z-index: 4;
+      min-width: 230px;
+      max-width: 230px;
+      background: #fff;
+      box-shadow: 1px 0 0 var(--border-subtle);
+    }
+
+    .matrix-table thead .sticky-employee {
+      background: #f8fafc;
+      z-index: 5;
+    }
+
+    .matrix-employee {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Empty State ── */
+    .empty-state {
+      display: none; /* hidden by default, toggled via JS */
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      text-align: center;
+      background: #fcfcfd;
+      border-radius: var(--radius);
+      min-height: 400px;
+    }
+    
+    .empty-state.active {
+      display: flex;
+    }
+
+    .empty-state-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: var(--accent-light);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .empty-state-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .empty-state-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 320px;
+      line-height: 1.5;
+    }
+
+
+    .matrix-employee .emp-name {
+      font-size: 12px;
+    }
+
+    .matrix-employee .emp-meta {
+      font-size: 10.5px;
+    }
+
+    .matrix-day-head {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: center;
+      line-height: 1.15;
+    }
+
+    .matrix-day-head strong {
+      font-size: 12px;
+      color: #0f172a;
+    }
+
+    .matrix-day-head span {
+      font-size: 9.5px;
+      color: var(--text-muted);
+    }
+
+    .attendance-cell {
+      min-height: 58px;
+      border-radius: 8px;
+      padding: 6px;
+      background: #fff;
+      border: 1px solid transparent;
+      font-variant-numeric: tabular-nums;
+      cursor: pointer;
+    }
+
+    .attendance-cell.ok {
+      background: var(--success-light);
+      border-color: #bbf7d0;
+    }
+
+    .attendance-cell.late {
+      background: var(--warning-light);
+      border-color: #fde68a;
+    }
+
+    .attendance-cell.missing {
+      background: var(--danger-light);
+      border-color: #fecaca;
+    }
+
+    .attendance-cell.weekend {
+      background: #f2f4f7;
+      border-color: #eaecf0;
+      color: var(--text-muted);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+
+    .cell-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
+      font-size: 10.5px;
+      color: var(--text-secondary);
+    }
+
+    .cell-line strong {
+      color: #0f172a;
+      font-weight: 900;
+    }
+
+    .cell-duration {
+      margin-top: 4px;
+      font-size: 10px;
+      font-weight: 900;
+      color: var(--accent);
+    }
+
+    /* ── Day Detail Modal ── */
+    .day-modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.45);
+      backdrop-filter: blur(3px);
+      z-index: 900;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .day-modal-backdrop.open {
+      display: flex;
+    }
+    .day-modal {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.22);
+      width: 100%;
+      max-width: 880px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalIn .18s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(10px) scale(.98); }
+      to   { opacity: 1; transform: translateY(0)  scale(1); }
+    }
+    .day-modal-header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: #fcfcfd;
+      flex-shrink: 0;
+    }
+    .day-modal-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: #0f172a;
+    }
+    .day-modal-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+    }
+    .day-modal-kpi {
+      display: flex;
+      gap: 10px;
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: #f8fafc;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+    .day-modal-kpi-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .day-modal-kpi-item strong { color: #0f172a; font-weight: 700; }
+    .day-modal-kpi-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .day-modal-body {
+      overflow: auto;
+      flex: 1;
+    }
+    .day-modal-footer {
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border-subtle);
+      background: #fcfcfd;
+      flex-shrink: 0;
+    }
+    .day-modal-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 32px; height: 32px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary);
+      font-size: 18px;
+      transition: background .15s;
+      flex-shrink: 0;
+    }
+    .day-modal-close:hover { background: var(--border-subtle); color: #0f172a; }
+
+    /* ── Cell detail blocks (used inside cell modal) ── */
+    .cell-detail-block {
+      background: #f8fafc;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .cell-detail-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    .cell-detail-value {
+      font-size: 20px;
+      font-weight: 900;
+    }
+    .scan-chip {
+      display: inline-flex;
+      align-items: center;
+      background: #f1f5f9;
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+    }
+    .scan-chip.first  { border-color: #10b981; color: #059669; background: #ecfdf5; }
+    .scan-chip.last   { border-color: #6366f1; color: #4f46e5; background: #eef2ff; }
+    .clickable-cell { cursor: pointer; transition: filter .12s; }
+    .clickable-cell:hover { filter: brightness(.94); }
+
+    .mini-table {
+      width: 100%;
+      min-width: 760px;
+    }
+
+    .mini-table th,
+    .mini-table td {
+      padding: 9px 12px;
+    }
+
+    .month-calendar {
+      padding: 14px;
+    }
+
+    .month-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .month-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: #0f172a;
+    }
+
+    .month-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      font-weight: 800;
+    }
+
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .weekday {
+      background: #477386;
+      color: #fff;
+      font-weight: 900;
+      font-size: 11px;
+      text-align: center;
+      padding: 9px 6px;
+      border-right: 1px solid rgba(255, 255, 255, .25);
+    }
+
+    .month-cell {
+      min-height: 116px;
+      border-right: 1px solid var(--border);
+      border-top: 1px solid var(--border);
+      padding: 8px;
+      background: #fff;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .month-cell:nth-child(7n) {
+      border-right: 0;
+    }
+
+    .month-cell.muted {
+      background: #f6f7f9;
+      color: var(--text-muted);
+    }
+
+    .month-cell.weekend {
+      background: #f5f5f5;
+    }
+
+    .month-cell.in-range {
+      background: #fff;
+      box-shadow: inset 0 0 0 2px rgba(37, 99, 235, .08);
+    }
+
+    .month-cell.selected {
+      background: #eff6ff;
+    }
+
+    .month-cell.holiday {
+      background: #fef2f2;
+    }
+
+    .cell-date {
+      position: absolute;
+      top: 7px;
+      right: 8px;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .cell-content {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+      text-align: center;
+      font-size: 11.5px;
+    }
+
+    .cell-main {
+      font-weight: 900;
+      color: #0f172a;
+    }
+
+    .cell-sub {
+      color: var(--text-secondary);
+      font-size: 10.5px;
+      line-height: 1.35;
+    }
+
+    .cell-stat {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: 10px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .cell-stat.ok {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .cell-stat.warn {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .cell-stat.danger {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .calendar-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 18px;
+      padding: 10px 2px 0;
+      color: var(--text-secondary);
+      font-size: 11px;
+    }
+
+    @media (max-width: 1180px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .filters {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .toolbar-top {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .calendar-grid {
+        grid-template-columns: repeat(2, minmax(240px, 1fr));
+      }
+
+      .day-selector {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .month-cell {
+        min-height: 104px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        padding: 18px;
+      }
+
+      .page-head {
+        flex-direction: column;
+      }
+
+      .kpi-grid,
+      .filters,
+      .calendar-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .day-selector,
+      .month-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .weekday {
+        display: none;
+      }
+    }
+
+    /* ── Range Mode Banner ── */
+    .range-banner {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      font-size: 12.5px;
+      font-weight: 600;
+      margin-bottom: 14px;
+      border: 1px solid;
+    }
+    .range-banner.show { display: flex; }
+    .range-banner.dual {
+      background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8;
+    }
+    .range-banner.flat {
+      background: var(--violet-light); border-color: #ddd6fe; color: #6d28d9;
+    }
+    .range-banner-icon { font-size: 16px; flex-shrink: 0; }
+    .range-banner-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: rgba(255,255,255,.7); border: 1px solid currentColor;
+      border-radius: 999px; padding: 2px 9px; font-weight: 700; font-size: 11.5px;
+    }
+
+    /* ── Dual-panel (2-month split) ── */
+    .dual-panel { display: flex; flex-direction: column; gap: 16px; }
+    .dual-panel-title {
+      font-size: 13px; font-weight: 800; color: var(--accent);
+      padding: 10px 16px; background: var(--accent-light);
+      border-bottom: 1px solid var(--accent-light2);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .dual-panel-title .dp-badge {
+      background: var(--accent); color: #fff; border-radius: 999px;
+      padding: 2px 8px; font-size: 11px;
+    }
+
+    /* ── Flat List View (cross-month > 2) ── */
+    #flat-list-view { display: none; }
+    #flat-list-view.active { display: block; }
+    .flat-list-head {
+      padding: 12px 16px; border-bottom: 1px solid var(--border-subtle);
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      background: #fcfcfd;
+    }
+    .flat-list-head h3 { font-size: 14px; font-weight: 900; }
+    .flat-list-head p { color: var(--text-secondary); font-size: 12px; margin-top: 2px; }
+    .flat-date-col { font-weight: 700; color: #0f172a; font-size: 12.5px; white-space: nowrap; }
+    .flat-date-sub { color: var(--text-muted); font-size: 11px; font-weight: 500; }
+
+    /* Segmented disabled state */
+    .segmented.disabled { opacity: .45; pointer-events: none; }
+
+    /* ── Cách 1 / Cách 2 switcher inside banner ── */
+    #cross-month-switcher { display: none; align-items: center; gap: 4px; flex-shrink: 0; }
+    #cross-month-switcher.show { display: flex; }
+    .cach-btn {
+      padding: 4px 10px; border-radius: 6px; border: 1.5px solid currentColor;
+      font-size: 12px; font-weight: 700; cursor: pointer; background: transparent;
+      color: inherit; opacity: .65; transition: opacity .15s, background .15s;
+    }
+    .cach-btn.active { background: rgba(255,255,255,.8); opacity: 1; }
+    .cach-btn:hover:not(.active) { opacity: .9; background: rgba(255,255,255,.4); }
+
+    /* ── Dual panel blocks ── */
+    .dual-panel-block + .dual-panel-block { border-top: 2px solid var(--border); }
+    .dual-panel-block .dual-panel-title {
+      font-size: 13px; font-weight: 800; color: var(--accent);
+      padding: 10px 16px; background: var(--accent-light);
+      border-bottom: 1px solid var(--accent-light2);
+      display: flex; align-items: center; gap: 8px; position: sticky; left: 0;
+    }
+    .dual-panel-block .dual-panel-title .dp-badge {
+      background: var(--accent); color: #fff; border-radius: 999px;
+      padding: 2px 9px; font-size: 11px;
+    }
+    .dual-panel-block .matrix-wrap-inner { overflow-x: auto; max-height: 340px; }
+
+    /* === New summary-first table UX === */
+    .toolbar-actions { display: flex; align-items: center; gap: 8px; }
+    .export-wrap { position: relative; }
+    .export-menu {
+      position: absolute; right: 0; top: calc(100% + 6px); z-index: 30;
+      width: 280px; background: #fff; border: 1px solid var(--border); border-radius: 10px;
+      box-shadow: 0 12px 30px rgba(15,23,42,.12); padding: 8px; display: none;
+    }
+    .export-menu.open { display: block; }
+    .export-item {
+      width: 100%; text-align: left; border: 0; background: transparent; cursor: pointer;
+      padding: 8px 10px; border-radius: 8px; font-size: 12.5px; color: #0f172a; font-weight: 600;
+    }
+    .export-item:hover { background: #f8fafc; }
+    .summary-wrap { padding: 12px 16px 16px; }
+    .summary-table { width: 100%; border-collapse: collapse; min-width: 0; }
+    .summary-table th, .summary-table td { border-bottom: 1px solid var(--border-subtle); padding: 10px 8px; vertical-align: top; }
+    .summary-table th { font-size: 11px; text-transform: uppercase; color: var(--text-secondary); letter-spacing: .4px; }
+    .timeline-strip { display: flex; flex-wrap: wrap; gap: 4px; max-width: 360px; }
+    .day-chip {
+      width: 18px; height: 18px; border-radius: 5px; display: inline-flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; cursor: pointer; border: 1px solid var(--border-subtle); color: #334155; background: #fff;
+    }
+    .day-chip.ok { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+    .day-chip.late { background: #fffbeb; color: #b45309; border-color: #fcd34d; }
+    .day-chip.missing { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+    .day-chip.weekend, .day-chip.holiday { background: #f1f5f9; color: #94a3b8; }
+    .advanced-box { margin-top: 12px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .advanced-head {
+      background: #f8fafc; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .advanced-body { display: none; }
+    .advanced-body.open { display: block; }
+
+    /* === Calendar employee chip bar === */
+    #cal-employee-bar {
+      padding: 12px 16px 0;
+    }
+    .cal-emp-bar-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .cal-emp-bar-label {
+      font-size: 12px; font-weight: 700; color: var(--text-secondary);
+      text-transform: uppercase; letter-spacing: .4px;
+    }
+    .cal-emp-back-btn {
+      border: 0; background: transparent; cursor: pointer; color: var(--accent);
+      font-size: 12.5px; font-weight: 700; padding: 0;
+    }
+    .cal-emp-back-btn:hover { text-decoration: underline; }
+    .cal-emp-chips {
+      display: flex; flex-wrap: wrap; gap: 10px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .emp-chip {
+      display: flex; align-items: center; gap: 10px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      background: #fff; padding: 8px 14px 8px 10px; cursor: pointer;
+      transition: border-color .15s, box-shadow .15s, background .15s;
+      min-width: 200px;
+    }
+    .emp-chip:hover { border-color: var(--accent); box-shadow: 0 2px 8px rgba(71,115,134,.15); }
+    .emp-chip.active {
+      border-color: var(--accent); background: var(--accent-light);
+      box-shadow: 0 2px 10px rgba(71,115,134,.2);
+    }
+    .emp-chip .chip-avatar {
+      width: 34px; height: 34px; border-radius: 50%; background: var(--accent);
+      color: #fff; font-weight: 900; font-size: 13px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .emp-chip .chip-info { display: flex; flex-direction: column; min-width: 0; }
+    .emp-chip .chip-name { font-weight: 700; font-size: 13px; color: #0f172a; }
+    .emp-chip .chip-meta { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
+    .emp-chip .chip-badge {
+      margin-left: auto; flex-shrink: 0; font-size: 10px; padding: 2px 6px;
+      border-radius: 999px; font-weight: 700;
+    }
+    .emp-chip .chip-badge.ok { background: #ecfdf5; color: #047857; }
+    .emp-chip .chip-badge.warn { background: #fffbeb; color: #b45309; }
+    .emp-chip .chip-badge.danger { background: #fef2f2; color: #b91c1c; }
+
+    .employee-kpi-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; padding: 0 14px 12px;
+    }
+    .employee-kpi-card { border: 1px solid var(--border-subtle); border-radius: 8px; background: #f8fafc; padding: 8px 10px; }
+    .employee-kpi-card .k { font-size: 11px; color: var(--text-secondary); }
+    .employee-kpi-card .v { font-size: 16px; font-weight: 900; color: #0f172a; margin-top: 2px; }
+    .employee-only { display: none; }
+    .employee-kpi-grid.employee-only.active { display: grid; }
+    .month-grid.employee-only.active { display: grid; }
+    .overview-only.hidden { display: none; }
+
+    /* === Scan timeline in modal === */
+    .scan-summary { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+    .scan-summary .cell-detail-block { padding: 10px 12px; }
+    .scan-timeline { border: 1px dashed var(--border); border-radius: 8px; background: #fff; padding: 8px; margin-top: 8px; }
+    .scan-row { display: flex; align-items: center; gap: 8px; padding: 6px 4px; font-size: 12.5px; color: #334155; }
+    .scan-row + .scan-row { border-top: 1px solid #f1f5f9; }
+    .scan-row .t { font-weight: 800; min-width: 62px; color: #0f172a; }
+    .scan-row .tag { font-size: 11px; padding: 1px 6px; border-radius: 999px; background: #eef2ff; color: #4f46e5; }
+    .scan-toggle { margin-top: 8px; font-size: 12px; color: var(--accent); background: transparent; border: 0; cursor: pointer; padding: 0; font-weight: 700; }
+
+    /* ══════════════════════════════════════════
+       STATISTICS SECTION
+    ══════════════════════════════════════════ */
+    .stats-section {
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    /* Overview breakdown bar */
+    .stat-overview-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat-ob-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .stat-ob-label {
+      font-size: 11px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .stat-ob-meta { display: flex; gap: 16px; font-size: 12px; color: var(--text-secondary); flex-wrap: wrap; }
+    .stat-ob-meta strong { color: #0f172a; font-weight: 800; font-size: 13px; }
+    .stat-ob-bar {
+      height: 22px; border-radius: 999px; overflow: hidden;
+      display: flex; margin-bottom: 12px;
+    }
+    .stat-ob-seg {
+      height: 100%; display: flex; align-items: center; justify-content: center;
+      font-size: 10.5px; font-weight: 700; color: rgba(255,255,255,.95);
+      overflow: hidden; white-space: nowrap; padding: 0 10px;
+    }
+    .stat-ob-seg.ok   { background: #10b981; flex: 89; border-radius: 999px 0 0 999px; }
+    .stat-ob-seg.late { background: #f59e0b; flex: 7; }
+    .stat-ob-seg.miss { background: #ef4444; flex: 4; border-radius: 0 999px 999px 0; }
+    .stat-ob-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 0; }
+    .stat-ob-leg-item {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 12.5px; padding: 4px 16px 4px 0;
+    }
+    .stat-ob-leg-item + .stat-ob-leg-item {
+      padding-left: 16px; border-left: 1px solid var(--border-subtle);
+    }
+    .leg-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+    .stat-ob-leg-item.ok   .leg-dot { background: #10b981; }
+    .stat-ob-leg-item.late .leg-dot { background: #f59e0b; }
+    .stat-ob-leg-item.miss .leg-dot { background: #ef4444; }
+    .leg-label { color: var(--text-secondary); }
+    .leg-num   { font-weight: 800; color: #0f172a; font-size: 14px; }
+    .leg-pct   {
+      font-size: 11px; color: var(--text-secondary);
+      background: #f1f5f9; border-radius: 999px; padding: 1px 7px; font-weight: 600;
+    }
+    /* 3 insight cards */
+    .stat-cards-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 12px;
+    }
+    .stat-insight-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .sic-header {
+      display: flex; align-items: center; gap: 9px;
+      padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);
+    }
+    .sic-icon {
+      width: 32px; height: 32px; border-radius: 9px;
+      display: grid; place-items: center; font-size: 15px; flex-shrink: 0;
+    }
+    .sic-title { font-size: 13px; font-weight: 800; color: #0f172a; }
+    .sic-period {
+      font-size: 11px; color: var(--text-muted); margin-left: auto;
+      background: #f1f5f9; padding: 2px 8px; border-radius: 999px; white-space: nowrap;
+    }
+    /* Hero metric */
+    .sic-hero { display: flex; align-items: flex-end; gap: 8px; }
+    .sic-hero-num {
+      font-size: 34px; font-weight: 900; letter-spacing: -.03em;
+      line-height: 1; font-variant-numeric: tabular-nums;
+    }
+    .sic-hero-num.warn   { color: #d97706; }
+    .sic-hero-num.ok     { color: #15803d; }
+    .sic-hero-num.accent { color: var(--accent); }
+    .sic-hero-unit {
+      font-size: 12.5px; color: var(--text-secondary);
+      line-height: 1.4; padding-bottom: 4px;
+    }
+    /* Supporting stats rows */
+    .sic-stats {
+      border: 1px solid var(--border-subtle);
+      border-radius: 9px; overflow: hidden; flex: 1;
+    }
+    .sic-stat {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 8px; padding: 8px 12px; font-size: 12.5px;
+      border-bottom: 1px solid var(--border-subtle); background: #fff;
+    }
+    .sic-stat:last-child { border-bottom: 0; }
+    .sic-stat.sic-alert { background: #fffef7; }
+    .sic-stat-label { color: var(--text-secondary); }
+    .sic-stat-val   { font-weight: 700; color: #0f172a; text-align: right; white-space: nowrap; }
+    .sic-stat-val.warn   { color: #d97706; }
+    .sic-stat-val.danger { color: var(--danger); }
+    .sic-stat-val.ok     { color: #15803d; }
+    .sic-stat-val.accent { color: var(--accent); }
+    /* Employee spotlight */
+    .sic-employee {
+      display: flex; align-items: center; gap: 9px;
+      padding: 10px 11px; border-radius: 9px;
+      background: #f8fafc; border: 1px solid var(--border-subtle);
+    }
+    .sic-emp-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: grid; place-items: center;
+      font-weight: 800; font-size: 12px; color: #fff; flex-shrink: 0;
+    }
+    .sic-emp-name { font-weight: 700; font-size: 12.5px; color: #0f172a; }
+    .sic-emp-sub  { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
+    .sic-emp-badge {
+      margin-left: auto; flex-shrink: 0; font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+    }
+    .sic-emp-badge.warn   { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+    .sic-emp-badge.danger { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+    .sic-emp-badge.accent { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent-light2); }
+    @media (max-width: 1180px) {
+      .stat-cards-row { grid-template-columns: 1fr; }
+    }
+
+    /* ══════════════════════════════════════════
+       IMPROVED TABLE MODE
+    ══════════════════════════════════════════ */
+    .summary-table th { font-size: 11px; white-space: nowrap; }
+    .sort-th { cursor: pointer; user-select: none; }
+    .sort-th:hover { color: var(--accent); }
+    .sort-arrow { opacity: .4; font-size: 9px; margin-left: 3px; }
+
+    /* Row status tinting — only on non-project rows outside groups */
+    .summary-table .tr-warn  td { background: transparent; }
+    .summary-table .tr-danger td { background: transparent; }
+    .summary-table .tr-warn  td:first-child { border-left: none; padding-left: inherit; }
+    .summary-table .tr-danger td:first-child { border-left: none; padding-left: inherit; }
+
+    /* Status badge in table */
+    .tbl-status-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 9px; border-radius: 999px;
+      font-size: 11.5px; font-weight: 700; white-space: nowrap;
+    }
+    .tbl-status-ok     { background: #f0fdf4; color: #047857; border: 1px solid #a7f3d0; }
+    .tbl-status-warn   { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+    .tbl-status-danger { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+    /* Mini attendance bar under working-days count */
+    .mini-bar-wrap {
+      height: 3px; background: #e2e8f0; border-radius: 999px;
+      overflow: hidden; margin-top: 5px; width: 48px;
+    }
+    .mini-bar-fill { height: 100%; border-radius: 999px; background: #10b981; }
+    .mini-bar-fill.warn   { background: #f59e0b; }
+    .mini-bar-fill.danger { background: #ef4444; }
+
+    /* Avg time display */
+    .avg-in-time {
+      font-size: 13px; font-weight: 700; color: #0f172a;
+      font-variant-numeric: tabular-nums;
+    }
+    .avg-in-time.late { color: var(--warning); }
+
+    /* Late / missing count cells */
+    .count-cell-bad  { font-weight: 800; color: var(--danger); }
+    .count-cell-warn { font-weight: 800; color: var(--warning); }
+    .count-cell-ok   { color: var(--text-muted); font-weight: 600; }
+
+    /* Project group header row — collapsible */
+    .project-group-header {
+      cursor: pointer;
+      user-select: none;
+    }
+    .project-group-header:hover td { background: #fafafa !important; }
+    .project-group-header td {
+      padding: 0 !important;
+      background: #fff !important;
+      border-top: 1px solid var(--border) !important;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .project-group-header:first-child td { border-top: none !important; }
+    .proj-header-inner {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px 10px 12px;
+      border-left: 3px solid;
+    }
+    .proj-chevron {
+      font-size: 10px; color: #94a3b8;
+      transition: transform .2s ease;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 16px; flex-shrink: 0;
+    }
+    .project-group-header.collapsed .proj-chevron { transform: rotate(-90deg); }
+    .proj-name {
+      font-size: 12.5px; font-weight: 800; letter-spacing: .3px; color: #0f172a;
+    }
+    .proj-count-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px;
+      background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;
+    }
+    .proj-header-stats {
+      margin-left: auto; display: flex; gap: 12px; align-items: center;
+    }
+    .proj-stat-item {
+      font-size: 11px; font-weight: 600; color: #94a3b8;
+    }
+    /* Tree line for employee rows */
+    .emp-row td:first-child {
+      position: relative;
+      padding-left: 46px !important;
+    }
+    /* vertical line */
+    .emp-row td:first-child::before {
+      content: '';
+      position: absolute;
+      left: 22px; top: 0; bottom: 0;
+      width: 1.5px; background: #e2e8f0;
+    }
+    .emp-row.emp-row-last td:first-child::before {
+      bottom: 50%;
+    }
+    /* horizontal connector */
+    .emp-row td:first-child::after {
+      content: '';
+      position: absolute;
+      left: 22px; top: 50%;
+      width: 14px; height: 1.5px; background: #e2e8f0;
+    }
+    /* Emp rows collapsible */
+    .emp-row.row-hidden, .project-subtotal.row-hidden { display: none; }
+
+    /* Project subtotal row */
+    .project-subtotal td {
+      background: #f8fafc !important;
+      font-size: 11.5px;
+      color: #475569;
+      border-top: 1px dashed var(--border) !important;
+      border-bottom: 2px solid var(--border) !important;
+      padding: 6px 8px !important;
+    }
+
+    /* Summary footer */
+    .summary-tfoot td {
+      background: #f8fafc !important;
+      font-weight: 700;
+      border-top: 2px solid var(--border) !important;
+      color: #0f172a;
+      font-size: 12px;
+    }
+
+    /* Bigger, more comfortable timeline chips */
+    .timeline-strip { display: flex; flex-wrap: wrap; gap: 3px; max-width: 380px; }
+    .day-chip {
+      width: 20px; height: 20px; border-radius: 5px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; cursor: pointer;
+      border: 1px solid var(--border-subtle); color: #334155; background: #fff;
+      transition: transform .1s, box-shadow .1s;
+    }
+    .day-chip:hover:not(.weekend):not(.holiday):not(.leave) {
+      transform: scale(1.25); box-shadow: 0 2px 6px rgba(0,0,0,.15); z-index: 1; position: relative;
+    }
+    .day-chip.ok      { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+    .day-chip.late    { background: #fffbeb; color: #b45309; border-color: #fcd34d; }
+    .day-chip.missing { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+    .day-chip.weekend, .day-chip.holiday { background: #f1f5f9; color: #cbd5e1; border-color: #e2e8f0; }
+    .day-chip.leave   { background: #f5f3ff; color: #7c3aed; border-color: #ddd6fe; }
+
+    @media (max-width: 1180px) {
+      .stats-row-2 { grid-template-columns: 1fr; }
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">TR</div>
+        <span>TechResource</span>
+      </div>
+      <div class="sidebar-section-title">Work management</div>
+      <div class="sidebar-item">📊 Quản lý công số</div>
+      <div class="sidebar-item">⏱ Quản lý OT</div>
+      <div class="sidebar-item active">🕘 Check-in checkout</div>
+      <div class="sidebar-section-title">Master data</div>
+      <div class="sidebar-item">👥 Nhân sự</div>
+      <div class="sidebar-item">📁 Dự án</div>
+    </aside>
+
+    <main class="main">
+      <header class="page-head">
+        <div>
+          <h1 class="title">Quản lý chấm công</h1>
+          <p class="subtitle">
+            Theo dõi giờ vào, giờ ra và thời gian làm việc theo dự án.
+          </p>
+        </div>
+        <div class="head-actions">
+          <button class="btn btn-primary">↻ Đồng bộ TechEyes</button>
+        </div>
+      </header>
+
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background: var(--accent-light); color: var(--accent);">👥</div>
+          <div>
+            <div class="kpi-label">Tổng lượt check-in</div>
+            <div class="kpi-value">1,356</div>
+            <div class="kpi-sub">Tháng 04 · PRODUCT24 · 63 nhân sự</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background: var(--success-light); color: var(--success);">✓</div>
+          <div>
+            <div class="kpi-label">Đúng giờ</div>
+            <div class="kpi-value">221</div>
+            <div class="kpi-sub">89% lượt check-in tháng này</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background: var(--warning-light); color: var(--warning);">!</div>
+          <div>
+            <div class="kpi-label">Đi trễ</div>
+            <div class="kpi-value">19</div>
+            <div class="kpi-sub">Ngưỡng mặc định 08:30</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background: var(--violet-light); color: var(--violet);">↗</div>
+          <div>
+            <div class="kpi-label">Giờ làm trung bình</div>
+            <div class="kpi-value">8.6h</div>
+            <div class="kpi-sub">Tính từ check-in đến checkout</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 insight cards -->
+      <section class="stats-section" id="stats-section">
+        <div class="stat-cards-row">
+
+          <!-- Card 1: Đi trễ -->
+          <div class="stat-insight-card">
+            <div class="sic-header">
+              <span class="sic-icon" style="background:#fffbeb;color:#d97706">🕐</span>
+              <span class="sic-title">Đi trễ</span>
+              <span id="sic-period-late" class="sic-period">Tháng 04 · vào sau 08:00 là trễ</span>
+            </div>
+            <div class="sic-hero" style="flex-direction:column;align-items:flex-start;gap:4px">
+              <div style="display:flex;align-items:baseline;gap:7px">
+                <span class="sic-hero-num warn">42</span>
+                <span style="font-size:14px;font-weight:700;color:#0f172a">/ 63 người đi trễ</span>
+              </div>
+              <span style="font-size:12px;color:var(--text-muted)">TB <strong style="color:#d97706">2.4 lần/người</strong> · 21 người không trễ lần nào</span>
+            </div>
+            <div class="sic-stats">
+              <div class="sic-stat">
+                <span class="sic-stat-label">Mức độ trễ <small style="color:var(--text-muted)"></small></span>
+                <span class="sic-stat-val" style="display:flex;gap:8px">
+                  <span style="color:#d97706" title="Trễ dưới 15 phút">⚡ &lt;15 phút: 72</span>
+                  <span style="color:var(--danger)" title="Trễ từ 15 phút trở lên">🔴 ≥15 phút: 27</span>
+                </span>
+              </div>
+              <div class="sic-stat">
+                <span class="sic-stat-label">Giờ vào trung bình</span>
+                <span class="sic-stat-val">08:09 <small style="color:var(--text-muted);font-size:11px">(trễ ~9 phút)</small></span>
+              </div>
+              <div class="sic-stat sic-alert">
+                <span class="sic-stat-label">📍 Ngày nhiều người trễ nhất</span>
+                <span class="sic-stat-val">16/04 · 6 người</span>
+              </div>
+            </div>
+            <div class="sic-employee">
+              <div class="sic-emp-avatar" style="background:#6366f1">T</div>
+              <div>
+                <div class="sic-emp-name">Huỳnh Hải Thiên</div>
+                <div class="sic-emp-sub">Nhiều lần trễ nhất · TB +11 phút</div>
+              </div>
+              <span class="sic-emp-badge warn">4 lần</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Giờ ra -->
+          <div class="stat-insight-card">
+            <div class="sic-header">
+              <span class="sic-icon" style="background:#f0fdf4;color:#15803d">🚪</span>
+              <span class="sic-title">Giờ ra</span>
+              <span id="sic-period-checkout" class="sic-period">Tháng 04 · quét TechEyes</span>
+            </div>
+            <div class="sic-hero" style="flex-direction:column;align-items:flex-start;gap:4px">
+              <div style="display:flex;align-items:baseline;gap:7px">
+                <span class="sic-hero-num ok">18:12</span>
+                <span style="font-size:14px;font-weight:700;color:#0f172a">giờ ra trung bình</span>
+              </div>
+              <span style="font-size:12px;color:var(--text-muted)">Dao động <strong style="color:#374151">17:05 – 20:19</strong> · hầu hết về trong khung 17:30–18:30</span>
+            </div>
+            <div class="sic-stats">
+              <div class="sic-stat">
+                <span class="sic-stat-label">OT <small style="color:var(--text-muted)">(checkout sau 19:00)</small></span>
+                <span class="sic-stat-val accent">23 lần · 11 người</span>
+              </div>
+              <div class="sic-stat">
+                <span class="sic-stat-label">Về sớm <small style="color:var(--text-muted)">(checkout trước 17:30)</small></span>
+                <span class="sic-stat-val warn">8 lần · 6 người</span>
+              </div>
+              <div class="sic-stat sic-alert">
+                <span class="sic-stat-label">📍 Khung giờ cao điểm ra về</span>
+                <span class="sic-stat-val">17:30–18:00 · 43 / 63 người</span>
+              </div>
+            </div>
+            <div class="sic-employee">
+              <div class="sic-emp-avatar" style="background:#10b981">K</div>
+              <div>
+                <div class="sic-emp-name">Phùng Ngô Duy Khánh</div>
+                <div class="sic-emp-sub">OT nhiều nhất · 7 lần · muộn nhất 20:19</div>
+              </div>
+              <span class="sic-emp-badge accent">7 OT</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Giờ làm -->
+          <div class="stat-insight-card">
+            <div class="sic-header">
+              <span class="sic-icon" style="background:var(--accent-light);color:var(--accent)">⚡</span>
+              <span class="sic-title">Giờ làm</span>
+              <span id="sic-period-hours" class="sic-period">Tháng 04 · check-in → out</span>
+            </div>
+            <div class="sic-hero" style="flex-direction:column;align-items:flex-start;gap:4px">
+              <div style="display:flex;align-items:baseline;gap:7px">
+                <span class="sic-hero-num accent">8h 56m</span>
+                <span style="font-size:14px;font-weight:700;color:#0f172a">trung bình / ngày</span>
+              </div>
+              <span style="font-size:12px;color:var(--text-muted)">Cao hơn chuẩn 8h <strong style="color:var(--accent)">+56 phút</strong> · tính trên 22 ngày làm việc</span>
+            </div>
+            <div class="sic-stats">
+              <div class="sic-stat">
+                <span class="sic-stat-label">Nhân viên có ít nhất 1 ngày OT &gt; 9h</span>
+                <span class="sic-stat-val">31 / 63 người</span>
+              </div>
+              <div class="sic-stat">
+                <span class="sic-stat-label">Nhân viên có ít nhất 1 ngày làm &lt; 8h</span>
+                <span class="sic-stat-val warn">14 / 63 người</span>
+              </div>
+              <div class="sic-stat sic-alert">
+                <span class="sic-stat-label">📍 Làm nhiều giờ nhất <small style="color:var(--text-muted)">(TB/ngày)</small></span>
+                <span class="sic-stat-val ok">Huỳnh Hải Thiên · 9h 23m / ngày</span>
+              </div>
+            </div>
+            <div class="sic-employee">
+              <div class="sic-emp-avatar" style="background:#f59e0b">K</div>
+              <div>
+                <div class="sic-emp-name">Phùng Ngô Duy Khánh</div>
+                <div class="sic-emp-sub">Tổng giờ cao nhất toàn cty · OT dài nhất 22/04: 12h 13m</div>
+              </div>
+              <span class="sic-emp-badge accent">169h tháng</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="toolbar">
+        <div class="toolbar-top">
+          <div class="filters">
+            <div class="field">
+              <label>Tìm kiếm</label>
+              <input class="input" value="" placeholder="Mã NV, tên nhân viên..." />
+            </div>
+            <div class="field">
+              <label>Dự án</label>
+              <select id="project-select" class="select">
+                <option value="ALL" selected>Tất cả dự án</option>
+                <option value="PRODUCT24">PRODUCT24</option>
+                <option value="TechResource">TechResource</option>
+                <option value="TechEyes">TechEyes</option>
+                <option value="Miichisoft">Miichisoft</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Tháng</label>
+              <select id="filter-month" class="select">
+                <option value="1">Tháng 1</option>
+                <option value="2">Tháng 2</option>
+                <option value="3">Tháng 3</option>
+                <option value="4" selected>Tháng 4</option>
+                <option value="5">Tháng 5</option>
+                <option value="6">Tháng 6</option>
+                <option value="7">Tháng 7</option>
+                <option value="8">Tháng 8</option>
+                <option value="9">Tháng 9</option>
+                <option value="10">Tháng 10</option>
+                <option value="11">Tháng 11</option>
+                <option value="12">Tháng 12</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Năm</label>
+              <select id="filter-year" class="select">
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026" selected>2026</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="toolbar-actions">
+            <div class="export-wrap">
+              <button class="btn" id="export-trigger">⬇ Export Excel</button>
+              <div class="export-menu" id="export-menu">
+                <button class="export-item">Monthly Attendance Matrix</button>
+                <button class="export-item">Employee Monthly Summary</button>
+                <button class="export-item">Daily Detail Report</button>
+                <button class="export-item">Exception Report</button>
+                <button class="export-item">Raw Scan Audit</button>
+              </div>
+            </div>
+            <div class="segmented" aria-label="view mode">
+              <button class="seg-btn active" data-view="table">Table</button>
+              <button class="seg-btn" data-view="calendar">Calendar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hint-row">
+          <span class="hint-chip">Gợi ý</span>
+          <span>Table mặc định là bản tóm tắt theo nhân sự (không cần kéo ngang). Calendar: chọn dự án để lọc theo nhân sự, click avatar để xem lịch cá nhân.</span>
+        </div>
+      </section>
+
+      <section class="panel">
+        
+        <!-- ── Empty State ── -->
+        <div id="empty-state-view" class="empty-state">
+          <div class="empty-state-icon">📊</div>
+          <div class="empty-state-title">Chưa chọn dự án</div>
+          <div class="empty-state-desc">Vui lòng chọn Dự án và khoảng thời gian để xem dữ liệu điểm danh chi tiết.</div>
+        </div>
+
+        <div id="data-view-container">
+
+        <!-- Range Mode Banner -->
+        <div class="range-banner" id="range-banner" style="margin:12px 16px 0; border-radius:8px; flex-wrap:wrap; gap:8px;">
+          <span class="range-banner-icon" id="range-banner-icon">📅</span>
+          <span id="range-banner-text" style="flex:1;min-width:0"></span>
+          <!-- Cách 1 / Cách 2 switcher (visible in dual mode only) -->
+          <span id="cross-month-switcher" style="display:none;gap:4px;align-items:center;display:none">
+            <button class="cach-btn active" data-cach="1">Cách 1 · Tách tháng</button>
+            <button class="cach-btn" data-cach="2">Cách 2 · Danh sách</button>
+          </span>
+        </div>
+
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">PRODUCT24 · Tháng 04/2026</div>
+            <div class="panel-desc">Table mode luôn hiển thị đủ ngày 1-30 trong tháng, mỗi ô là check-in/checkout của nhân viên.</div>
+          </div>
+          <div class="status-legend">
+            <span class="legend-item"><span class="dot" style="background: var(--success);"></span>Đúng giờ</span>
+            <span class="legend-item"><span class="dot" style="background: var(--warning);"></span>Đi trễ</span>
+            <span class="legend-item"><span class="dot" style="background: var(--danger);"></span>Thiếu checkout</span>
+          </div>
+        </div>
+
+        <!-- Flat List View (cross-month > 2 months) -->
+        <div id="flat-list-view">
+          <div class="flat-list-head">
+            <div>
+              <h3 id="flat-list-title">Danh sách check-in</h3>
+              <p id="flat-list-sub"></p>
+            </div>
+            <div class="status-legend">
+              <span class="legend-item"><span class="dot" style="background:var(--success)"></span>Đúng giờ</span>
+              <span class="legend-item"><span class="dot" style="background:var(--warning)"></span>Đi trễ</span>
+              <span class="legend-item"><span class="dot" style="background:var(--danger)"></span>Thiếu checkout</span>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="mini-table" id="flat-table">
+              <thead>
+                <tr>
+                  <th>Ngày</th>
+                  <th>Mã NV</th>
+                  <th>Tên nhân viên</th>
+                  <th>Chức vụ</th>
+                  <th>Giờ vào</th>
+                  <th>Giờ ra</th>
+                  <th>Thời gian làm</th>
+                  <th>Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody id="flat-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="view active" id="table-view">
+          <div class="summary-wrap">
+            <div class="table-wrap" style="overflow-x:auto;">
+              <table class="summary-table" id="summary-table">
+                <thead>
+                  <tr>
+                    <th style="min-width:200px">Nhân sự</th>
+                    <th class="sort-th" title="Sắp xếp theo ngày công">Ngày công <span class="sort-arrow">↕</span></th>
+                    <th class="sort-th" title="Sắp xếp theo tổng giờ">Tổng giờ <span class="sort-arrow">↕</span></th>
+                    <th class="sort-th" title="Sắp xếp theo TB/ngày">TB/ngày <span class="sort-arrow">↕</span></th>
+                    <th>Giờ vào TB</th>
+                    <th class="sort-th" style="color:var(--warning)" title="Sắp xếp theo số lần trễ">Đi trễ <span class="sort-arrow">↕</span></th>
+                    <th class="sort-th" style="color:var(--danger)" title="Sắp xếp">Thiếu C/O <span class="sort-arrow">↕</span></th>
+                    <th>Bất thường</th>
+                    <th>Tình trạng</th>
+                    <th style="min-width:400px">Chấm công theo ngày</th>
+                  </tr>
+                </thead>
+                <tbody id="summary-tbody"></tbody>
+                <tfoot id="summary-tfoot"></tfoot>
+              </table>
+            </div>
+
+            <div class="advanced-box">
+              <div class="advanced-head">
+                <div style="font-weight:800;color:#0f172a">Advanced Matrix View (30 ngày)</div>
+                <button class="btn" id="toggle-advanced-matrix">Xem dạng ma trận</button>
+              </div>
+              <div class="advanced-body" id="advanced-matrix-body">
+          <!-- Dual-month panels (Cách 1) — injected here, hidden in single mode -->
+          <div id="dual-container" style="display:none;flex-direction:column;gap:0"></div>
+          <!-- Single-month matrix -->
+          <div class="matrix-wrap" id="single-matrix-wrap">
+            <table class="matrix-table" id="month-matrix"></table>
+          </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="view" id="calendar-view">
+          <!-- Hidden select used internally by renderEmployeeCalendar -->
+          <select id="calendar-employee-select" style="display:none"></select>
+
+          <!-- Employee chip picker — appears when a specific project is selected -->
+          <div id="cal-employee-bar" style="display:none">
+            <div class="cal-emp-bar-head">
+              <div class="cal-emp-bar-label" id="cal-emp-bar-label">Nhân sự trong dự án</div>
+              <button class="cal-emp-back-btn" id="cal-emp-back-btn" style="display:none">
+                — Xem tổng quan
+              </button>
+            </div>
+            <div class="cal-emp-chips" id="cal-emp-chips"></div>
+          </div>
+
+          <div class="employee-kpi-grid employee-only" id="employee-kpi-grid">
+            <div class="employee-kpi-card"><div class="k">Tổng giờ tháng</div><div class="v" id="emp-kpi-total-hours">188h 20m</div></div>
+            <div class="employee-kpi-card"><div class="k">Ngày có check-in</div><div class="v" id="emp-kpi-working-days">22</div></div>
+            <div class="employee-kpi-card"><div class="k">Số lần đi trễ</div><div class="v" id="emp-kpi-late-count">3</div></div>
+            <div class="employee-kpi-card"><div class="k">Thiếu checkout</div><div class="v" id="emp-kpi-missing-checkout">1</div></div>
+            <div class="employee-kpi-card"><div class="k">TB Giờ vào/ra</div><div class="v" id="emp-kpi-avg-io">08:09 / 18:11</div></div>
+            <div class="employee-kpi-card"><div class="k">TB giờ/ngày</div><div class="v" id="emp-kpi-avg-hours">8h 34m</div></div>
+          </div>
+
+          <div class="month-calendar">
+            <div class="month-top">
+              <div class="month-title">Tháng 04/2026 · PRODUCT24</div>
+            </div>
+            <div class="month-grid overview-only" id="calendar-overview-grid">
+              <div class="weekday">T2</div>
+              <div class="weekday">T3</div>
+              <div class="weekday">T4</div>
+              <div class="weekday">T5</div>
+              <div class="weekday">T6</div>
+              <div class="weekday">T7</div>
+              <div class="weekday">CN</div>
+
+              <div class="month-cell muted"><span class="cell-date">30</span></div>
+              <div class="month-cell muted"><span class="cell-date">31</span></div>
+              <div class="month-cell">
+                <span class="cell-date">1</span>
+                <div class="cell-content">
+                  <div class="cell-main">61 nhân sự</div>
+                  <div class="cell-sub">56 đúng giờ · 3 trễ</div>
+                  <span class="cell-stat ok">Avg 8.4h</span>
+                </div>
+              </div>
+              <div class="month-cell">
+                <span class="cell-date">2</span>
+                <div class="cell-content">
+                  <div class="cell-main">60 nhân sự</div>
+                  <div class="cell-sub">55 đúng giờ · 4 trễ</div>
+                  <span class="cell-stat ok">Avg 8.6h</span>
+                </div>
+              </div>
+              <div class="month-cell">
+                <span class="cell-date">3</span>
+                <div class="cell-content">
+                  <div class="cell-main">63 nhân sự</div>
+                  <div class="cell-sub">58 đúng giờ · 2 trễ</div>
+                  <span class="cell-stat ok">Avg 8.7h</span>
+                </div>
+              </div>
+              <div class="month-cell weekend">
+                <span class="cell-date">4</span>
+                <div class="cell-content"><div class="cell-main">~~~~</div><div class="cell-sub">Cuối tuần</div></div>
+              </div>
+              <div class="month-cell weekend">
+                <span class="cell-date">5</span>
+                <div class="cell-content"><div class="cell-main">~~~~</div><div class="cell-sub">Cuối tuần</div></div>
+              </div>
+
+              <div class="month-cell">
+                <span class="cell-date">6</span>
+                <div class="cell-content"><div class="cell-main">59 nhân sự</div><div class="cell-sub">54 đúng giờ · 5 trễ</div><span class="cell-stat warn">2 thiếu checkout</span></div>
+              </div>
+              <div class="month-cell">
+                <span class="cell-date">7</span>
+                <div class="cell-content"><div class="cell-main">60 nhân sự</div><div class="cell-sub">57 đúng giờ · 2 trễ</div><span class="cell-stat ok">Avg 8.5h</span></div>
+              </div>
+              <div class="month-cell">
+                <span class="cell-date">8</span>
+                <div class="cell-content"><div class="cell-main">61 nhân sự</div><div class="cell-sub">56 đúng giờ · 4 trễ</div><span class="cell-stat ok">Avg 8.4h</span></div>
+              </div>
+              <div class="month-cell">
+                <span class="cell-date">9</span>
+                <div class="cell-content"><div class="cell-main">62 nhân sự</div><div class="cell-sub">58 đúng giờ · 3 trễ</div><span class="cell-stat ok">Avg 8.8h</span></div>
+              </div>
+              <div class="month-cell">
+                <span class="cell-date">10</span>
+                <div class="cell-content"><div class="cell-main">60 nhân sự</div><div class="cell-sub">55 đúng giờ · 3 trễ</div><span class="cell-stat warn">2 thiếu checkout</span></div>
+              </div>
+              <div class="month-cell weekend"><span class="cell-date">11</span><div class="cell-content"><div class="cell-main">~~~~</div><div class="cell-sub">Cuối tuần</div></div></div>
+              <div class="month-cell weekend"><span class="cell-date">12</span><div class="cell-content"><div class="cell-main">~~~~</div><div class="cell-sub">Cuối tuần</div></div></div>
+
+              <div class="month-cell">
+                <span class="cell-date">13</span>
+                <div class="cell-content"><div class="cell-main">62 nhân sự</div><div class="cell-sub">59 đúng giờ · 1 trễ</div><span class="cell-stat ok">Avg 8.6h</span></div>
+              </div>
+              <div class="month-cell">
+                <span class="cell-date">14</span>
+                <div class="cell-content"><div class="cell-main">61 nhân sự</div><div class="cell-sub">55 đúng giờ · 4 trễ</div><span class="cell-stat warn">2 thiếu checkout</span></div>
+              </div>
+              <div class="month-cell">
+                <span class="cell-date">15</span>
+                <div class="cell-content"><div class="cell-main">63 nhân sự</div><div class="cell-sub">60 đúng giờ · 2 trễ</div><span class="cell-stat ok">Avg 8.7h</span></div>
+              </div>
+              <div class="month-cell">
+                <span class="cell-date">16</span>
+                <div class="cell-content"><div class="cell-main">60 nhân sự</div><div class="cell-sub">54 đúng giờ · 6 trễ</div><span class="cell-stat warn">Avg 8.2h</span></div>
+              </div>
+              <div class="month-cell">
+                <span class="cell-date">17</span>
+                <div class="cell-content"><div class="cell-main">61 nhân sự</div><div class="cell-sub">57 đúng giờ · 3 trễ</div><span class="cell-stat ok">Avg 8.5h</span></div>
+              </div>
+              <div class="month-cell weekend"><span class="cell-date">18</span><div class="cell-content"><div class="cell-main">~~~~</div><div class="cell-sub">Cuối tuần</div></div></div>
+              <div class="month-cell weekend"><span class="cell-date">19</span><div class="cell-content"><div class="cell-main">~~~~</div><div class="cell-sub">Cuối tuần</div></div></div>
+
+              <div class="month-cell in-range selected">
+                <span class="cell-date">20</span>
+                <div class="cell-content">
+                  <div class="cell-main">62 nhân sự</div>
+                  <div class="cell-sub">56 đúng giờ · 4 trễ</div>
+                  <span class="cell-stat danger">2 thiếu checkout</span>
+                  <div class="cell-sub">Click để xem đủ 62</div>
+                </div>
+              </div>
+              <div class="month-cell in-range">
+                <span class="cell-date">21</span>
+                <div class="cell-content">
+                  <div class="cell-main">61 nhân sự</div>
+                  <div class="cell-sub">57 đúng giờ · 2 trễ</div>
+                  <span class="cell-stat danger">2 thiếu checkout</span>
+                </div>
+              </div>
+              <div class="month-cell in-range">
+                <span class="cell-date">22</span>
+                <div class="cell-content">
+                  <div class="cell-main">63 nhân sự</div>
+                  <div class="cell-sub">60 đúng giờ · 3 trễ</div>
+                  <span class="cell-stat ok">Avg 8.9h</span>
+                </div>
+              </div>
+              <div class="month-cell in-range">
+                <span class="cell-date">23</span>
+                <div class="cell-content">
+                  <div class="cell-main">62 nhân sự</div>
+                  <div class="cell-sub">58 đúng giờ · 3 trễ</div>
+                  <span class="cell-stat warn">1 thiếu checkout</span>
+                </div>
+              </div>
+              <div class="month-cell"><span class="cell-date">24</span><div class="cell-content"><div class="cell-main">60 nhân sự</div><div class="cell-sub">55 đúng giờ · 4 trễ</div><span class="cell-stat ok">Avg 8.4h</span></div></div>
+              <div class="month-cell weekend"><span class="cell-date">25</span><div class="cell-content"><div class="cell-main">~~~~</div><div class="cell-sub">Cuối tuần</div></div></div>
+              <div class="month-cell weekend"><span class="cell-date">26</span><div class="cell-content"><div class="cell-main">~~~~</div><div class="cell-sub">Cuối tuần</div></div></div>
+
+              <div class="month-cell holiday"><span class="cell-date">27</span><div class="cell-content"><div class="cell-main">H</div><div class="cell-sub">Ngày lễ</div></div></div>
+              <div class="month-cell"><span class="cell-date">28</span><div class="cell-content"><div class="cell-main">58 nhân sự</div><div class="cell-sub">54 đúng giờ · 2 trễ</div><span class="cell-stat warn">2 thiếu checkout</span></div></div>
+              <div class="month-cell"><span class="cell-date">29</span><div class="cell-content"><div class="cell-main">60 nhân sự</div><div class="cell-sub">58 đúng giờ · 2 trễ</div><span class="cell-stat ok">Avg 8.5h</span></div></div>
+              <div class="month-cell holiday"><span class="cell-date">30</span><div class="cell-content"><div class="cell-main">H</div><div class="cell-sub">Ngày lễ</div></div></div>
+              <div class="month-cell muted"><span class="cell-date">1</span></div>
+              <div class="month-cell muted"><span class="cell-date">2</span></div>
+              <div class="month-cell muted"><span class="cell-date">3</span></div>
+            </div>
+            <div class="month-grid employee-only" id="calendar-employee-grid"></div>
+          </div>
+        </div>
+        </div> <!-- End data-view-container -->
+      </section>
+    </main>
+  </div>
+
+  <!-- Cell Detail Modal (Table mode: single employee × single day) -->
+  <div class="day-modal-backdrop" id="cell-modal-backdrop">
+    <div class="day-modal" style="max-width:520px" role="dialog" aria-modal="true">
+      <div class="day-modal-header">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="avatar" id="cell-modal-avatar" style="width:40px;height:40px;font-size:15px;flex-shrink:0">K</div>
+          <div>
+            <div class="day-modal-title" id="cell-modal-name">Phùng Ngô Duy Khánh</div>
+            <div class="day-modal-sub" id="cell-modal-meta">NV-0241 · Backend Developer</div>
+          </div>
+        </div>
+        <button class="day-modal-close" id="cell-modal-close" aria-label="Đóng">✕</button>
+      </div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:16px">
+        <!-- Date pill -->
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:13px;color:var(--text-secondary)">Ngày làm việc</span>
+          <span id="cell-modal-date" style="font-weight:700;color:#0f172a;font-size:14px"></span>
+          <span id="cell-modal-badge" class="badge badge-ok" style="margin-left:auto"></span>
+        </div>
+        <!-- Time row -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <div class="cell-detail-block">
+            <div class="cell-detail-label">VÀO</div>
+            <div class="cell-detail-value" id="cell-modal-in" style="color:#10b981"></div>
+          </div>
+          <div class="cell-detail-block">
+            <div class="cell-detail-label">RA</div>
+            <div class="cell-detail-value" id="cell-modal-out" style="color:#6366f1"></div>
+          </div>
+          <div class="cell-detail-block">
+            <div class="cell-detail-label">THỜI GIAN LÀM</div>
+            <div class="cell-detail-value" id="cell-modal-dur" style="color:#0f172a"></div>
+          </div>
+        </div>
+        <!-- Scan overview + timeline -->
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Thông tin quét</div>
+          <div class="scan-summary">
+            <div class="cell-detail-block">
+              <div class="cell-detail-label">QUÉT ĐẦU</div>
+              <div class="cell-detail-value" id="cell-modal-first-scan" style="font-size:18px;color:#0f172a"></div>
+            </div>
+            <div class="cell-detail-block">
+              <div class="cell-detail-label">QUÉT CUỐI</div>
+              <div class="cell-detail-value" id="cell-modal-last-scan" style="font-size:18px;color:#0f172a"></div>
+            </div>
+            <div class="cell-detail-block">
+              <div class="cell-detail-label">SỐ LẦN QUÉT</div>
+              <div class="cell-detail-value" id="cell-modal-scan-count" style="font-size:18px;color:#0f172a"></div>
+            </div>
+          </div>
+          <div class="scan-timeline">
+            <div style="font-size:12px;font-weight:700;color:var(--text-secondary);margin-bottom:4px">Tất cả lần quét</div>
+            <div id="cell-modal-scan-timeline"></div>
+            <button class="scan-toggle" id="cell-modal-scan-toggle" type="button">Xem tất cả lần quét</button>
+          </div>
+        </div>
+        <!-- Project -->
+        <div style="font-size:13px;color:var(--text-secondary)">
+          Dự án: <strong id="cell-modal-project" style="color:#0f172a">PRODUCT24</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day Detail Modal -->
+  <div class="day-modal-backdrop" id="day-modal-backdrop">
+    <div class="day-modal" role="dialog" aria-modal="true" aria-labelledby="day-modal-title-el">
+      <div class="day-modal-header">
+        <div>
+          <div class="day-modal-title" id="day-modal-title-el">Danh sách chấm công · 20/04/2026</div>
+          <div class="day-modal-sub" id="day-modal-sub">PRODUCT24 · 62 nhân sự · 56 đúng giờ · 4 đi trễ · 2 thiếu checkout</div>
+        </div>
+        <button class="day-modal-close" id="day-modal-close" aria-label="Đóng">✕</button>
+      </div>
+      <div class="day-modal-kpi">
+        <div class="day-modal-kpi-item">
+          <div class="day-modal-kpi-dot" style="background:#10b981"></div>
+          <span>Đúng giờ: <strong id="kpi-ontime">56</strong></span>
+        </div>
+        <div class="day-modal-kpi-item">
+          <div class="day-modal-kpi-dot" style="background:#f59e0b"></div>
+          <span>Đi trễ: <strong id="kpi-late">4</strong></span>
+        </div>
+        <div class="day-modal-kpi-item">
+          <div class="day-modal-kpi-dot" style="background:#ef4444"></div>
+          <span>Thiếu checkout: <strong id="kpi-nocheckout">2</strong></span>
+        </div>
+        <div class="day-modal-kpi-item" style="margin-left:auto">
+          <span>Avg: <strong id="kpi-avg">9h 12m</strong></span>
+        </div>
+      </div>
+      <div class="day-modal-body">
+        <div class="table-wrap" style="margin:0">
+          <table class="mini-table" id="day-modal-table">
+            <thead>
+              <tr>
+                <th>Mã NV</th>
+                <th>Tên nhân viên</th>
+                <th>Chức vụ</th>
+                <th>Giờ vào</th>
+                <th>Giờ ra</th>
+                <th>Thời gian làm</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody id="day-modal-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="day-modal-footer">
+        <span id="day-modal-count" style="font-size:13px;color:var(--text-secondary)">62 nhân sự</span>
+        <button class="btn" id="day-modal-open-table">Mở full table ngày này</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll('.seg-btn[data-view]');
+    const tableView = document.getElementById('table-view');
+    const calendarView = document.getElementById('calendar-view');
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        buttons.forEach((b) => b.classList.remove('active'));
+        button.classList.add('active');
+
+        const view = button.dataset.view;
+        tableView.classList.toggle('active', view === 'table');
+        calendarView.classList.toggle('active', view === 'calendar');
+      });
+    });
+
+    /* ── Month / Year filter → update calendar title ── */
+    function getCalendarTitle() {
+      const m = document.getElementById('filter-month')?.value || '4';
+      const y = document.getElementById('filter-year')?.value  || '2026';
+      const mm = String(m).padStart(2, '0');
+      const projectSel = document.getElementById('project-select');
+      const proj = projectSel && projectSel.value !== 'ALL' ? ` · ${projectSel.value}` : '';
+      return `Tháng ${mm}/${y}${proj}`;
+    }
+
+    function syncCalendarTitle() {
+      const titleEl = document.querySelector('.month-title');
+      if (titleEl) titleEl.textContent = getCalendarTitle();
+      // also update panel header if present
+      const overviewTitle = document.getElementById('cal-month-label');
+      if (overviewTitle) overviewTitle.textContent = getCalendarTitle();
+
+      // Sync the sic-period chips on the 3 insight cards
+      const m  = document.getElementById('filter-month')?.value || '4';
+      const y  = document.getElementById('filter-year')?.value  || '2026';
+      const mm = String(m).padStart(2, '0');
+      const periodLabel = `Tháng ${mm}/${y}`;
+      const late     = document.getElementById('sic-period-late');
+      const checkout = document.getElementById('sic-period-checkout');
+      const hours    = document.getElementById('sic-period-hours');
+      if (late)     late.textContent     = `${periodLabel} · vào sau 08:00 là trễ`;
+      if (checkout) checkout.textContent = `${periodLabel} · quét TechEyes`;
+      if (hours)    hours.textContent    = `${periodLabel} · check-in → out`;
+
+      // Sync kpi-grid sub text
+      const kpiSub = document.querySelector('.kpi-grid .kpi-card:first-child .kpi-sub');
+      if (kpiSub) {
+        const projSel = document.getElementById('project-select');
+        const proj = projSel && projSel.value !== 'ALL' ? projSel.value : 'Tất cả dự án';
+        kpiSub.textContent = `${periodLabel} · ${proj} · 63 nhân sự`;
+      }
+    }
+
+    document.getElementById('filter-month')?.addEventListener('change', syncCalendarTitle);
+    document.getElementById('filter-year')?.addEventListener('change', syncCalendarTitle);
+    document.getElementById('project-select')?.addEventListener('change', () => {
+      syncCalendarTitle();
+    });
+
+    /* Export dropdown */
+    const exportTrigger = document.getElementById('export-trigger');
+    const exportMenu = document.getElementById('export-menu');
+    exportTrigger?.addEventListener('click', () => exportMenu.classList.toggle('open'));
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.export-wrap')) exportMenu.classList.remove('open');
+    });
+
+    const weekdays = ['T4', 'T5', 'T6', 'T7', 'CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN', 'T2', 'T3', 'T4', 'T5'];
+    const rangeStart = 1;
+    const rangeEnd = 30;
+    const employees = [
+      {
+        code: 'NV-0241',
+        name: 'Phùng Ngô Duy Khánh',
+        role: 'Backend Developer',
+        avatar: 'K',
+        pattern: ['ok', 'ok', 'ok', 'weekend', 'weekend', 'ok', 'ok', 'ok', 'ok', 'ok', 'weekend', 'weekend', 'ok', 'late', 'ok', 'ok', 'ok', 'weekend', 'weekend', 'ok', 'ok', 'ok', 'ok', 'ok', 'weekend', 'weekend', 'holiday', 'ok', 'leave', 'holiday']
+      },
+      {
+        code: 'NV-0188',
+        name: 'Huỳnh Hải Thiên',
+        role: 'Fullstack Developer',
+        avatar: 'T',
+        pattern: ['ok', 'late', 'ok', 'weekend', 'weekend', 'ok', 'ok', 'late', 'ok', 'missing', 'weekend', 'weekend', 'ok', 'ok', 'ok', 'late', 'ok', 'weekend', 'weekend', 'late', 'ok', 'ok', 'ok', 'ok', 'weekend', 'weekend', 'holiday', 'ok', 'leave', 'holiday']
+      },
+      {
+        code: 'NV-0312',
+        name: 'Nguyễn Văn An',
+        role: 'Frontend Developer',
+        avatar: 'A',
+        pattern: ['ok', 'ok', 'late', 'weekend', 'weekend', 'ok', 'missing', 'ok', 'ok', 'ok', 'weekend', 'weekend', 'ok', 'ok', 'late', 'ok', 'ok', 'weekend', 'weekend', 'missing', 'ok', 'ok', 'late', 'ok', 'weekend', 'weekend', 'holiday', 'ok', 'leave', 'holiday']
+      }
+    ];
+
+    const projectAssignments = {
+      PRODUCT24: ['NV-0241', 'NV-0188', 'NV-0312'],
+      TechResource: ['NV-0241', 'NV-0312'],
+      TechEyes: ['NV-0188'],
+      Miichisoft: ['NV-0312'],
+      ALL: []
+    };
+
+    function timeCell(status, day, empIdx) {
+      if (status === 'weekend') return '<div class="attendance-cell weekend">Cuối tuần</div>';
+      if (status === 'holiday') return '<div class="attendance-cell weekend">Ngày lễ</div>';
+      if (status === 'leave')   return '<div class="attendance-cell weekend">Nghỉ phép</div>';
+
+      const inTime  = status === 'late' ? '08:41' : empIdx % 3 === 0 ? '08:05' : '08:11';
+      const outTime = status === 'missing' ? '—' : empIdx % 4 === 0 ? '20:19' : '18:17';
+      const duration = status === 'missing' ? '—' : empIdx % 4 === 0 ? '12h 13m' : '9h 36m';
+      const cls = status === 'late' ? 'late' : status === 'missing' ? 'missing' : 'ok';
+
+      return `
+        <div class="attendance-cell ${cls} clickable-cell"
+             data-emp-idx="${empIdx}"
+             data-day="${day}"
+             data-status="${status}"
+             data-in="${inTime}"
+             data-out="${outTime}"
+             data-dur="${duration}"
+             title="Click để xem chi tiết">
+          <div class="cell-line"><span>In</span><strong>${inTime}</strong></div>
+          <div class="cell-line"><span>Out</span><strong>${outTime}</strong></div>
+          <div class="cell-duration">${duration}</div>
+        </div>
+      `;
+    }
+
+    function renderMatrix() {
+      const matrix = document.getElementById('month-matrix');
+      if (!matrix) return;
+
+      const dayHeaders = Array.from({ length: rangeEnd - rangeStart + 1 }, (_, i) => `
+        <th>
+          <div class="matrix-day-head">
+            <strong>${rangeStart + i}</strong>
+            <span>${weekdays[rangeStart + i - 1]}</span>
+          </div>
+        </th>
+      `).join('');
+
+      const rows = employees.map((emp, empIdx) => `
+        <tr>
+          <td class="sticky-employee">
+            <div class="matrix-employee">
+              <div class="avatar">${emp.avatar}</div>
+              <div>
+                <div class="emp-name">${emp.name}</div>
+                <div class="emp-meta">${emp.code} · ${emp.role}</div>
+              </div>
+            </div>
+          </td>
+          ${emp.pattern.slice(rangeStart - 1, rangeEnd).map((status, index) => `<td>${timeCell(status, rangeStart + index, empIdx)}</td>`).join('')}
+        </tr>
+      `).join('');
+
+      matrix.innerHTML = `
+        <thead>
+          <tr>
+            <th class="sticky-employee">Nhân viên</th>
+            ${dayHeaders}
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      `;
+    }
+
+    renderMatrix();
+
+    function buildSummaryRows() {
+      return employees.map((emp, empIdx) => {
+        const working = emp.pattern.filter((s) => !['weekend', 'holiday', 'leave'].includes(s)).length;
+        const late = emp.pattern.filter((s) => s === 'late').length;
+        const missing = emp.pattern.filter((s) => s === 'missing').length;
+        const anomalies = late + missing;
+        const totalMin = working * (empIdx % 2 === 0 ? 536 : 563);
+        const avgMin = Math.floor(totalMin / Math.max(working, 1));
+        const fmt = (m) => `${Math.floor(m / 60)}h ${String(m % 60).padStart(2, '0')}m`;
+        return { emp, working, late, missing, anomalies, totalMin, avgMin, timeline: emp.pattern };
+      });
+    }
+
+    function renderSummaryTable() {
+      const tbody = document.getElementById('summary-tbody');
+      const tfoot = document.getElementById('summary-tfoot');
+      if (!tbody) return;
+
+      const COLS = 10;
+      const workingDays = 22;
+      const fmt = (m) => `${Math.floor(m / 60)}h ${String(m % 60).padStart(2, '0')}m`;
+
+      const avgInTimes = { 'NV-0241': '08:05', 'NV-0188': '08:13', 'NV-0312': '08:09' };
+      const avatarColors = {
+        'NV-0241': '#e8eaf6',
+        'NV-0188': '#e8eaf6',
+        'NV-0312': '#e8eaf6',
+      };
+      const avatarTextColors = {
+        'NV-0241': '#3949ab',
+        'NV-0188': '#3949ab',
+        'NV-0312': '#3949ab',
+      };
+      const projectColors = {
+        PRODUCT24:    { bg: '#eff6ff', color: '#2563eb', border: '#bfdbfe' },
+        TechResource: { bg: '#f0fdf4', color: '#15803d', border: '#a7f3d0' },
+        TechEyes:     { bg: '#f5f3ff', color: '#7c3aed', border: '#ddd6fe' },
+        Miichisoft:   { bg: '#fffbeb', color: '#b45309', border: '#fde68a' },
+      };
+
+      let allHtml = '';
+      let grandWorking = 0, grandLate = 0, grandMissing = 0, grandHours = 0;
+
+      const projects = Object.entries(projectAssignments).filter(([key]) => key !== 'ALL');
+
+      for (const [projName, codes] of projects) {
+        const c = projectColors[projName] || { bg: '#f8fafc', color: '#374151', border: '#e4e7ec' };
+        const projEmps = employees.filter(e => codes.includes(e.code));
+        if (projEmps.length === 0) continue;
+
+        // Project group header
+        allHtml += `
+          <tr class="project-group-header" data-proj="${projName}">
+            <td colspan="${COLS}">
+              <div class="proj-header-inner" style="border-color:${c.color}">
+                <span class="proj-chevron">▼</span>
+                <span class="proj-name">${projName}</span>
+                <span class="proj-count-badge">👥 ${projEmps.length} người</span>
+                <div class="proj-header-stats">
+                  <span class="proj-stat-item">Ngày công · ${workingDays} ngày</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        `;
+
+        let projWorking = 0, projLate = 0, projMissing = 0, projHours = 0;
+
+        for (let ei = 0; ei < projEmps.length; ei++) {
+          const emp = projEmps[ei];
+          const isLast = ei === projEmps.length - 1;
+          const empIdx   = employees.indexOf(emp);
+          const working  = emp.pattern.filter(s => !['weekend','holiday','leave'].includes(s)).length;
+          const late     = emp.pattern.filter(s => s === 'late').length;
+          const missing  = emp.pattern.filter(s => s === 'missing').length;
+          const anomalies = late + missing;
+          const totalMin = working * (empIdx % 2 === 0 ? 536 : 563);
+          const avgMin   = Math.floor(totalMin / Math.max(working, 1));
+          const attendPct = Math.round((working / workingDays) * 100);
+
+          projWorking += working; projLate += late; projMissing += missing; projHours += totalMin;
+
+          const rowCls     = missing > 1 ? 'tr-danger' : (late > 2 || missing > 0) ? 'tr-warn' : '';
+          const [badgeCls, badgeLabel] = missing > 1
+            ? ['tbl-status-danger','⚠ Cần xử lý']
+            : (late > 2 || missing > 0)
+              ? ['tbl-status-warn','⚡ Chú ý']
+              : ['tbl-status-ok','✓ Tốt'];
+          const barCls    = missing > 1 ? 'danger' : late > 2 ? 'warn' : '';
+          const lateClass = late    > 3 ? 'count-cell-bad' : late    > 0 ? 'count-cell-warn' : 'count-cell-ok';
+          const missClass = missing > 0 ? 'count-cell-bad' : 'count-cell-ok';
+          const anomClass = anomalies > 3 ? 'count-cell-bad' : anomalies > 1 ? 'count-cell-warn' : 'count-cell-ok';
+          const avgIn     = avgInTimes[emp.code] || '08:10';
+          const avgInLate = avgIn > '08:30' ? ' late' : '';
+          const avatarBg   = avatarColors[emp.code] || '#e8eaf6';
+          const avatarText = avatarTextColors[emp.code] || '#3949ab';
+
+          allHtml += `
+            <tr class="emp-row ${rowCls}${isLast ? ' emp-row-last' : ''}" data-proj="${projName}">
+              <td>
+                <div class="employee-cell">
+                  <div class="avatar" style="background:${avatarBg};color:${avatarText}">${emp.avatar}</div>
+                  <div>
+                    <div class="emp-name">${emp.name}</div>
+                    <div class="emp-meta">${emp.code} · ${emp.role}</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span style="font-weight:800;font-size:13px">${working}</span>
+                <span style="color:var(--text-muted);font-size:11px"> / ${workingDays}</span>
+                <div class="mini-bar-wrap"><div class="mini-bar-fill ${barCls}" style="width:${attendPct}%"></div></div>
+              </td>
+              <td><span class="time">${Math.floor(totalMin / 60)}h</span></td>
+              <td><span class="time">${fmt(avgMin)}</span></td>
+              <td><span class="avg-in-time${avgInLate}">${avgIn}</span></td>
+              <td><span class="${lateClass}">${late > 0 ? late : '—'}</span></td>
+              <td><span class="${missClass}">${missing > 0 ? missing : '—'}</span></td>
+              <td><span class="${anomClass}">${anomalies > 0 ? anomalies : '—'}</span></td>
+              <td><span class="tbl-status-badge ${badgeCls}">${badgeLabel}</span></td>
+              <td>
+                <div class="timeline-strip">
+                  ${emp.pattern.map((s, i) => {
+                    const label = s==='ok'?'Đúng giờ':s==='late'?'Đi trễ':s==='missing'?'Thiếu C/O':s==='weekend'?'Cuối tuần':s==='holiday'?'Ngày lễ':'Nghỉ phép';
+                    return `<span class="day-chip ${s}" data-emp-idx="${empIdx}" data-day="${i+1}" title="Ngày ${i+1}: ${label}">${i+1}</span>`;
+                  }).join('')}
+                </div>
+              </td>
+            </tr>
+          `;
+        }
+
+        grandWorking += projWorking; grandLate += projLate;
+        grandMissing += projMissing; grandHours  += projHours;
+      }
+
+      tbody.innerHTML = allHtml;
+
+      if (tfoot) {
+        tfoot.innerHTML = `
+          <tr class="summary-tfoot">
+            <td>Tổng cộng toàn công ty</td>
+            <td>${grandWorking} ngày</td>
+            <td>${Math.floor(grandHours/60)}h</td>
+            <td>—</td><td>—</td>
+            <td style="color:var(--warning)">${grandLate} lượt</td>
+            <td style="color:var(--danger)">${grandMissing} lượt</td>
+            <td>${grandLate + grandMissing}</td>
+            <td></td><td></td>
+          </tr>
+        `;
+      }
+    }
+
+    renderSummaryTable();
+
+    // Collapsible project groups
+    document.getElementById('summary-tbody')?.addEventListener('click', (e) => {
+      const header = e.target.closest('.project-group-header');
+      if (header) {
+        const proj = header.dataset.proj;
+        const isCollapsed = header.classList.toggle('collapsed');
+        document.querySelectorAll(`#summary-tbody [data-proj="${proj}"]:not(.project-group-header)`).forEach(row => {
+          row.classList.toggle('row-hidden', isCollapsed);
+        });
+        return;
+      }
+      const chip = e.target.closest('.day-chip');
+      if (!chip || ['weekend', 'holiday', 'leave'].some((c) => chip.classList.contains(c))) return;
+      const empIdx = Number(chip.dataset.empIdx);
+      const day = Number(chip.dataset.day);
+      const status = chip.classList.contains('missing') ? 'missing' : chip.classList.contains('late') ? 'late' : 'ok';
+      const inTime = status === 'late' ? '08:41' : '08:05';
+      const outTime = status === 'missing' ? '—' : '18:17';
+      const dur = status === 'missing' ? '—' : '9h 36m';
+      openCellModal(empIdx, day, status, inTime, outTime, dur);
+    });
+
+    document.getElementById('toggle-advanced-matrix')?.addEventListener('click', () => {
+      const body = document.getElementById('advanced-matrix-body');
+      body.classList.toggle('open');
+    });
+
+    /* ── Cell Detail Modal (Table mode) ── */
+    const cellBackdrop   = document.getElementById('cell-modal-backdrop');
+    const cellCloseBtn   = document.getElementById('cell-modal-close');
+    const cellAvatar     = document.getElementById('cell-modal-avatar');
+    const cellName       = document.getElementById('cell-modal-name');
+    const cellMeta       = document.getElementById('cell-modal-meta');
+    const cellDate       = document.getElementById('cell-modal-date');
+    const cellBadge      = document.getElementById('cell-modal-badge');
+    const cellIn         = document.getElementById('cell-modal-in');
+    const cellOut        = document.getElementById('cell-modal-out');
+    const cellDur        = document.getElementById('cell-modal-dur');
+    const cellFirstScan  = document.getElementById('cell-modal-first-scan');
+    const cellLastScan   = document.getElementById('cell-modal-last-scan');
+    const cellScanCount  = document.getElementById('cell-modal-scan-count');
+    const cellScanTimeline = document.getElementById('cell-modal-scan-timeline');
+    const cellScanToggle = document.getElementById('cell-modal-scan-toggle');
+    const cellProject    = document.getElementById('cell-modal-project');
+
+    const mockScans = {
+      ok:      ['07:58:12', '08:05:30', '12:01:04', '12:46:33', '20:19:09'],
+      late:    ['08:41:02', '12:03:11', '13:02:58', '18:17:44'],
+      missing: ['08:05:15', '12:00:03'],
+    };
+
+    const badgeMap = {
+      ok:      { cls: 'badge-ok',   label: 'Đúng giờ'      },
+      late:    { cls: 'badge-late', label: 'Đi trễ'        },
+      missing: { cls: 'badge-warn', label: 'Thiếu checkout' },
+    };
+
+    function renderScanTimeline(scans, expanded = false) {
+      const head = scans.slice(0, 5);
+      const tail = scans.slice(-5);
+      const list = (scans.length > 10 && !expanded) ? [...head, '...', ...tail] : scans;
+      cellScanTimeline.innerHTML = list.map((t, i) => {
+        if (t === '...') return `<div class="scan-row"><span class="t">...</span><span>Đã ẩn các lần quét ở giữa</span></div>`;
+        const tag = i === 0 ? 'Gợi ý check-in' : i === list.length - 1 ? 'Gợi ý check-out' : 'Quét';
+        return `<div class="scan-row"><span class="t">${t}</span><span class="tag">${tag}</span></div>`;
+      }).join('');
+      if (scans.length <= 10) cellScanToggle.style.display = 'none';
+      else {
+        cellScanToggle.style.display = 'inline-block';
+        cellScanToggle.textContent = expanded ? 'Thu gọn danh sách quét' : `Xem tất cả lần quét (${scans.length})`;
+      }
+      cellScanToggle.dataset.expanded = expanded ? '1' : '0';
+      cellScanToggle.dataset.raw = JSON.stringify(scans);
+    }
+
+    function openCellModal(empIdx, day, status, inTime, outTime, dur) {
+      const emp = employees[empIdx];
+      if (!emp) return;
+
+      cellAvatar.textContent  = emp.avatar;
+      cellName.textContent    = emp.name;
+      cellMeta.textContent    = `${emp.code} · ${emp.role}`;
+      cellDate.textContent    = `${String(day).padStart(2,'0')}/04/2026`;
+
+      const b = badgeMap[status] || badgeMap.ok;
+      cellBadge.className  = `badge ${b.cls}`;
+      cellBadge.textContent = b.label;
+
+      cellIn.textContent  = inTime !== '—' ? inTime : '—';
+      cellOut.textContent = outTime !== '—' ? outTime : '—';
+      cellDur.textContent = dur !== '—' ? dur : '—';
+
+      const scans = [...(mockScans[status] || mockScans.ok), '21:12:30', '22:01:10', '22:45:44'];
+      cellFirstScan.textContent = scans[0];
+      cellLastScan.textContent = scans[scans.length - 1];
+      cellScanCount.textContent = String(scans.length);
+      renderScanTimeline(scans, false);
+
+      cellProject.textContent = 'PRODUCT24';
+
+      cellBackdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCellModal() {
+      cellBackdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    cellCloseBtn.addEventListener('click', closeCellModal);
+    cellBackdrop.addEventListener('click', (e) => { if (e.target === cellBackdrop) closeCellModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeCellModal(); closeModal(); } });
+    cellScanToggle?.addEventListener('click', () => {
+      const raw = JSON.parse(cellScanToggle.dataset.raw || '[]');
+      const expanded = cellScanToggle.dataset.expanded === '1';
+      renderScanTimeline(raw, !expanded);
+    });
+
+    /* Event delegation on the matrix table */
+    document.getElementById('month-matrix').addEventListener('click', (e) => {
+      const cell = e.target.closest('.clickable-cell');
+      if (!cell) return;
+      const empIdx  = parseInt(cell.dataset.empIdx,  10);
+      const day     = parseInt(cell.dataset.day,     10);
+      const status  = cell.dataset.status;
+      const inTime  = cell.dataset.in;
+      const outTime = cell.dataset.out;
+      const dur     = cell.dataset.dur;
+      openCellModal(empIdx, day, status, inTime, outTime, dur);
+    });
+
+    /* ── Day Detail Modal logic ── */
+    const modalBackdrop   = document.getElementById('day-modal-backdrop');
+    const modalTitleEl    = document.getElementById('day-modal-title-el');
+    const modalSubEl      = document.getElementById('day-modal-sub');
+    const modalCountEl    = document.getElementById('day-modal-count');
+    const modalTbody      = document.getElementById('day-modal-tbody');
+    const modalKpiOntime  = document.getElementById('kpi-ontime');
+    const modalKpiLate    = document.getElementById('kpi-late');
+    const modalKpiNo      = document.getElementById('kpi-nocheckout');
+    const modalKpiAvg     = document.getElementById('kpi-avg');
+    const modalCloseBtn   = document.getElementById('day-modal-close');
+
+    /* Mock per-day data keyed by day number */
+    /* Full employee pool */
+    const EMP = [
+      { code:'NV-0241', name:'Phùng Ngô Duy Khánh', role:'Backend Developer'   },
+      { code:'NV-0188', name:'Huỳnh Hải Thiên',      role:'Fullstack Developer' },
+      { code:'NV-0312', name:'Nguyễn Văn An',         role:'Frontend Developer'  },
+      { code:'NV-0099', name:'Trần Minh Khoa',        role:'DevOps Engineer'     },
+      { code:'NV-0156', name:'Lê Thị Hương',          role:'QA Engineer'         },
+      { code:'NV-0203', name:'Đỗ Quang Huy',          role:'Product Manager'     },
+      { code:'NV-0278', name:'Phan Thị Lan',          role:'UI/UX Designer'      },
+      { code:'NV-0334', name:'Bùi Văn Tùng',          role:'Backend Developer'   },
+      { code:'NV-0401', name:'Vũ Thị Mai',            role:'Frontend Developer'  },
+      { code:'NV-0445', name:'Hoàng Văn Đức',         role:'Data Analyst'        },
+    ];
+
+    /* Quick row builder */
+    function r(idx, cin, cout, status) {
+      const e = EMP[idx % EMP.length];
+      const dur = (!cout || status === 'missing')
+        ? '—'
+        : (() => {
+            const [ih,im] = cin.split(':').map(Number);
+            const [oh,om] = cout.split(':').map(Number);
+            const mins = (oh*60+om) - (ih*60+im);
+            return `${Math.floor(mins/60)}h ${mins%60}m`;
+          })();
+      return { ...e, cin, cout: cout || '', dur, status };
+    }
+
+    const mockDayData = {
+      1:  { total:62, ontime:57, late:5,  nocheckout:0, avg:'9h 14m', rows:[
+              r(0,'08:05:30','20:19:09','ok'), r(1,'08:41:02','18:17:44','late'),
+              r(2,'08:07:15','17:50:00','ok'), r(3,'08:10:00','18:00:00','ok'),
+              r(4,'08:03:44','17:45:30','ok'), r(5,'08:45:11','18:30:00','late'),
+              r(6,'08:06:00','17:55:00','ok'), r(7,'08:11:22','18:10:00','ok') ] },
+      2:  { total:60, ontime:54, late:6,  nocheckout:1, avg:'9h 02m', rows:[
+              r(0,'08:11:00','18:17:00','ok'), r(1,'08:41:15','18:17:44','late'),
+              r(2,'08:05:00','','missing'),    r(3,'08:08:33','18:05:00','ok'),
+              r(4,'08:44:00','17:59:00','late'),r(5,'08:02:10','18:22:00','ok'),
+              r(6,'08:09:00','17:48:00','ok'), r(7,'08:50:00','18:17:00','late') ] },
+      3:  { total:61, ontime:55, late:4,  nocheckout:2, avg:'9h 18m', rows:[
+              r(0,'08:05:30','18:17:00','ok'), r(1,'08:41:00','18:17:00','late'),
+              r(2,'08:06:00','','missing'),    r(3,'08:03:00','18:10:00','ok'),
+              r(4,'08:07:22','20:19:09','ok'), r(5,'08:02:00','','missing'),
+              r(6,'08:55:00','18:17:00','late'),r(7,'08:08:00','17:55:00','ok') ] },
+      4:  { total:63, ontime:58, late:3,  nocheckout:2, avg:'9h 28m', rows:[
+              r(0,'08:11:00','20:19:09','ok'), r(1,'08:05:00','18:17:44','ok'),
+              r(2,'08:41:30','18:17:00','late'),r(3,'08:03:11','17:50:00','ok'),
+              r(4,'08:06:00','','missing'),    r(5,'08:04:00','18:05:00','ok'),
+              r(6,'08:07:00','18:17:00','ok'), r(7,'08:01:00','','missing') ] },
+      7:  { total:59, ontime:52, late:7,  nocheckout:0, avg:'8h 55m', rows:[
+              r(0,'08:05:30','18:17:00','ok'), r(1,'08:41:02','18:17:44','late'),
+              r(2,'08:44:00','17:55:00','late'),r(3,'08:07:00','18:10:00','ok'),
+              r(4,'08:51:00','17:45:00','late'),r(5,'08:03:00','18:22:00','ok'),
+              r(6,'08:41:00','18:00:00','late'),r(7,'08:06:00','18:17:00','ok') ] },
+      8:  { total:62, ontime:57, late:5,  nocheckout:0, avg:'9h 11m', rows:[
+              r(0,'08:05:30','20:19:09','ok'), r(1,'08:05:00','18:17:44','ok'),
+              r(2,'08:07:00','18:00:00','ok'), r(3,'08:41:00','18:17:00','late'),
+              r(4,'08:03:00','17:55:00','ok'), r(5,'08:44:22','18:30:00','late'),
+              r(6,'08:09:00','17:50:00','ok'), r(7,'08:08:00','18:17:00','ok') ] },
+      9:  { total:60, ontime:56, late:4,  nocheckout:0, avg:'9h 06m', rows:[
+              r(0,'08:11:00','18:17:00','ok'), r(1,'08:41:15','18:17:44','late'),
+              r(2,'08:06:00','18:05:00','ok'), r(3,'08:04:00','17:55:00','ok'),
+              r(4,'08:41:00','18:00:00','late'),r(5,'08:02:00','18:22:00','ok'),
+              r(6,'08:07:00','17:48:00','ok'), r(7,'08:43:00','18:17:00','late') ] },
+      10: { total:61, ontime:59, late:2,  nocheckout:0, avg:'9h 22m', rows:[
+              r(0,'08:05:30','20:19:09','ok'), r(1,'08:05:00','18:17:44','ok'),
+              r(2,'08:41:00','18:17:00','late'),r(3,'08:03:00','18:10:00','ok'),
+              r(4,'08:07:00','17:50:00','ok'), r(5,'08:04:00','18:05:00','ok'),
+              r(6,'08:41:30','18:00:00','late'),r(7,'08:01:00','20:19:09','ok') ] },
+      11: { total:58, ontime:53, late:5,  nocheckout:0, avg:'8h 59m', rows:[
+              r(0,'08:11:00','18:17:00','ok'), r(1,'08:41:02','18:17:44','late'),
+              r(2,'08:06:00','17:55:00','ok'), r(3,'08:08:00','18:10:00','ok'),
+              r(4,'08:44:00','17:45:00','late'),r(5,'08:03:00','18:22:00','ok'),
+              r(6,'08:05:00','17:50:00','ok'), r(7,'08:41:00','18:17:00','late') ] },
+      14: { total:62, ontime:56, late:6,  nocheckout:0, avg:'9h 17m', rows:[
+              r(0,'08:05:30','20:19:09','ok'), r(1,'08:41:15','18:17:44','late'),
+              r(2,'08:07:00','18:00:00','ok'), r(3,'08:41:00','18:10:00','late'),
+              r(4,'08:03:00','17:55:00','ok'), r(5,'08:02:00','18:05:00','ok'),
+              r(6,'08:44:00','18:00:00','late'),r(7,'08:09:00','18:17:00','ok') ] },
+      15: { total:63, ontime:60, late:3,  nocheckout:0, avg:'9h 31m', rows:[
+              r(0,'08:05:30','18:17:00','ok'), r(1,'08:05:00','18:17:44','ok'),
+              r(2,'08:41:00','18:17:00','late'),r(3,'08:04:00','17:50:00','ok'),
+              r(4,'08:06:00','20:19:09','ok'), r(5,'08:03:00','18:22:00','ok'),
+              r(6,'08:07:00','17:48:00','ok'), r(7,'08:42:00','18:10:00','late') ] },
+      16: { total:60, ontime:55, late:5,  nocheckout:0, avg:'9h 08m', rows:[
+              r(0,'08:11:00','20:19:09','ok'), r(1,'08:41:02','18:17:44','late'),
+              r(2,'08:06:00','18:00:00','ok'), r(3,'08:07:00','18:05:00','ok'),
+              r(4,'08:44:00','17:55:00','late'),r(5,'08:04:00','18:22:00','ok'),
+              r(6,'08:41:00','18:17:00','late'),r(7,'08:08:00','17:50:00','ok') ] },
+      17: { total:61, ontime:57, late:4,  nocheckout:0, avg:'9h 15m', rows:[
+              r(0,'08:05:30','18:17:00','ok'), r(1,'08:41:15','18:17:44','late'),
+              r(2,'08:07:00','17:55:00','ok'), r(3,'08:41:00','18:10:00','late'),
+              r(4,'08:03:00','20:19:09','ok'), r(5,'08:02:00','18:05:00','ok'),
+              r(6,'08:06:00','18:00:00','ok'), r(7,'08:42:00','18:17:00','late') ] },
+      20: { total:62, ontime:56, late:4,  nocheckout:2, avg:'9h 12m', rows:[
+              r(0,'08:05:30','20:19:09','ok'), r(1,'08:41:02','18:17:44','late'),
+              r(2,'08:05:00','','missing'),    r(3,'08:10:12','17:55:00','ok'),
+              r(4,'08:03:44','17:45:30','ok'), r(5,'08:45:11','18:30:00','late'),
+              r(6,'08:06:00','','missing'),    r(7,'08:11:22','18:10:00','ok') ] },
+      21: { total:58, ontime:53, late:5,  nocheckout:0, avg:'9h 05m', rows:[
+              r(0,'08:11:00','18:17:00','ok'), r(1,'08:41:15','18:17:44','late'),
+              r(2,'08:06:00','18:00:00','ok'), r(3,'08:08:33','18:05:00','ok'),
+              r(4,'08:44:00','17:59:00','late'),r(5,'08:02:10','18:22:00','ok'),
+              r(6,'08:09:00','17:48:00','ok'), r(7,'08:50:00','18:17:00','late') ] },
+      22: { total:60, ontime:55, late:4,  nocheckout:1, avg:'8h 58m', rows:[
+              r(0,'08:05:30','18:17:00','ok'), r(1,'08:41:00','18:17:00','late'),
+              r(2,'08:06:00','17:55:00','ok'), r(3,'08:03:00','','missing'),
+              r(4,'08:07:22','18:10:00','ok'), r(5,'08:02:00','18:05:00','ok'),
+              r(6,'08:41:00','18:17:00','late'),r(7,'08:08:00','17:50:00','ok') ] },
+      23: { total:61, ontime:58, late:3,  nocheckout:0, avg:'9h 20m', rows:[
+              r(0,'08:05:30','20:19:09','ok'), r(1,'08:05:00','18:17:44','ok'),
+              r(2,'08:41:00','18:17:00','late'),r(3,'08:04:00','17:55:00','ok'),
+              r(4,'08:06:00','18:10:00','ok'), r(5,'08:03:00','18:22:00','ok'),
+              r(6,'08:07:00','17:48:00','ok'), r(7,'08:42:00','18:17:00','late') ] },
+      24: { total:60, ontime:55, late:4,  nocheckout:1, avg:'8h 43m', rows:[
+              r(0,'08:11:00','18:17:00','ok'), r(1,'08:41:02','18:17:44','late'),
+              r(2,'08:07:00','18:00:00','ok'), r(3,'08:08:00','','missing'),
+              r(4,'08:44:00','17:45:00','late'),r(5,'08:03:00','18:05:00','ok'),
+              r(6,'08:05:00','18:17:00','ok'), r(7,'08:41:00','18:10:00','late') ] },
+      28: { total:58, ontime:54, late:2,  nocheckout:2, avg:'9h 01m', rows:[
+              r(0,'08:05:30','18:17:00','ok'), r(1,'08:05:00','20:19:09','ok'),
+              r(2,'08:07:00','','missing'),    r(3,'08:04:00','18:05:00','ok'),
+              r(4,'08:41:00','17:55:00','late'),r(5,'08:02:00','18:22:00','ok'),
+              r(6,'08:06:00','','missing'),    r(7,'08:03:00','17:50:00','ok') ] },
+      29: { total:57, ontime:52, late:3,  nocheckout:2, avg:'8h 49m', rows:[
+              r(0,'08:11:00','18:17:00','ok'), r(1,'08:41:15','18:17:44','late'),
+              r(2,'08:06:00','18:00:00','ok'), r(3,'08:08:00','','missing'),
+              r(4,'08:44:00','17:59:00','late'),r(5,'08:02:00','','missing'),
+              r(6,'08:09:00','17:48:00','ok'), r(7,'08:41:00','18:17:00','late') ] },
+    };
+
+    const statusLabel = { ok: 'Đúng giờ', late: 'Đi trễ', missing: 'Thiếu checkout' };
+    const statusBadge = { ok: 'badge-ok', late: 'badge-late', missing: 'badge-warn' };
+
+    function openDayModal(day) {
+      const data = mockDayData[day] || {
+        total: 0, ontime: 0, late: 0, nocheckout: 0, avg: '—', rows: []
+      };
+      const label = String(day).padStart(2, '0') + '/04/2026';
+
+      modalTitleEl.textContent  = `Danh sách record · ${label}`;
+      modalSubEl.textContent    = `PRODUCT24 · ${data.total} records · ${data.ontime} đúng giờ · ${data.late} đi trễ · ${data.nocheckout} thiếu checkout`;
+      modalCountEl.textContent  = `${data.total} records`;
+      modalKpiOntime.textContent = data.ontime;
+      modalKpiLate.textContent   = data.late;
+      modalKpiNo.textContent     = data.nocheckout;
+      modalKpiAvg.textContent    = data.avg;
+
+      modalTbody.innerHTML = data.rows.map(r => `
+        <tr>
+          <td>${r.code}</td>
+          <td><strong>${r.name}</strong></td>
+          <td style="color:var(--text-secondary)">${r.role}</td>
+          <td><span class="time">${r.cin}</span></td>
+          <td>${r.cout ? `<span class="time">${r.cout}</span>` : '<span style="color:#94a3b8">—</span>'}</td>
+          <td><span class="duration">${r.dur}</span></td>
+          <td><span class="badge ${statusBadge[r.status]}">${statusLabel[r.status]}</span></td>
+        </tr>
+      `).join('') + (data.total > data.rows.length ? `
+        <tr>
+          <td colspan="7" style="text-align:center;color:var(--text-secondary);font-weight:600;padding:14px;background:#fcfcfd">
+            ... còn ${data.total - data.rows.length} records khác ...
+          </td>
+        </tr>
+      ` : '');
+
+      modalBackdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.remove('open');
+      document.body.style.overflow = '';
+      document.querySelectorAll('.month-cell').forEach((c) => c.classList.remove('selected'));
+    }
+
+    modalCloseBtn.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', (e) => { if (e.target === modalBackdrop) closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    document.getElementById('day-modal-open-table').addEventListener('click', () => {
+      closeModal();
+      document.querySelector('[data-view="table"]').click();
+    });
+
+    function renderEmployeeCalendar() {
+      const grid = document.getElementById('calendar-employee-grid');
+      if (!grid) return;
+      const selectedEmp = document.getElementById('calendar-employee-select')?.value || '';
+      const empIdx = employees.findIndex((e) => e.code === selectedEmp);
+      if (empIdx < 0) {
+        grid.innerHTML = `<div style="grid-column:1 / -1; padding:24px; text-align:center; color:var(--text-secondary); font-weight:700;">
+          Chọn nhân sự từ danh sách được assign theo dự án để xem calendar cá nhân.
+        </div>`;
+        return;
+      }
+      const emp = employees[empIdx];
+
+      // quick monthly KPI mock from pattern
+      const workDays = emp.pattern.filter((s) => !['weekend', 'holiday', 'leave'].includes(s)).length;
+      const lateCount = emp.pattern.filter((s) => s === 'late').length;
+      const missing = emp.pattern.filter((s) => s === 'missing').length;
+      const under8 = 4 + empIdx;
+      const over8 = 12 - empIdx;
+      document.getElementById('emp-kpi-total-hours').textContent = `${180 + empIdx * 3}h ${20 + empIdx}m`;
+      document.getElementById('emp-kpi-working-days').textContent = String(workDays);
+      document.getElementById('emp-kpi-late-count').textContent = String(lateCount);
+      document.getElementById('emp-kpi-missing-checkout').textContent = String(missing);
+      document.getElementById('emp-kpi-avg-io').textContent = `${empIdx % 2 ? '08:13' : '08:08'} / ${empIdx % 2 ? '18:07' : '18:16'}`;
+      document.getElementById('emp-kpi-avg-hours').textContent = `${8 + (empIdx % 2)}h ${34 - empIdx}m`;
+
+      const year = 2026;
+      const month = 4; // April
+      const firstDow = new Date(year, month - 1, 1).getDay(); // 0=CN ... 6=T7
+      const leadingMuted = (firstDow + 6) % 7; // convert to Monday-first index
+      const daysInMonth = 30;
+
+      const dayCells = Array.from({ length: daysInMonth }, (_, i) => {
+        const day = i + 1;
+        const st = emp.pattern[i];
+        if (st === 'weekend') return `<div class="month-cell weekend"><span class="cell-date">${day}</span><div class="cell-content"><div class="cell-main">~~~~</div><div class="cell-sub">Cuối tuần</div></div></div>`;
+        if (st === 'holiday') return `<div class="month-cell holiday"><span class="cell-date">${day}</span><div class="cell-content"><div class="cell-main">H</div><div class="cell-sub">Ngày lễ</div></div></div>`;
+        if (st === 'leave') return `<div class="month-cell"><span class="cell-date">${day}</span><div class="cell-content"><div class="cell-main">Nghỉ phép</div><div class="cell-sub">Không có check-in</div></div></div>`;
+        const inT = st === 'late' ? '08:41' : '08:05';
+        const outT = st === 'missing' ? '—' : '18:17';
+        const dur = st === 'missing' ? '—' : '9h 36m';
+        const marker = st === 'late' ? `<span class="cell-stat warn">Đi trễ</span>` : st === 'missing' ? `<span class="cell-stat danger">Thiếu checkout</span>` : `<span class="cell-stat ok">Đúng giờ</span>`;
+        return `<div class="month-cell" data-emp-day="${day}" style="cursor:pointer"><span class="cell-date">${day}</span><div class="cell-content"><div class="cell-main">${inT} - ${outT}</div><div class="cell-sub">${dur}</div>${marker}</div></div>`;
+      }).join('');
+      const head = `<div class="weekday">T2</div><div class="weekday">T3</div><div class="weekday">T4</div><div class="weekday">T5</div><div class="weekday">T6</div><div class="weekday">T7</div><div class="weekday">CN</div>`;
+      const lead = Array.from({ length: leadingMuted }, (_, i) => `<div class="month-cell muted"><span class="cell-date">${30 - leadingMuted + i + 1}</span></div>`).join('');
+      const totalShown = leadingMuted + daysInMonth;
+      const trailingMuted = (7 - (totalShown % 7)) % 7;
+      const tail = Array.from({ length: trailingMuted }, (_, i) => `<div class="month-cell muted"><span class="cell-date">${i + 1}</span></div>`).join('');
+
+      grid.innerHTML = `${head}${lead}${dayCells}${tail}`;
+      grid.querySelectorAll('[data-emp-day]').forEach((cell) => {
+        cell.addEventListener('click', () => {
+          const day = Number(cell.dataset.empDay);
+          const st = emp.pattern[day - 1];
+          openCellModal(empIdx, day, st === 'late' ? 'late' : st === 'missing' ? 'missing' : 'ok', st === 'late' ? '08:41' : '08:05', st === 'missing' ? '—' : '18:17', st === 'missing' ? '—' : '9h 36m');
+        });
+      });
+    }
+
+    /* ── Employee chip bar logic ── */
+    let _selectedEmpCode = null;
+
+    function setCalendarEmployeeMode(empCode) {
+      _selectedEmpCode = empCode;
+      const employeeMode = !!empCode;
+
+      document.querySelectorAll('.employee-only').forEach((el) => el.classList.toggle('active', employeeMode));
+      document.getElementById('calendar-overview-grid')?.classList.toggle('hidden', employeeMode);
+      const backBtn = document.getElementById('cal-emp-back-btn');
+      if (backBtn) backBtn.style.display = employeeMode ? '' : 'none';
+
+      document.querySelectorAll('.emp-chip').forEach((c) => {
+        c.classList.toggle('active', c.dataset.code === empCode);
+      });
+
+      if (employeeMode) {
+        const sel = document.getElementById('calendar-employee-select');
+        if (sel) sel.value = empCode;
+        renderEmployeeCalendar();
+      }
+    }
+
+    const avatarColors = ['#477386','#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#0ea5e9'];
+
+    function buildEmployeeChips(projectCode) {
+      const bar   = document.getElementById('cal-employee-bar');
+      const chips = document.getElementById('cal-emp-chips');
+      const label = document.getElementById('cal-emp-bar-label');
+      if (!bar || !chips) return;
+
+      const assignedCodes = (projectAssignments[projectCode] || []);
+      if (!projectCode || projectCode === 'ALL' || assignedCodes.length === 0) {
+        bar.style.display = 'none';
+        setCalendarEmployeeMode(null);
+        return;
+      }
+
+      const assignedEmps = employees.filter((e) => assignedCodes.includes(e.code));
+      label.textContent = `${assignedEmps.length} nhân sự trong ${projectCode}`;
+
+      chips.innerHTML = assignedEmps.map((emp, i) => {
+        const color       = avatarColors[i % avatarColors.length];
+        const lateCount   = emp.pattern.filter((s) => s === 'late').length;
+        const missingCount= emp.pattern.filter((s) => s === 'missing').length;
+        const badgeCls    = missingCount > 0 ? 'danger' : lateCount > 0 ? 'warn' : 'ok';
+        const badgeTxt    = missingCount > 0 ? `${missingCount} thiếu checkout` : lateCount > 0 ? `${lateCount} đi trễ` : 'Đúng giờ';
+        return `
+          <div class="emp-chip" data-code="${emp.code}" title="Click để xem calendar cá nhân">
+            <div class="chip-avatar" style="background:${color}">${emp.avatar}</div>
+            <div class="chip-info">
+              <div class="chip-name">${emp.name}</div>
+              <div class="chip-meta">${emp.code} · ${emp.role}</div>
+            </div>
+            <span class="chip-badge ${badgeCls}">${badgeTxt}</span>
+          </div>`;
+      }).join('');
+
+      bar.style.display = '';
+
+      chips.querySelectorAll('.emp-chip').forEach((chip) => {
+        chip.addEventListener('click', () => {
+          const code = chip.dataset.code;
+          if (_selectedEmpCode === code) {
+            setCalendarEmployeeMode(null);
+          } else {
+            setCalendarEmployeeMode(code);
+          }
+        });
+      });
+    }
+
+    document.getElementById('cal-emp-back-btn')?.addEventListener('click', () => {
+      // Reset project filter to "Tất cả dự án" (ALL) to match Image 2 state
+      const projSel = document.getElementById('project-select');
+      if (projSel) projSel.value = 'ALL';
+      
+      setCalendarEmployeeMode(null);
+      applyRangeMode();
+    });
+
+    document.querySelectorAll('.month-cell:not(.muted):not(.weekend):not(.holiday)').forEach((cell) => {
+      cell.style.cursor = 'pointer';
+      cell.addEventListener('click', () => {
+        document.querySelectorAll('.month-cell').forEach((c) => c.classList.remove('selected'));
+        cell.classList.add('selected');
+        const day = parseInt(cell.querySelector('.cell-date')?.textContent?.trim(), 10);
+        if (day) openDayModal(day);
+      });
+    });
+
+    /* ═══════════════════════════════════════════════════════════
+       DATE RANGE LOGIC
+       ─ single  : same month          → Table / Calendar (unchanged)
+       ─ dual    : spans exactly 2 months → Cách 1 (2 matrix panels)
+                                            or Cách 2 (flat list) via toggle
+       ─ flat    : spans 3+ months     → Cách 2 forced (flat list)
+       ═══════════════════════════════════════════════════════════ */
+
+    const dateFromEl      = document.getElementById('date-from');
+    const dateToEl        = document.getElementById('date-to');
+    const rangeBanner     = document.getElementById('range-banner');
+    const bannerIcon      = document.getElementById('range-banner-icon');
+    const bannerText      = document.getElementById('range-banner-text');
+    const crossSwitcher   = document.getElementById('cross-month-switcher');
+    const segmented       = document.querySelector('.segmented');
+    const panelHead       = document.querySelector('.panel-head');
+    // tableView & calendarView already declared above (seg-btn section)
+    const flatView        = document.getElementById('flat-list-view');
+    const dualContainer   = document.getElementById('dual-container');
+    const singleWrap      = document.getElementById('single-matrix-wrap');
+    const flatTbody       = document.getElementById('flat-tbody');
+    const flatTitle       = document.getElementById('flat-list-title');
+    const flatSub         = document.getElementById('flat-list-sub');
+    const MONTH_NAMES = ['','Tháng 01','Tháng 02','Tháng 03','Tháng 04','Tháng 05','Tháng 06',
+                         'Tháng 07','Tháng 08','Tháng 09','Tháng 10','Tháng 11','Tháng 12'];
+    const DAY_NAMES   = ['CN','T2','T3','T4','T5','T6','T7'];
+
+    let _dualFrom = null, _dualTo = null; // saved for cach toggle
+
+    function syncAssignedEmployeesByProject(projectCode) {
+      // Build hidden select for renderEmployeeCalendar compatibility
+      const assignedCodes = projectAssignments[projectCode] || [];
+      const targetCodes   = projectCode === 'ALL' ? [] : assignedCodes;
+      const assignedEmps  = employees.filter((e) => targetCodes.includes(e.code));
+      const calEmpSel     = document.getElementById('calendar-employee-select');
+      if (calEmpSel) {
+        const opts = assignedEmps.map((e) => `<option value="${e.code}">${e.name}</option>`).join('');
+        calEmpSel.innerHTML = '<option value="">—</option>' + opts;
+      }
+      buildEmployeeChips(projectCode);
+    }
+
+    function parseDate(s)     { return s ? new Date(s + 'T00:00:00') : null; }
+    function fmtDate(d)       { return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`; }
+    function fmtMonthYear(m,y){ return `${MONTH_NAMES[m]}/${y}`; }
+    function diffMonths(a,b)  { return (b.getFullYear()-a.getFullYear())*12 + b.getMonth()-a.getMonth(); }
+    function isWeekend(d)     { const w=d.getDay(); return w===0||w===6; }
+
+    /* Get Vietnamese weekday label for a specific date */
+    function wdLabel(year, month, day) {
+      return DAY_NAMES[new Date(year, month - 1, day).getDay()];
+    }
+
+    function computeRangeMode(from, to) {
+      if (!from || !to || from > to) return 'invalid';
+      const dm = diffMonths(from, to);
+      if (dm === 0) return 'single';
+      if (dm === 1) return 'dual';
+      return 'flat';
+    }
+
+    /* ── Reset all cross-month UI ── */
+    function resetCrossMonthUI() {
+      rangeBanner.className = 'range-banner';
+      flatView.classList.remove('active');
+      dualContainer.style.display = 'none';
+      dualContainer.innerHTML = '';
+      singleWrap.style.display = '';
+      panelHead.style.display = '';
+      segmented.classList.remove('disabled');
+      crossSwitcher.classList.remove('show');
+    }
+
+    /* ── Build flat rows for given date range ── */
+    function buildFlatRows(from, to) {
+      const statusCycle = ['ok','ok','ok','late','ok','ok','missing','ok','ok','late','ok','late'];
+      const rows = []; let cur = new Date(from); let idx = 0;
+      while (cur <= to) {
+        if (!isWeekend(cur)) {
+          const emp = EMP[idx % EMP.length];
+          const s   = statusCycle[idx % statusCycle.length];
+          rows.push({
+            date: new Date(cur), emp, s,
+            cin:  s === 'late' ? '08:41' : '08:05',
+            cout: s === 'missing' ? '' : '18:17',
+            dur:  s === 'missing' ? '—' : s === 'late' ? '9h 36m' : '10h 12m'
+          });
+          idx++;
+        }
+        cur.setDate(cur.getDate() + 1);
+      }
+      return rows;
+    }
+
+    /* ── Render Cách 2: flat chronological list ── */
+    function renderFlatList(from, to) {
+      const rows = buildFlatRows(from, to);
+      const sLabel = { ok:'Đúng giờ', late:'Đi trễ', missing:'Thiếu checkout' };
+      const sBadge = { ok:'badge-ok', late:'badge-late', missing:'badge-warn'  };
+
+      flatTitle.textContent = `Danh sách check-in · ${fmtDate(from)} → ${fmtDate(to)}`;
+      flatSub.textContent   = `${rows.length} bản ghi · PRODUCT24`;
+
+      /* Group by month for visual separation */
+      let lastMonth = -1;
+      flatTbody.innerHTML = rows.map(({date,emp,s,cin,cout,dur}) => {
+        const m = date.getMonth();
+        let sep = '';
+        if (m !== lastMonth) {
+          lastMonth = m;
+          sep = `<tr><td colspan="8" style="background:#f1f5f9;padding:7px 14px;font-weight:800;font-size:12px;color:var(--accent);border-bottom:1px solid var(--border-subtle)">
+            📅 ${MONTH_NAMES[m+1]}/${date.getFullYear()}
+          </td></tr>`;
+        }
+        return sep + `<tr>
+          <td>
+            <div class="flat-date-col">${fmtDate(date)}</div>
+            <div class="flat-date-sub">${DAY_NAMES[date.getDay()]}</div>
+          </td>
+          <td style="color:var(--text-secondary)">${emp.code}</td>
+          <td><strong>${emp.name}</strong></td>
+          <td style="color:var(--text-muted)">${emp.role}</td>
+          <td><span class="time">${cin}</span></td>
+          <td>${cout?`<span class="time">${cout}</span>`:'<span style="color:#94a3b8">—</span>'}</td>
+          <td><span class="duration">${dur}</span></td>
+          <td><span class="badge ${sBadge[s]}">${sLabel[s]}</span></td>
+        </tr>`;
+      }).join('');
+
+      flatView.classList.add('active');
+      singleWrap.style.display  = 'none';
+      dualContainer.style.display = 'none';
+    }
+
+    /* ── Render Cách 1: split matrix panels per month ── */
+    function renderDualPanels(from, to) {
+      dualContainer.innerHTML = '';
+
+      const segments = [
+        { year: from.getFullYear(), month: from.getMonth()+1,
+          dayFrom: from.getDate(),
+          dayTo: new Date(from.getFullYear(), from.getMonth()+1, 0).getDate() },
+        { year: to.getFullYear(),   month: to.getMonth()+1,
+          dayFrom: 1, dayTo: to.getDate() }
+      ];
+
+      segments.forEach(({ year, month, dayFrom, dayTo }) => {
+        const block = document.createElement('div');
+        block.className = 'dual-panel-block';
+
+        /* Title bar */
+        const titleEl = document.createElement('div');
+        titleEl.className = 'dual-panel-title';
+        titleEl.innerHTML = `📅 ${fmtMonthYear(month, year)}
+          <span class="dp-badge">Ngày ${dayFrom} → ${dayTo}
+            (${dayTo - dayFrom + 1} ngày)</span>`;
+        block.appendChild(titleEl);
+
+        /* Scrollable matrix */
+        const innerWrap = document.createElement('div');
+        innerWrap.className = 'matrix-wrap-inner';
+
+        const tbl = document.createElement('table');
+        tbl.className = 'matrix-table';
+
+        /* Size by real columns to avoid phantom empty area */
+        const DAY_COL_W = 80;
+        const EMPLOYEE_COL_W = 230;
+        const TOTAL_COL_W = EMPLOYEE_COL_W + (dayTo - dayFrom + 1) * DAY_COL_W;
+        tbl.style.minWidth = `${TOTAL_COL_W}px`;
+        tbl.style.width = `${TOTAL_COL_W}px`;
+        tbl.style.tableLayout = 'fixed';
+
+        /* Day headers — use actual Date for correct weekday */
+        const dayHeaders = Array.from({ length: dayTo - dayFrom + 1 }, (_, i) => {
+          const d = dayFrom + i;
+          const wd = wdLabel(year, month, d);
+          const isWknd = ['T7','CN'].includes(wd);
+          return `<th style="width:${DAY_COL_W}px;${isWknd?'background:#f8fafc;color:#94a3b8':''}">
+            <div class="matrix-day-head">
+              <strong>${d}</strong><span>${wd}</span>
+            </div></th>`;
+        }).join('');
+
+        /* Rows — use employees' pattern for April; generate generic pattern for other months */
+        const rows = employees.map((emp, empIdx) => {
+          const cells = Array.from({ length: dayTo - dayFrom + 1 }, (_, i) => {
+            const d   = dayFrom + i;
+            const wd  = new Date(year, month - 1, d).getDay();
+            let status;
+            if (wd === 0 || wd === 6) {
+              status = 'weekend';
+            } else {
+              /* Use April pattern if same month, else generate varied mock */
+              if (month === 4 && year === 2026) {
+                status = emp.pattern[d - 1] || 'ok';
+              } else {
+                const cycle = ['ok','ok','late','ok','ok','missing','ok','late','ok','ok'];
+                status = cycle[(d + empIdx) % cycle.length];
+              }
+            }
+            return `<td style="width:${DAY_COL_W}px">${timeCell(status, d, empIdx)}</td>`;
+          }).join('');
+
+          return `<tr>
+            <td class="sticky-employee" style="width:${EMPLOYEE_COL_W}px">
+              <div class="matrix-employee">
+                <div class="avatar">${emp.avatar}</div>
+                <div><div class="emp-name">${emp.name}</div>
+                     <div class="emp-meta">${emp.code} · ${emp.role}</div></div>
+              </div>
+            </td>${cells}
+          </tr>`;
+        }).join('');
+
+        tbl.innerHTML = `
+          <thead><tr>
+            <th class="sticky-employee" style="width:${EMPLOYEE_COL_W}px">Nhân viên</th>
+            ${dayHeaders}
+          </tr></thead>
+          <tbody>${rows}</tbody>`;
+
+        innerWrap.appendChild(tbl);
+        block.appendChild(innerWrap);
+        dualContainer.appendChild(block);
+      });
+
+      dualContainer.style.display = 'flex';
+      singleWrap.style.display  = 'none';
+      flatView.classList.remove('active');
+    }
+
+    /* ── Apply mode based on date range ── */
+    let _currentMode = 'single';
+
+    const projectSelect = document.getElementById('project-select');
+    const emptyStateView = document.getElementById('empty-state-view');
+    const dataViewContainer = document.getElementById('data-view-container');
+
+    function applyRangeMode() {
+      const proj = projectSelect.value;
+      syncAssignedEmployeesByProject(proj);
+      emptyStateView.classList.remove('active');
+      dataViewContainer.style.display = 'block';
+      const panelTitle = document.querySelector('.panel-title');
+      const panelDesc = document.querySelector('.panel-desc');
+      if (panelTitle) panelTitle.textContent = `${proj === 'ALL' ? 'Tất cả dự án' : proj} · Tháng 04/2026`;
+      if (panelDesc) panelDesc.textContent = proj === 'ALL'
+        ? 'Đang hiển thị dữ liệu check-in của toàn bộ dự án; chọn dự án cụ thể để lọc theo nhân sự.'
+        : 'Bảng tóm tắt theo nhân sự, có thể mở Advanced Matrix nếu cần xem ma trận 30 ngày.';
+
+      const from = parseDate(dateFromEl.value);
+      const to   = parseDate(dateToEl.value);
+      const mode = computeRangeMode(from, to);
+      _currentMode = mode;
+
+      resetCrossMonthUI();
+      // Force table view only for cross-month modes where Calendar is not supported
+      if (mode !== 'single') {
+        tableView.classList.add('active');
+        calendarView.classList.remove('active');
+      } else {
+        // In single month, respect the currently active segmented button
+        const activeView = document.querySelector('.seg-btn.active').dataset.view;
+        tableView.classList.toggle('active', activeView === 'table');
+        calendarView.classList.toggle('active', activeView === 'calendar');
+      }
+
+      /* ── Single / Invalid ── */
+      if (mode === 'single' || mode === 'invalid') {
+        singleWrap.style.display = '';
+        renderMatrix();
+        return;
+      }
+
+      /* ── Dual (2 months): Cách 1 default + toggle ── */
+      if (mode === 'dual') {
+        _dualFrom = from; _dualTo = to;
+
+        rangeBanner.classList.add('show', 'dual');
+        bannerIcon.textContent = '📆';
+        bannerText.innerHTML = `
+          <strong>Khoảng 2 tháng</strong> —
+          <span class="range-banner-badge">${fmtMonthYear(from.getMonth()+1, from.getFullYear())} · ${String(from.getDate()).padStart(2,'0')} → ${String(new Date(from.getFullYear(),from.getMonth()+1,0).getDate()).padStart(2,'0')}</span>
+          <span class="range-banner-badge">${fmtMonthYear(to.getMonth()+1, to.getFullYear())} · 01 → ${String(to.getDate()).padStart(2,'0')}</span>`;
+
+        segmented.classList.add('disabled');
+        panelHead.style.display = 'none';
+        crossSwitcher.classList.add('show');
+
+        // Default to Cách 1
+        document.querySelectorAll('.cach-btn').forEach(b => b.classList.toggle('active', b.dataset.cach === '1'));
+        renderDualPanels(from, to);
+        return;
+      }
+
+      /* ── Flat (3+ months): force Cách 2 ── */
+      if (mode === 'flat') {
+        rangeBanner.classList.add('show', 'flat');
+        bannerIcon.textContent = '📋';
+        const dm = diffMonths(from, to);
+        bannerText.innerHTML = `
+          <strong>Khoảng ${dm} tháng</strong> — Phạm vi quá rộng, chuyển sang <strong>Cách 2 · Danh sách</strong> tổng hợp.
+          <span class="range-banner-badge">${fmtDate(from)} → ${fmtDate(to)}</span>`;
+        segmented.classList.add('disabled');
+        panelHead.style.display = 'none';
+        renderFlatList(from, to);
+      }
+    }
+
+    /* ── Cách 1 / Cách 2 toggle (dual mode only) ── */
+    document.querySelectorAll('.cach-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.cach-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (btn.dataset.cach === '1') {
+          renderDualPanels(_dualFrom, _dualTo);
+          flatView.classList.remove('active');
+        } else {
+          renderFlatList(_dualFrom, _dualTo);
+          dualContainer.style.display = 'none';
+          singleWrap.style.display = 'none';
+        }
+      });
+    });
+
+    projectSelect.addEventListener('change', applyRangeMode);
+    dateFromEl.addEventListener('change', applyRangeMode);
+    dateToEl.addEventListener('change', applyRangeMode);
+
+    // Run once on load with defaults
+    applyRangeMode();
+
+  </script>
+</body>
+
+</html>
